@@ -216,26 +216,40 @@ export function CoursePreview() {
   });
 
   // Scroll-reveal: Intersection Observer for content block animations
+  // Uses a MutationObserver to catch refs that mount after the effect runs
   useEffect(() => {
     if (!course.settings.enableScrollReveal) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const blockId = entry.target.getAttribute('data-block-id');
-            if (blockId) {
-              setRevealedBlocks((prev) => new Set([...prev, blockId]));
-            }
+            if (blockId) setRevealedBlocks((prev) => new Set([...prev, blockId]));
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.05, rootMargin: '100px' }
     );
-    Object.values(blockRefs.current).forEach((el) => {
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, [previewSlideIndex, course.settings.enableScrollReveal]);
+
+    // Observe existing refs
+    const observeAll = () => {
+      Object.values(blockRefs.current).forEach((el) => {
+        if (el) observer.observe(el);
+      });
+    };
+
+    // Initial observe + retry after a tick (handles landing→slide transition)
+    observeAll();
+    const t1 = setTimeout(observeAll, 150);
+    const t2 = setTimeout(observeAll, 500);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [previewSlideIndex, course.settings.enableScrollReveal, showLanding]);
 
   // Resolve animation for a block
   const getBlockAnimation = (block: ContentBlock, index: number): { animName: EntranceAnimation; delay: number } => {
