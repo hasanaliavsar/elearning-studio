@@ -12,6 +12,10 @@ import type {
   LabeledMarker,
   CalloutStyle,
   ButtonStyle,
+  ScenarioStep,
+  ScenarioChoice,
+  ChecklistItem,
+  SortCard,
 } from '../types';
 import {
   Plus,
@@ -1405,6 +1409,424 @@ function ThreeImagesEditor({ block, onUpdateData }: BlockEditorProps) {
 // Main BlockEditor component
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Scenario Editor (branching decisions)
+// ---------------------------------------------------------------------------
+
+function ScenarioEditor({ block, onUpdate, onUpdateData }: BlockEditorProps) {
+  const data = ensureData(block);
+  const steps = data.scenarioSteps ?? [];
+  const title = data.scenarioTitle ?? '';
+  const description = data.scenarioDescription ?? '';
+  const image = data.scenarioImage ?? '';
+
+  const updateSteps = (updated: ScenarioStep[]) => onUpdateData({ scenarioSteps: updated });
+
+  const addStep = () => {
+    const newStep: ScenarioStep = {
+      id: generateId(),
+      text: '',
+      choices: [],
+      isEnd: false,
+    };
+    updateSteps([...steps, newStep]);
+  };
+
+  const updateStep = (id: string, updates: Partial<ScenarioStep>) => {
+    updateSteps(steps.map(s => (s.id === id ? { ...s, ...updates } : s)));
+  };
+
+  const removeStep = (id: string) => updateSteps(steps.filter(s => s.id !== id));
+
+  const addChoice = (stepId: string) => {
+    const newChoice: ScenarioChoice = {
+      id: generateId(),
+      text: '',
+      nextStepId: '',
+      feedback: '',
+    };
+    updateSteps(steps.map(s =>
+      s.id === stepId ? { ...s, choices: [...s.choices, newChoice] } : s
+    ));
+  };
+
+  const updateChoice = (stepId: string, choiceId: string, updates: Partial<ScenarioChoice>) => {
+    updateSteps(steps.map(s =>
+      s.id === stepId
+        ? { ...s, choices: s.choices.map(c => (c.id === choiceId ? { ...c, ...updates } : c)) }
+        : s
+    ));
+  };
+
+  const removeChoice = (stepId: string, choiceId: string) => {
+    updateSteps(steps.map(s =>
+      s.id === stepId ? { ...s, choices: s.choices.filter(c => c.id !== choiceId) } : s
+    ));
+  };
+
+  return (
+    <div className="space-y-3">
+      <SectionHeading>Scenario</SectionHeading>
+
+      <div>
+        <label className="label text-xs">Title</label>
+        <input
+          className="input text-xs"
+          placeholder="Scenario title..."
+          value={title}
+          onChange={e => onUpdateData({ scenarioTitle: e.target.value })}
+        />
+      </div>
+
+      <div>
+        <label className="label text-xs">Description</label>
+        <textarea
+          className="input text-xs resize-none"
+          rows={2}
+          placeholder="Brief scenario context..."
+          value={description}
+          onChange={e => onUpdateData({ scenarioDescription: e.target.value })}
+        />
+      </div>
+
+      <div>
+        <label className="label text-xs">Image URL (optional)</label>
+        <input
+          className="input text-xs"
+          placeholder="https://..."
+          value={image}
+          onChange={e => onUpdateData({ scenarioImage: e.target.value })}
+        />
+      </div>
+
+      {/* Mini flow indicator */}
+      {steps.length > 0 && (
+        <div className="flex flex-wrap items-center gap-1 text-[10px] text-gray-400 bg-gray-50 rounded-lg p-2">
+          {steps.map((step, idx) => (
+            <span key={step.id} className="flex items-center gap-1">
+              <span className={`px-1.5 py-0.5 rounded ${step.isEnd ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
+                {step.isEnd ? `End ${idx + 1}` : `Step ${idx + 1}`}
+              </span>
+              {idx < steps.length - 1 && <span className="text-gray-300">&rarr;</span>}
+            </span>
+          ))}
+        </div>
+      )}
+
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-medium text-gray-500">{steps.length} step{steps.length !== 1 ? 's' : ''}</span>
+        <button onClick={addStep} className="btn-secondary text-xs">
+          <Plus className="w-3 h-3 mr-1 inline" /> Add Step
+        </button>
+      </div>
+
+      {steps.length === 0 && (
+        <EmptyState icon={GripVertical} text="No steps yet" onAction={addStep} actionLabel="Add Step" />
+      )}
+
+      {steps.map((step, idx) => (
+        <div key={step.id} className="card p-3 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-gray-500">
+              {step.isEnd ? `End Step ${idx + 1}` : `Step ${idx + 1}`}
+            </span>
+            <ItemActions
+              index={idx}
+              total={steps.length}
+              onMoveUp={() => updateSteps(moveItem(steps, idx, 'up'))}
+              onMoveDown={() => updateSteps(moveItem(steps, idx, 'down'))}
+              onDelete={() => removeStep(step.id)}
+            />
+          </div>
+
+          <div>
+            <label className="label text-xs">Situation Text</label>
+            <textarea
+              className="input text-xs resize-none"
+              rows={2}
+              placeholder="Describe the situation..."
+              value={step.text}
+              onChange={e => updateStep(step.id, { text: e.target.value })}
+            />
+          </div>
+
+          <label className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={step.isEnd || false}
+              onChange={e => updateStep(step.id, { isEnd: e.target.checked })}
+              className="rounded border-gray-300 text-blue-600"
+            />
+            This is an end step
+          </label>
+
+          {step.isEnd ? (
+            <div className="space-y-2 pl-4 border-l-2 border-amber-200">
+              <div>
+                <label className="label text-xs">End Message</label>
+                <input
+                  className="input text-xs"
+                  placeholder="What happens at this ending..."
+                  value={step.endMessage || ''}
+                  onChange={e => updateStep(step.id, { endMessage: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="label text-xs">End Type</label>
+                <select
+                  className="input text-xs"
+                  value={step.endType || 'neutral'}
+                  onChange={e => updateStep(step.id, { endType: e.target.value as 'success' | 'failure' | 'neutral' })}
+                >
+                  <option value="success">Success</option>
+                  <option value="failure">Failure</option>
+                  <option value="neutral">Neutral</option>
+                </select>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-medium text-gray-400 uppercase">Choices</span>
+                <button onClick={() => addChoice(step.id)} className="text-[10px] text-blue-600 hover:text-blue-800 font-medium">
+                  + Add Choice
+                </button>
+              </div>
+              {step.choices.map((choice, ci) => (
+                <div key={choice.id} className="pl-3 border-l-2 border-blue-200 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-gray-400">Choice {ci + 1}</span>
+                    <button
+                      onClick={() => removeChoice(step.id, choice.id)}
+                      className="btn-icon w-5 h-5 text-red-400 hover:text-red-600"
+                    >
+                      <Trash2 className="w-2.5 h-2.5" />
+                    </button>
+                  </div>
+                  <input
+                    className="input text-xs"
+                    placeholder="Choice text..."
+                    value={choice.text}
+                    onChange={e => updateChoice(step.id, choice.id, { text: e.target.value })}
+                  />
+                  <input
+                    className="input text-xs"
+                    placeholder="Feedback (shown after choosing)..."
+                    value={choice.feedback || ''}
+                    onChange={e => updateChoice(step.id, choice.id, { feedback: e.target.value })}
+                  />
+                  <div>
+                    <label className="label text-[10px]">Go to step</label>
+                    <select
+                      className="input text-xs"
+                      value={choice.nextStepId}
+                      onChange={e => updateChoice(step.id, choice.id, { nextStepId: e.target.value })}
+                    >
+                      <option value="">-- Select --</option>
+                      {steps.filter(s => s.id !== step.id).map((s, si) => (
+                        <option key={s.id} value={s.id}>
+                          {s.isEnd ? `End: ` : `Step ${steps.indexOf(s) + 1}: `}{s.text.slice(0, 40) || '(untitled)'}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Checklist Editor
+// ---------------------------------------------------------------------------
+
+function ChecklistEditor({ block, onUpdateData }: BlockEditorProps) {
+  const data = ensureData(block);
+  const items = data.checklistItems ?? [];
+  const title = data.checklistTitle ?? '';
+
+  const updateItems = (updated: ChecklistItem[]) => onUpdateData({ checklistItems: updated });
+
+  const addItem = () => {
+    updateItems([...items, { id: generateId(), title: '', description: '' }]);
+  };
+
+  const updateItem = (id: string, updates: Partial<ChecklistItem>) => {
+    updateItems(items.map(i => (i.id === id ? { ...i, ...updates } : i)));
+  };
+
+  const removeItem = (id: string) => updateItems(items.filter(i => i.id !== id));
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <SectionHeading>Checklist</SectionHeading>
+        <button onClick={addItem} className="btn-secondary text-xs">
+          <Plus className="w-3 h-3 mr-1 inline" /> Add Item
+        </button>
+      </div>
+
+      <div>
+        <label className="label text-xs">Checklist Title</label>
+        <input
+          className="input text-xs"
+          placeholder="My Checklist..."
+          value={title}
+          onChange={e => onUpdateData({ checklistTitle: e.target.value })}
+        />
+      </div>
+
+      {items.length === 0 && (
+        <EmptyState icon={Tag} text="No items yet" onAction={addItem} actionLabel="Add Item" />
+      )}
+
+      {items.map((item, idx) => (
+        <div key={item.id} className="card p-3 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-gray-500">Item {idx + 1}</span>
+            <ItemActions
+              index={idx}
+              total={items.length}
+              onMoveUp={() => updateItems(moveItem(items, idx, 'up'))}
+              onMoveDown={() => updateItems(moveItem(items, idx, 'down'))}
+              onDelete={() => removeItem(item.id)}
+            />
+          </div>
+          <input
+            className="input text-xs"
+            placeholder="Item title..."
+            value={item.title}
+            onChange={e => updateItem(item.id, { title: e.target.value })}
+          />
+          <input
+            className="input text-xs"
+            placeholder="Description (optional)..."
+            value={item.description}
+            onChange={e => updateItem(item.id, { description: e.target.value })}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Card Sorting Editor
+// ---------------------------------------------------------------------------
+
+function CardSortingEditor({ block, onUpdateData }: BlockEditorProps) {
+  const data = ensureData(block);
+  const categories = data.cardSortCategories ?? [];
+  const cards = data.cardSortCards ?? [];
+
+  const updateCategories = (updated: string[]) => onUpdateData({ cardSortCategories: updated });
+  const updateCards = (updated: SortCard[]) => onUpdateData({ cardSortCards: updated });
+
+  const addCategory = () => updateCategories([...categories, '']);
+  const removeCategory = (idx: number) => {
+    const updated = categories.filter((_, i) => i !== idx);
+    updateCategories(updated);
+  };
+  const updateCategory = (idx: number, value: string) => {
+    const updated = [...categories];
+    updated[idx] = value;
+    updateCategories(updated);
+  };
+
+  const addCard = () => {
+    updateCards([...cards, { id: generateId(), text: '', correctCategory: '' }]);
+  };
+  const updateCard = (id: string, updates: Partial<SortCard>) => {
+    updateCards(cards.map(c => (c.id === id ? { ...c, ...updates } : c)));
+  };
+  const removeCard = (id: string) => updateCards(cards.filter(c => c.id !== id));
+
+  return (
+    <div className="space-y-3">
+      <SectionHeading>Card Sorting</SectionHeading>
+
+      {/* Categories */}
+      <div>
+        <div className="flex items-center justify-between mb-1">
+          <label className="label text-xs mb-0">Categories</label>
+          <button onClick={addCategory} className="text-[10px] text-blue-600 hover:text-blue-800 font-medium">
+            + Add Category
+          </button>
+        </div>
+        {categories.length === 0 && (
+          <p className="text-xs text-gray-400 italic">No categories yet. Add at least two.</p>
+        )}
+        {categories.map((cat, idx) => (
+          <div key={idx} className="flex items-center gap-1 mb-1">
+            <input
+              className="input text-xs flex-1"
+              placeholder={`Category ${idx + 1}...`}
+              value={cat}
+              onChange={e => updateCategory(idx, e.target.value)}
+            />
+            <button
+              onClick={() => removeCategory(idx)}
+              className="btn-icon w-6 h-6 text-red-400 hover:text-red-600"
+            >
+              <Trash2 className="w-3 h-3" />
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* Cards */}
+      <div>
+        <div className="flex items-center justify-between mb-1">
+          <label className="label text-xs mb-0">Cards</label>
+          <button onClick={addCard} className="btn-secondary text-xs">
+            <Plus className="w-3 h-3 mr-1 inline" /> Add Card
+          </button>
+        </div>
+        {cards.length === 0 && (
+          <EmptyState icon={Tag} text="No cards yet" onAction={addCard} actionLabel="Add Card" />
+        )}
+        {cards.map((card, idx) => (
+          <div key={card.id} className="card p-2 space-y-1 mb-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-medium text-gray-400">Card {idx + 1}</span>
+              <button
+                onClick={() => removeCard(card.id)}
+                className="btn-icon w-5 h-5 text-red-400 hover:text-red-600"
+              >
+                <Trash2 className="w-2.5 h-2.5" />
+              </button>
+            </div>
+            <input
+              className="input text-xs"
+              placeholder="Card text..."
+              value={card.text}
+              onChange={e => updateCard(card.id, { text: e.target.value })}
+            />
+            <select
+              className="input text-xs"
+              value={card.correctCategory}
+              onChange={e => updateCard(card.id, { correctCategory: e.target.value })}
+            >
+              <option value="">-- Correct category --</option>
+              {categories.filter(c => c.trim()).map((cat, ci) => (
+                <option key={ci} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Block Editor (switch)
+// ---------------------------------------------------------------------------
+
 export function BlockEditor(props: BlockEditorProps) {
   const { block } = props;
 
@@ -1445,6 +1867,12 @@ export function BlockEditor(props: BlockEditorProps) {
       return <TwoImagesEditor {...props} />;
     case 'three-images':
       return <ThreeImagesEditor {...props} />;
+    case 'scenario':
+      return <ScenarioEditor {...props} />;
+    case 'checklist':
+      return <ChecklistEditor {...props} />;
+    case 'card-sorting':
+      return <CardSortingEditor {...props} />;
     default:
       return null;
   }

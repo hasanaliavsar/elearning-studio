@@ -10,7 +10,8 @@ import {
   Layout, Columns, Palette,
   RotateCw, MousePointerClick, ChevronsUpDown, LayoutPanelTop, Clock, AlertCircle,
   Table2, MousePointer, Music, Code2, Images, MapPin, Sparkles, BookOpen, Play,
-  ArrowUpFromLine, ArrowDownFromLine, PanelLeft, PanelRight, Columns2, Grid3x3
+  ArrowUpFromLine, ArrowDownFromLine, PanelLeft, PanelRight, Columns2, Grid3x3,
+  GitBranch, ListChecks, Layers
 } from 'lucide-react';
 
 interface Props {
@@ -54,6 +55,9 @@ const blockCategories: { label: string; options: BlockOption[] }[] = [
       { type: 'tabs', label: 'Tabs', icon: <LayoutPanelTop className="w-4 h-4" /> },
       { type: 'timeline', label: 'Timeline', icon: <Clock className="w-4 h-4" /> },
       { type: 'labeled-graphic', label: 'Labels', icon: <MapPin className="w-4 h-4" /> },
+      { type: 'scenario', label: 'Scenario', icon: <GitBranch className="w-4 h-4" /> },
+      { type: 'checklist', label: 'Checklist', icon: <ListChecks className="w-4 h-4" /> },
+      { type: 'card-sorting', label: 'Card Sort', icon: <Layers className="w-4 h-4" /> },
     ],
   },
   {
@@ -296,6 +300,7 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
           {['flip-card', 'hotspot', 'accordion', 'tabs', 'timeline', 'callout',
             'table', 'button', 'audio', 'embed', 'gallery', 'labeled-graphic',
             'image-top', 'image-bottom', 'image-left', 'image-right', 'two-images', 'three-images',
+            'scenario', 'checklist', 'card-sorting',
           ].includes(block.type) && (
             <BlockEditor
               block={block}

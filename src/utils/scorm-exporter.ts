@@ -1157,6 +1157,67 @@ function generatePlayer(): string {
           html += '</div>';
         }
         html += '</div>';
+
+      } else if (block.type === 'scenario' && d.scenarioSteps && d.scenarioSteps.length) {
+        html += '<div class="scenario-container" id="scenario_' + block.id + '" data-steps=\\'' + JSON.stringify(d.scenarioSteps).replace(/'/g, '&#39;') + '\\'>';
+        if (d.scenarioTitle) html += '<h3 class="scenario-title">' + escapeHtml(d.scenarioTitle) + '</h3>';
+        if (d.scenarioDescription) html += '<p class="scenario-desc">' + escapeHtml(d.scenarioDescription) + '</p>';
+        if (d.scenarioImage) html += '<img src="' + escapeHtml(d.scenarioImage) + '" alt="" class="scenario-img"/>';
+        html += '<div class="scenario-step-indicator"></div>';
+        html += '<div class="scenario-step-content"></div>';
+        html += '<div class="scenario-feedback"></div>';
+        html += '<div class="scenario-choices"></div>';
+        html += '<div class="scenario-end" style="display:none;"></div>';
+        html += '</div>';
+
+      } else if (block.type === 'checklist' && d.checklistItems && d.checklistItems.length) {
+        html += '<div class="checklist-container" id="checklist_' + block.id + '">';
+        if (d.checklistTitle) html += '<h3 class="checklist-title">' + escapeHtml(d.checklistTitle) + '</h3>';
+        d.checklistItems.forEach(function(item) {
+          html += '<div class="checklist-item" data-item-id="' + item.id + '" data-block-id="' + block.id + '">';
+          html += '<div class="checklist-checkbox"><svg class="checklist-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>';
+          html += '<div class="checklist-item-content">';
+          html += '<span class="checklist-item-title">' + escapeHtml(item.title) + '</span>';
+          if (item.description) html += '<span class="checklist-item-desc">' + escapeHtml(item.description) + '</span>';
+          html += '</div></div>';
+        });
+        html += '<p class="checklist-progress" id="checklist_progress_' + block.id + '">0 of ' + d.checklistItems.length + ' completed</p>';
+        html += '</div>';
+
+      } else if (block.type === 'card-sorting' && d.cardSortCategories && d.cardSortCards && d.cardSortCards.length) {
+        html += '<div class="card-sort-container" id="cardsort_' + block.id + '">';
+        html += '<h3 class="card-sort-title">Sort the Cards</h3>';
+        html += '<div class="card-sort-unsorted" id="cardsort_unsorted_' + block.id + '">';
+        html += '<p class="card-sort-label">Unsorted</p>';
+        html += '<div class="card-sort-pile">';
+        d.cardSortCards.forEach(function(card) {
+          html += '<div class="card-sort-card" data-card-id="' + card.id + '" data-correct="' + escapeHtml(card.correctCategory) + '" data-block-id="' + block.id + '">';
+          html += '<span class="card-sort-card-text">' + escapeHtml(card.text) + '</span>';
+          html += '<div class="card-sort-card-buttons">';
+          d.cardSortCategories.forEach(function(cat) {
+            if (cat.trim()) {
+              html += '<button class="card-sort-assign-btn" data-card-id="' + card.id + '" data-category="' + escapeHtml(cat) + '" data-block-id="' + block.id + '">' + escapeHtml(cat) + '</button>';
+            }
+          });
+          html += '</div></div>';
+        });
+        html += '</div></div>';
+        html += '<div class="card-sort-bins">';
+        d.cardSortCategories.forEach(function(cat) {
+          if (cat.trim()) {
+            html += '<div class="card-sort-bin" data-category="' + escapeHtml(cat) + '" data-block-id="' + block.id + '">';
+            html += '<p class="card-sort-bin-label">' + escapeHtml(cat) + '</p>';
+            html += '<div class="card-sort-bin-cards"></div>';
+            html += '</div>';
+          }
+        });
+        html += '</div>';
+        html += '<div class="card-sort-result" id="cardsort_result_' + block.id + '"></div>';
+        html += '<div class="card-sort-actions">';
+        html += '<button class="card-sort-check-btn" data-block-id="' + block.id + '">Check</button>';
+        html += '<button class="card-sort-reset-btn" data-block-id="' + block.id + '">Reset</button>';
+        html += '</div>';
+        html += '</div>';
       }
       // Close animation wrapper if needed
       if (anim && anim !== 'none') {
@@ -1244,6 +1305,165 @@ function generatePlayer(): string {
       if (!e.target.closest('.labeled-marker') && !e.target.closest('.labeled-tooltip')) {
         document.querySelectorAll('.labeled-tooltip.visible').forEach(function(t) { t.classList.remove('visible'); });
       }
+    });
+
+    // Scenario listeners
+    document.querySelectorAll('.scenario-container').forEach(function(el) {
+      var stepsData = el.getAttribute('data-steps');
+      if (!stepsData) return;
+      var steps = JSON.parse(stepsData);
+      var currentStep = 0;
+
+      function renderScenarioStep() {
+        var step = steps[currentStep];
+        if (!step) return;
+        var indicator = el.querySelector('.scenario-step-indicator');
+        var content = el.querySelector('.scenario-step-content');
+        var choicesEl = el.querySelector('.scenario-choices');
+        var feedbackEl = el.querySelector('.scenario-feedback');
+        var endEl = el.querySelector('.scenario-end');
+        indicator.textContent = 'Step ' + (currentStep + 1) + ' of ' + steps.length;
+        feedbackEl.style.display = 'none';
+        feedbackEl.textContent = '';
+
+        if (step.isEnd) {
+          content.style.display = 'none';
+          choicesEl.style.display = 'none';
+          endEl.style.display = '';
+          var endClass = step.endType === 'success' ? 'scenario-end-success' : step.endType === 'failure' ? 'scenario-end-failure' : 'scenario-end-neutral';
+          endEl.className = 'scenario-end ' + endClass;
+          var endLabel = step.endType === 'success' ? 'Success!' : step.endType === 'failure' ? 'Failed' : 'The End';
+          endEl.innerHTML = '<p class="scenario-end-label">' + endLabel + '</p>' +
+            '<p class="scenario-end-msg">' + escapeHtml(step.endMessage || step.text) + '</p>' +
+            '<button class="scenario-restart-btn">Restart</button>';
+          endEl.querySelector('.scenario-restart-btn').addEventListener('click', function() {
+            currentStep = 0;
+            renderScenarioStep();
+          });
+        } else {
+          content.style.display = '';
+          choicesEl.style.display = '';
+          endEl.style.display = 'none';
+          content.innerHTML = '<p>' + escapeHtml(step.text) + '</p>';
+          var choicesHtml = '';
+          (step.choices || []).forEach(function(choice) {
+            choicesHtml += '<button class="scenario-choice-btn" data-next="' + choice.nextStepId + '" data-feedback="' + escapeHtml(choice.feedback || '') + '">' + escapeHtml(choice.text) + '</button>';
+          });
+          choicesEl.innerHTML = choicesHtml;
+          choicesEl.querySelectorAll('.scenario-choice-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+              var fb = btn.getAttribute('data-feedback');
+              var nextId = btn.getAttribute('data-next');
+              var nextIdx = -1;
+              for (var si = 0; si < steps.length; si++) { if (steps[si].id === nextId) { nextIdx = si; break; } }
+              if (fb) {
+                feedbackEl.textContent = fb;
+                feedbackEl.style.display = '';
+                setTimeout(function() {
+                  feedbackEl.style.display = 'none';
+                  if (nextIdx >= 0) { currentStep = nextIdx; renderScenarioStep(); }
+                }, 2000);
+              } else {
+                if (nextIdx >= 0) { currentStep = nextIdx; renderScenarioStep(); }
+              }
+            });
+          });
+        }
+      }
+      renderScenarioStep();
+    });
+
+    // Checklist listeners
+    document.querySelectorAll('.checklist-item').forEach(function(item) {
+      item.addEventListener('click', function() {
+        item.classList.toggle('checked');
+        var blockId = item.getAttribute('data-block-id');
+        var container = document.getElementById('checklist_' + blockId);
+        if (!container) return;
+        var total = container.querySelectorAll('.checklist-item').length;
+        var checked = container.querySelectorAll('.checklist-item.checked').length;
+        var prog = document.getElementById('checklist_progress_' + blockId);
+        if (prog) prog.textContent = checked + ' of ' + total + ' completed';
+      });
+    });
+
+    // Card sorting listeners
+    document.querySelectorAll('.card-sort-assign-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var cardId = btn.getAttribute('data-card-id');
+        var category = btn.getAttribute('data-category');
+        var blockId = btn.getAttribute('data-block-id');
+        var card = document.querySelector('.card-sort-card[data-card-id="' + cardId + '"][data-block-id="' + blockId + '"]');
+        if (!card) return;
+        // Move card to the bin
+        var bin = document.querySelector('.card-sort-bin[data-category="' + category + '"][data-block-id="' + blockId + '"] .card-sort-bin-cards');
+        if (!bin) return;
+        // Create a bin card element
+        var binCard = document.createElement('div');
+        binCard.className = 'card-sort-bin-card';
+        binCard.setAttribute('data-card-id', cardId);
+        binCard.setAttribute('data-correct', card.getAttribute('data-correct'));
+        binCard.setAttribute('data-assigned', category);
+        binCard.innerHTML = '<span>' + card.querySelector('.card-sort-card-text').textContent + '</span>' +
+          '<button class="card-sort-remove-btn" data-card-id="' + cardId + '" data-block-id="' + blockId + '">&times;</button>';
+        bin.appendChild(binCard);
+        // Hide original card
+        card.style.display = 'none';
+        // Clear result
+        var result = document.getElementById('cardsort_result_' + blockId);
+        if (result) { result.textContent = ''; result.className = 'card-sort-result'; }
+        // Attach remove listener
+        binCard.querySelector('.card-sort-remove-btn').addEventListener('click', function(ev) {
+          ev.stopPropagation();
+          binCard.remove();
+          card.style.display = '';
+          if (result) { result.textContent = ''; result.className = 'card-sort-result'; }
+        });
+      });
+    });
+
+    document.querySelectorAll('.card-sort-check-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var blockId = btn.getAttribute('data-block-id');
+        var container = document.getElementById('cardsort_' + blockId);
+        if (!container) return;
+        var binCards = container.querySelectorAll('.card-sort-bin-card');
+        var allCards = container.querySelectorAll('.card-sort-card');
+        var unsortedVisible = 0;
+        allCards.forEach(function(c) { if (c.style.display !== 'none') unsortedVisible++; });
+        if (unsortedVisible > 0) return; // not all sorted
+        var allCorrect = true;
+        binCards.forEach(function(bc) {
+          var correct = bc.getAttribute('data-correct');
+          var assigned = bc.getAttribute('data-assigned');
+          if (correct === assigned) {
+            bc.classList.add('correct');
+            bc.classList.remove('incorrect');
+          } else {
+            bc.classList.add('incorrect');
+            bc.classList.remove('correct');
+            allCorrect = false;
+          }
+        });
+        var result = document.getElementById('cardsort_result_' + blockId);
+        if (result) {
+          result.textContent = allCorrect ? 'All cards are in the correct categories!' : 'Some cards are in the wrong category. Try again!';
+          result.className = 'card-sort-result ' + (allCorrect ? 'card-sort-correct' : 'card-sort-incorrect');
+        }
+      });
+    });
+
+    document.querySelectorAll('.card-sort-reset-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var blockId = btn.getAttribute('data-block-id');
+        var container = document.getElementById('cardsort_' + blockId);
+        if (!container) return;
+        container.querySelectorAll('.card-sort-bin-card').forEach(function(bc) { bc.remove(); });
+        container.querySelectorAll('.card-sort-card').forEach(function(c) { c.style.display = ''; });
+        var result = document.getElementById('cardsort_result_' + blockId);
+        if (result) { result.textContent = ''; result.className = 'card-sort-result'; }
+      });
     });
 
     // Drag-sort listeners
@@ -3891,6 +4111,359 @@ body {
   font-size: 0.75rem;
   color: #94a3b8;
   margin-top: 0.75rem;
+}
+
+/* ========= Scenario ========= */
+.scenario-container {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+.scenario-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+.scenario-desc {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 0.75rem;
+}
+.scenario-img {
+  width: 100%;
+  max-height: 12rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.scenario-step-indicator {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+}
+.scenario-step-content p {
+  font-size: 0.938rem;
+  color: #1e293b;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+.scenario-feedback {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  color: #1e40af;
+  margin-bottom: 1rem;
+}
+.scenario-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.scenario-choice-btn {
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 2px solid #e2e8f0;
+  background: #fff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.scenario-choice-btn:hover {
+  border-color: ${primary};
+  background: #eef2ff;
+}
+.scenario-end {
+  text-align: center;
+  padding: 2rem 1rem;
+  border-radius: 0.5rem;
+}
+.scenario-end-success { background: #ecfdf5; border: 1px solid #a7f3d0; }
+.scenario-end-failure { background: #fef2f2; border: 1px solid #fecaca; }
+.scenario-end-neutral { background: #f8fafc; border: 1px solid #e2e8f0; }
+.scenario-end-label {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.scenario-end-success .scenario-end-label { color: #059669; }
+.scenario-end-failure .scenario-end-label { color: #dc2626; }
+.scenario-end-neutral .scenario-end-label { color: #475569; }
+.scenario-end-msg {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-bottom: 1rem;
+}
+.scenario-restart-btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.scenario-restart-btn:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+/* ========= Checklist ========= */
+.checklist-container {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+.checklist-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.625rem 0;
+  cursor: pointer;
+  transition: all 0.15s;
+  border-bottom: 1px solid #f1f5f9;
+}
+.checklist-item:last-of-type {
+  border-bottom: none;
+}
+.checklist-item:hover {
+  background: #f9fafb;
+  margin: 0 -0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-radius: 0.375rem;
+}
+.checklist-checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 0.25rem;
+  border: 2px solid #d1d5db;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  margin-top: 0.125rem;
+}
+.checklist-check-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  display: none;
+  color: #fff;
+}
+.checklist-item.checked .checklist-checkbox {
+  background: #10b981;
+  border-color: #10b981;
+}
+.checklist-item.checked .checklist-check-icon {
+  display: block;
+}
+.checklist-item.checked .checklist-item-title {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+.checklist-item-content {
+  display: flex;
+  flex-direction: column;
+}
+.checklist-item-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1e293b;
+  transition: all 0.15s;
+}
+.checklist-item-desc {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.125rem;
+}
+.checklist-progress {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.75rem;
+}
+
+/* ========= Card Sorting ========= */
+.card-sort-container {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+.card-sort-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+.card-sort-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+}
+.card-sort-pile {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.card-sort-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+.card-sort-card-text {
+  font-size: 0.875rem;
+  color: #374151;
+  display: block;
+  margin-bottom: 0.375rem;
+}
+.card-sort-card-buttons {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+.card-sort-assign-btn {
+  font-size: 0.625rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  background: #eff6ff;
+  color: ${primary};
+  border: 1px solid #bfdbfe;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.card-sort-assign-btn:hover {
+  background: ${primary};
+  color: #fff;
+  border-color: ${primary};
+}
+.card-sort-bins {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.card-sort-bin {
+  border: 2px dashed #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  min-height: 5rem;
+}
+.card-sort-bin-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 0.5rem;
+}
+.card-sort-bin-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.card-sort-bin-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: ${primary};
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.75rem;
+}
+.card-sort-bin-card.correct {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #059669;
+}
+.card-sort-bin-card.incorrect {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+.card-sort-remove-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0 0.25rem;
+}
+.card-sort-remove-btn:hover {
+  color: #ef4444;
+}
+.card-sort-result {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.card-sort-correct {
+  background: #ecfdf5;
+  color: #059669;
+}
+.card-sort-incorrect {
+  background: #fef2f2;
+  color: #dc2626;
+}
+.card-sort-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.card-sort-check-btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: ${primary};
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+.card-sort-check-btn:hover {
+  filter: brightness(1.1);
+}
+.card-sort-reset-btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.card-sort-reset-btn:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
 }
 
 /* ========= Responsive / Mobile ========= */

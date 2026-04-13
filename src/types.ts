@@ -168,9 +168,48 @@ export interface ContentBlockData {
   // Labeled Graphic
   labeledImage?: string;
   labeledMarkers?: LabeledMarker[];
-  // Image layouts (image-top, image-bottom, image-left, image-right, two-images, three-images)
-  layoutText?: string; // HTML text paired with image
+  // Image layouts
+  layoutText?: string;
   layoutImages?: { url: string; caption: string; alt: string }[];
+  // Scenario (branching decisions)
+  scenarioTitle?: string;
+  scenarioDescription?: string;
+  scenarioImage?: string;
+  scenarioSteps?: ScenarioStep[];
+  // Checklist
+  checklistItems?: ChecklistItem[];
+  checklistTitle?: string;
+  // Card sorting
+  cardSortCategories?: string[];
+  cardSortCards?: SortCard[];
+}
+
+export interface ScenarioStep {
+  id: string;
+  text: string;
+  choices: ScenarioChoice[];
+  isEnd?: boolean;
+  endMessage?: string;
+  endType?: 'success' | 'failure' | 'neutral';
+}
+
+export interface ScenarioChoice {
+  id: string;
+  text: string;
+  nextStepId: string; // ID of the next ScenarioStep
+  feedback?: string;
+}
+
+export interface ChecklistItem {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export interface SortCard {
+  id: string;
+  text: string;
+  correctCategory: string; // must match one of cardSortCategories
 }
 
 export type ContentBlockType =
@@ -179,7 +218,8 @@ export type ContentBlockType =
   | 'callout' | 'table' | 'button' | 'audio' | 'embed'
   | 'gallery' | 'labeled-graphic'
   | 'image-top' | 'image-bottom' | 'image-left' | 'image-right'
-  | 'two-images' | 'three-images';
+  | 'two-images' | 'three-images'
+  | 'scenario' | 'checklist' | 'card-sorting';
 
 // --- Animation types ---
 export type EntranceAnimation = 'none' | 'fade-in' | 'slide-up' | 'slide-left' | 'slide-right' | 'zoom-in' | 'bounce-in';

@@ -771,6 +771,38 @@ export const useStore = create<AppState>()(
             layoutImages: [{ url: '', caption: 'Image 1', alt: '' }, { url: '', caption: 'Image 2', alt: '' }],
           } : type === 'three-images' ? {
             layoutImages: [{ url: '', caption: 'Image 1', alt: '' }, { url: '', caption: 'Image 2', alt: '' }, { url: '', caption: 'Image 3', alt: '' }],
+          } : type === 'scenario' ? (() => {
+            const endSuccess = generateId();
+            const endFail = generateId();
+            const step1 = generateId();
+            return {
+              scenarioTitle: 'Decision Scenario',
+              scenarioDescription: 'Make choices to navigate through the scenario.',
+              scenarioImage: '',
+              scenarioSteps: [
+                { id: step1, text: 'You encounter a situation. What do you do?', choices: [
+                  { id: generateId(), text: 'Option A — Take action', nextStepId: endSuccess, feedback: 'Good choice!' },
+                  { id: generateId(), text: 'Option B — Wait and see', nextStepId: endFail, feedback: 'Not the best approach.' },
+                ] },
+                { id: endSuccess, text: '', choices: [], isEnd: true, endMessage: 'Great job! You made the right decision.', endType: 'success' as const },
+                { id: endFail, text: '', choices: [], isEnd: true, endMessage: 'That could have gone better. Review the material and try again.', endType: 'failure' as const },
+              ],
+            };
+          })() : type === 'checklist' ? {
+            checklistTitle: 'Action Checklist',
+            checklistItems: [
+              { id: generateId(), title: 'Checklist Item 1', description: 'Description of the first item...' },
+              { id: generateId(), title: 'Checklist Item 2', description: 'Description of the second item...' },
+              { id: generateId(), title: 'Checklist Item 3', description: 'Description of the third item...' },
+            ],
+          } : type === 'card-sorting' ? {
+            cardSortCategories: ['Category 1', 'Category 2'],
+            cardSortCards: [
+              { id: generateId(), text: 'Card A', correctCategory: 'Category 1' },
+              { id: generateId(), text: 'Card B', correctCategory: 'Category 2' },
+              { id: generateId(), text: 'Card C', correctCategory: 'Category 1' },
+              { id: generateId(), text: 'Card D', correctCategory: 'Category 2' },
+            ],
           } : undefined,
         };
         set(state => ({

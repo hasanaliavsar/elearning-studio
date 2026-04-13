@@ -48,6 +48,17 @@ export function CoursePreview() {
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const [galleryLightbox, setGalleryLightbox] = useState<{ blockId: string; imageUrl: string } | null>(null);
 
+  // Scenario state: current step index per block
+  const [scenarioCurrentStep, setScenarioCurrentStep] = useState<Record<string, number>>({});
+  const [scenarioFeedback, setScenarioFeedback] = useState<Record<string, string | null>>({});
+
+  // Checklist state: checked item IDs per block
+  const [checkedItems, setCheckedItems] = useState<Record<string, Set<string>>>({});
+
+  // Card sorting state: card assignments per block (cardId -> category)
+  const [cardAssignments, setCardAssignments] = useState<Record<string, Record<string, string>>>({});
+  const [cardSortChecked, setCardSortChecked] = useState<Record<string, 'correct' | 'incorrect' | null>>({});
+
   // Text-to-speech narration state
   const [isNarrating, setIsNarrating] = useState(false);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -1405,6 +1416,274 @@ export function CoursePreview() {
                       ))}
                     </div>
                   )}
+
+                  {/* Scenario (branching decisions) */}
+                  {block.type === 'scenario' && block.data?.scenarioSteps && block.data.scenarioSteps.length > 0 && (() => {
+                    const steps = block.data!.scenarioSteps!;
+                    const currentIdx = scenarioCurrentStep[block.id] ?? 0;
+                    const step = steps[currentIdx];
+                    if (!step) return null;
+
+                    const feedback = scenarioFeedback[block.id] ?? null;
+
+                    return (
+                      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                        {block.data!.scenarioTitle && (
+                          <h3 className="text-lg font-bold text-gray-900 mb-1">{block.data!.scenarioTitle}</h3>
+                        )}
+                        {block.data!.scenarioDescription && currentIdx === 0 && (
+                          <p className="text-sm text-gray-500 mb-3">{block.data!.scenarioDescription}</p>
+                        )}
+                        {block.data!.scenarioImage && currentIdx === 0 && (
+                          <img src={block.data!.scenarioImage} alt="" className="w-full max-h-48 object-cover rounded-lg mb-3" />
+                        )}
+
+                        <p className="text-xs text-gray-400 mb-2">Step {currentIdx + 1} of {steps.length}</p>
+
+                        {step.isEnd ? (
+                          <div className={`rounded-lg p-5 text-center ${
+                            step.endType === 'success' ? 'bg-emerald-50 border border-emerald-200' :
+                            step.endType === 'failure' ? 'bg-red-50 border border-red-200' :
+                            'bg-gray-50 border border-gray-200'
+                          }`}>
+                            <p className={`text-lg font-semibold mb-2 ${
+                              step.endType === 'success' ? 'text-emerald-700' :
+                              step.endType === 'failure' ? 'text-red-700' :
+                              'text-gray-700'
+                            }`}>
+                              {step.endType === 'success' ? 'Success!' : step.endType === 'failure' ? 'Failed' : 'The End'}
+                            </p>
+                            <p className="text-sm text-gray-600">{step.endMessage || step.text}</p>
+                            <button
+                              onClick={() => {
+                                setScenarioCurrentStep(prev => ({ ...prev, [block.id]: 0 }));
+                                setScenarioFeedback(prev => ({ ...prev, [block.id]: null }));
+                              }}
+                              className="mt-4 px-4 py-2 rounded-lg text-sm font-medium bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                            >
+                              Restart
+                            </button>
+                          </div>
+                        ) : (
+                          <div>
+                            <p className="text-base text-gray-800 mb-4">{step.text}</p>
+
+                            {feedback && (
+                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 text-sm text-blue-800">
+                                {feedback}
+                              </div>
+                            )}
+
+                            <div className="space-y-2">
+                              {step.choices.map(choice => (
+                                <button
+                                  key={choice.id}
+                                  onClick={() => {
+                                    if (choice.feedback) {
+                                      setScenarioFeedback(prev => ({ ...prev, [block.id]: choice.feedback! }));
+                                      setTimeout(() => {
+                                        setScenarioFeedback(prev => ({ ...prev, [block.id]: null }));
+                                        const nextIdx = steps.findIndex(s => s.id === choice.nextStepId);
+                                        if (nextIdx >= 0) {
+                                          setScenarioCurrentStep(prev => ({ ...prev, [block.id]: nextIdx }));
+                                        }
+                                      }, 2000);
+                                    } else {
+                                      const nextIdx = steps.findIndex(s => s.id === choice.nextStepId);
+                                      if (nextIdx >= 0) {
+                                        setScenarioCurrentStep(prev => ({ ...prev, [block.id]: nextIdx }));
+                                      }
+                                    }
+                                  }}
+                                  className="w-full text-left px-4 py-3 rounded-lg border-2 border-gray-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all text-sm font-medium text-gray-700"
+                                >
+                                  {choice.text}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
+
+                  {/* Checklist */}
+                  {block.type === 'checklist' && block.data?.checklistItems && block.data.checklistItems.length > 0 && (() => {
+                    const items = block.data!.checklistItems!;
+                    const checked = checkedItems[block.id] ?? new Set<string>();
+                    const toggleItem = (itemId: string) => {
+                      setCheckedItems(prev => {
+                        const set = new Set(prev[block.id] || []);
+                        if (set.has(itemId)) set.delete(itemId); else set.add(itemId);
+                        return { ...prev, [block.id]: set };
+                      });
+                    };
+
+                    return (
+                      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                        {block.data!.checklistTitle && (
+                          <h3 className="text-lg font-bold text-gray-900 mb-4">{block.data!.checklistTitle}</h3>
+                        )}
+                        <div className="space-y-3">
+                          {items.map(item => {
+                            const isChecked = checked.has(item.id);
+                            return (
+                              <div
+                                key={item.id}
+                                className="flex items-start gap-3 cursor-pointer group"
+                                onClick={() => toggleItem(item.id)}
+                              >
+                                <div className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+                                  isChecked ? 'bg-emerald-500 border-emerald-500' : 'border-gray-300 group-hover:border-gray-400'
+                                }`}>
+                                  {isChecked && (
+                                    <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                  )}
+                                </div>
+                                <div>
+                                  <p className={`text-sm font-medium transition-all ${isChecked ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
+                                    {item.title}
+                                  </p>
+                                  {item.description && (
+                                    <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <p className="text-xs text-gray-400 mt-4">
+                          {checked.size} of {items.length} completed
+                        </p>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Card Sorting */}
+                  {block.type === 'card-sorting' && block.data?.cardSortCategories && block.data?.cardSortCards && (() => {
+                    const categories = block.data!.cardSortCategories!;
+                    const cards = block.data!.cardSortCards!;
+                    const assignments = cardAssignments[block.id] ?? {};
+                    const checkResult = cardSortChecked[block.id] ?? null;
+
+                    const unsorted = cards.filter(c => !assignments[c.id]);
+
+                    const assignCard = (cardId: string, category: string) => {
+                      setCardAssignments(prev => ({
+                        ...prev,
+                        [block.id]: { ...(prev[block.id] || {}), [cardId]: category },
+                      }));
+                      setCardSortChecked(prev => ({ ...prev, [block.id]: null }));
+                    };
+
+                    const unassignCard = (cardId: string) => {
+                      setCardAssignments(prev => {
+                        const updated = { ...(prev[block.id] || {}) };
+                        delete updated[cardId];
+                        return { ...prev, [block.id]: updated };
+                      });
+                      setCardSortChecked(prev => ({ ...prev, [block.id]: null }));
+                    };
+
+                    const checkAnswers = () => {
+                      const allCorrect = cards.every(c => assignments[c.id] === c.correctCategory);
+                      setCardSortChecked(prev => ({ ...prev, [block.id]: allCorrect ? 'correct' : 'incorrect' }));
+                    };
+
+                    const resetSort = () => {
+                      setCardAssignments(prev => ({ ...prev, [block.id]: {} }));
+                      setCardSortChecked(prev => ({ ...prev, [block.id]: null }));
+                    };
+
+                    return (
+                      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                        <h3 className="text-lg font-bold text-gray-900 mb-4">Sort the Cards</h3>
+
+                        {/* Unsorted pile */}
+                        {unsorted.length > 0 && (
+                          <div className="mb-4">
+                            <p className="text-xs font-semibold text-gray-400 uppercase mb-2">Unsorted ({unsorted.length})</p>
+                            <div className="flex flex-wrap gap-2">
+                              {unsorted.map(card => (
+                                <div key={card.id} className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700">
+                                  <span>{card.text}</span>
+                                  <div className="flex gap-1 mt-1">
+                                    {categories.filter(c => c.trim()).map((cat, ci) => (
+                                      <button
+                                        key={ci}
+                                        onClick={() => assignCard(card.id, cat)}
+                                        className="text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200"
+                                      >
+                                        {cat}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Category bins */}
+                        <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(categories.length, 3)}, 1fr)` }}>
+                          {categories.filter(c => c.trim()).map((cat, ci) => {
+                            const catCards = cards.filter(c => assignments[c.id] === cat);
+                            return (
+                              <div key={ci} className="border-2 border-dashed border-gray-200 rounded-lg p-3 min-h-[80px]">
+                                <p className="text-xs font-bold text-gray-600 mb-2">{cat}</p>
+                                {catCards.length === 0 && (
+                                  <p className="text-[10px] text-gray-300 italic">Drop cards here</p>
+                                )}
+                                {catCards.map(card => (
+                                  <div key={card.id} className={`rounded px-2 py-1.5 text-xs mb-1 flex items-center justify-between ${
+                                    checkResult === 'correct' ? 'bg-emerald-50 border border-emerald-200 text-emerald-700' :
+                                    checkResult === 'incorrect' && card.correctCategory !== cat ? 'bg-red-50 border border-red-200 text-red-700' :
+                                    checkResult === 'incorrect' && card.correctCategory === cat ? 'bg-emerald-50 border border-emerald-200 text-emerald-700' :
+                                    'bg-blue-50 border border-blue-200 text-blue-700'
+                                  }`}>
+                                    <span>{card.text}</span>
+                                    {!checkResult && (
+                                      <button onClick={() => unassignCard(card.id)} className="text-gray-400 hover:text-red-500 ml-1 text-[10px]">
+                                        &times;
+                                      </button>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Result feedback */}
+                        {checkResult && (
+                          <div className={`mt-3 text-sm font-medium text-center p-2 rounded-lg ${
+                            checkResult === 'correct' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
+                          }`}>
+                            {checkResult === 'correct' ? 'All cards are in the correct categories!' : 'Some cards are in the wrong category. Try again!'}
+                          </div>
+                        )}
+
+                        {/* Buttons */}
+                        <div className="flex gap-2 mt-4">
+                          <button
+                            onClick={checkAnswers}
+                            disabled={unsorted.length > 0}
+                            className="px-4 py-2 rounded-lg text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            Check
+                          </button>
+                          <button
+                            onClick={resetSort}
+                            className="px-4 py-2 rounded-lg text-sm font-medium bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                          >
+                            Reset
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
                 );
               })}
