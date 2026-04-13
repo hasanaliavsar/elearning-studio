@@ -5,7 +5,7 @@ import {
   ArrowLeft, ArrowRight, X, ChevronLeft, ChevronRight,
   CheckCircle2, XCircle, Award, RotateCcw, Home,
   ChevronDown, ChevronUp, Info, AlertTriangle, Lightbulb, CheckCircle,
-  ExternalLink, Volume2, GripVertical, Download, Star, MapPin,
+  ExternalLink, Volume2, VolumeX, GripVertical, Download, Star, MapPin,
   PanelLeftClose, PanelLeftOpen, FileText, Trophy, Circle
 } from 'lucide-react';
 import { CourseLandingPage } from './CourseLandingPage';
@@ -48,6 +48,10 @@ export function CoursePreview() {
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const [galleryLightbox, setGalleryLightbox] = useState<{ blockId: string; imageUrl: string } | null>(null);
 
+  // Text-to-speech narration state
+  const [isNarrating, setIsNarrating] = useState(false);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+
   // LMS sidebar state
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [visitedSlides, setVisitedSlides] = useState<Set<number>>(new Set([0]));
@@ -72,6 +76,49 @@ export function CoursePreview() {
   const setActiveTab = useCallback((blockId: string, tabId: string) => {
     setActiveTabs(prev => ({ ...prev, [blockId]: tabId }));
   }, []);
+
+  // Extract plain text from a slide for TTS narration
+  const extractSlideText = useCallback((slide: Slide): string => {
+    const parts: string[] = [];
+    if (slide.title) parts.push(slide.title);
+    if (slide.learningObjectives && slide.learningObjectives.length > 0) {
+      parts.push('Learning objectives.');
+      slide.learningObjectives.forEach(obj => {
+        if (obj.text) parts.push(obj.text);
+      });
+    }
+    slide.content.forEach(block => {
+      if (block.content) {
+        // Strip HTML tags to get plain text
+        const text = block.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+        if (text) parts.push(text);
+      }
+    });
+    slide.questions.forEach(q => {
+      if (q.text) parts.push(q.text);
+    });
+    return parts.join('. ');
+  }, []);
+
+  const stopNarration = useCallback(() => {
+    window.speechSynthesis.cancel();
+    utteranceRef.current = null;
+    setIsNarrating(false);
+  }, []);
+
+  const startNarration = useCallback((slide: Slide, lang: string) => {
+    window.speechSynthesis.cancel();
+    const text = extractSlideText(slide);
+    if (!text) return;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.95;
+    utterance.pitch = 1.0;
+    utterance.lang = lang || 'en';
+    utterance.onend = () => setIsNarrating(false);
+    utteranceRef.current = utterance;
+    window.speechSynthesis.speak(utterance);
+    setIsNarrating(true);
+  }, [extractSlideText]);
 
   const flatSlides = useMemo<FlatSlide[]>(() => {
     if (!course) return [];
@@ -223,6 +270,7 @@ export function CoursePreview() {
   const passed = scorePercent >= (course.settings.passingScore || 70);
 
   const handleClose = () => {
+    stopNarration();
     setViewMode('editor');
     setPreviewSlideIndex(0);
     setShowLanding(course.settings.landingPage.enabled);
@@ -273,6 +321,20 @@ export function CoursePreview() {
       setExpandedModules(prev => new Set([...prev, currentFlat.moduleIdx]));
     }
   }, [previewSlideIndex]);
+
+  // Auto-narrate on slide change (if narration was active)
+  useEffect(() => {
+    if (isNarrating && currentSlide) {
+      startNarration(currentSlide, course.language || 'en');
+    }
+  }, [previewSlideIndex]);
+
+  // Cleanup speech synthesis on unmount
+  useEffect(() => {
+    return () => {
+      window.speechSynthesis.cancel();
+    };
+  }, []);
 
   // Scroll-reveal: Intersection Observer for content block animations
   // Uses a MutationObserver to catch refs that mount after the effect runs
@@ -564,6 +626,10 @@ export function CoursePreview() {
         .preview-slide-right-exit { animation: slide-right-exit 0.35s ease-in both; }
         .preview-slide-up-exit { animation: slide-up-exit 0.35s ease-in both; }
         .preview-slide-zoom-exit { animation: slide-zoom-exit 0.35s ease-in both; }
+
+        /* Narration pulse animation */
+        @keyframes narration-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        .narration-pulse { animation: narration-pulse 1.5s ease-in-out infinite; }
       `}</style>
 
       {/* Top bar */}
@@ -589,6 +655,24 @@ export function CoursePreview() {
           <span className="text-gray-500 text-sm">
             Page {previewSlideIndex + 1} of {flatSlides.length}
           </span>
+          <button
+            onClick={() => {
+              if (isNarrating) {
+                stopNarration();
+              } else {
+                startNarration(currentSlide, course.language || 'en');
+              }
+            }}
+            className={`p-1.5 rounded-lg transition-colors ${
+              isNarrating
+                ? 'text-white narration-pulse'
+                : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'
+            }`}
+            style={isNarrating ? { backgroundColor: primaryColor } : undefined}
+            title={isNarrating ? 'Stop narration' : 'Read aloud'}
+          >
+            {isNarrating ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          </button>
         </div>
       </header>
 

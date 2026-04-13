@@ -381,6 +381,80 @@ function generatePlayer(): string {
   var startTime = new Date();
 
   var showingLanding = false;
+  var isNarrating = false;
+
+  function extractSlideText(slide) {
+    var parts = [];
+    if (slide.title) parts.push(slide.title);
+    if (slide.learningObjectives && slide.learningObjectives.length > 0) {
+      parts.push('Learning objectives.');
+      slide.learningObjectives.forEach(function(obj) {
+        if (obj.text) parts.push(obj.text);
+      });
+    }
+    if (slide.content) {
+      slide.content.forEach(function(block) {
+        if (block.content) {
+          var text = block.content.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim();
+          if (text) parts.push(text);
+        }
+      });
+    }
+    if (slide.questions) {
+      slide.questions.forEach(function(q) {
+        if (q.text) parts.push(q.text);
+      });
+    }
+    return parts.join('. ');
+  }
+
+  function startNarration() {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    var slide = COURSE_DATA.slides[currentSlide];
+    if (!slide) return;
+    var text = extractSlideText(slide);
+    if (!text) return;
+    var utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.95;
+    utterance.pitch = 1.0;
+    utterance.lang = COURSE_DATA.language || 'en';
+    utterance.onend = function() {
+      isNarrating = false;
+      updateNarrationButton();
+    };
+    window.speechSynthesis.speak(utterance);
+    isNarrating = true;
+    updateNarrationButton();
+  }
+
+  function stopNarration() {
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    isNarrating = false;
+    updateNarrationButton();
+  }
+
+  function updateNarrationButton() {
+    var btn = document.getElementById('btn-narrate');
+    if (!btn) return;
+    if (isNarrating) {
+      btn.classList.add('narrating');
+      btn.title = 'Stop narration';
+      btn.innerHTML = '\\u{1F507}';
+    } else {
+      btn.classList.remove('narrating');
+      btn.title = 'Read aloud';
+      btn.innerHTML = '\\u{1F50A}';
+    }
+  }
+
+  window._toggleNarration = function() {
+    if (isNarrating) {
+      stopNarration();
+    } else {
+      startNarration();
+    }
+  };
 
   function goToSlide(index) {
     currentSlide = index;
@@ -398,6 +472,7 @@ function generatePlayer(): string {
     updateProgress();
     updateNavigation();
     saveState();
+    if (isNarrating) startNarration();
   }
 
   function getModuleFirstSlideIndex(moduleIdx) {
@@ -741,8 +816,9 @@ function generatePlayer(): string {
     }
   });
 
-  // Save state before unload
+  // Save state and stop narration before unload
   window.addEventListener('beforeunload', function() {
+    stopNarration();
     var elapsed = new Date() - startTime;
     ScormAPI.setSessionTime(elapsed);
     saveState();
@@ -1750,7 +1826,9 @@ function generatePlayer(): string {
       updateProgress();
       updateNavigation();
       saveState();
+      if (isNarrating) startNarration();
     } else {
+      stopNarration();
       finishCourse();
     }
   };
@@ -1763,6 +1841,7 @@ function generatePlayer(): string {
       updateProgress();
       updateNavigation();
       saveState();
+      if (isNarrating) startNarration();
     }
   };
 
@@ -1949,6 +2028,32 @@ body {
   font-size: 0.813rem;
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+.btn-narrate {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: #6b7280;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.btn-narrate:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+.btn-narrate.narrating {
+  background: ${primary};
+  color: #fff;
+  animation: narration-pulse 1.5s ease-in-out infinite;
+}
+@keyframes narration-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
 /* ========= Progress Bar ========= */
@@ -3769,6 +3874,7 @@ function generateIndexHtml(course: Course): string {
       <h1>${escapeHtml(course.title)}</h1>
     </div>
     <span id="slide-counter">Page 1 of 1</span>
+    <button id="btn-narrate" class="btn-narrate" onclick="window._toggleNarration()" title="Read aloud">&#x1F50A;</button>
   </div>
   <div id="progress-container">
     <div id="progress-bar"></div>
