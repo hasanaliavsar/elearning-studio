@@ -7,6 +7,7 @@ import {
   ChevronDown, ChevronUp, Info, AlertTriangle, Lightbulb, CheckCircle,
   ExternalLink, Volume2, GripVertical, Download
 } from 'lucide-react';
+import { CourseLandingPage } from './CourseLandingPage';
 
 interface FlatSlide {
   slide: Slide;
@@ -23,6 +24,9 @@ export function CoursePreview() {
   const previewSlideIndex = useStore(s => s.previewSlideIndex);
   const setPreviewSlideIndex = useStore(s => s.setPreviewSlideIndex);
 
+  const [showLanding, setShowLanding] = useState(
+    course ? course.settings.landingPage.enabled : false
+  );
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [submittedQuizzes, setSubmittedQuizzes] = useState<Set<string>>(new Set());
   const [showResults, setShowResults] = useState(false);
@@ -170,6 +174,7 @@ export function CoursePreview() {
   const handleClose = () => {
     setViewMode('editor');
     setPreviewSlideIndex(0);
+    setShowLanding(course.settings.landingPage.enabled);
   };
 
   const handleRestart = () => {
@@ -177,6 +182,18 @@ export function CoursePreview() {
     setQuizAnswers({});
     setSubmittedQuizzes(new Set());
     setShowResults(false);
+  };
+
+  const handleJumpToModule = (moduleIdx: number) => {
+    // Calculate the flat slide index for the first slide of that module
+    let targetIndex = 0;
+    for (let mi = 0; mi < course.modules.length && mi < moduleIdx; mi++) {
+      for (const lesson of course.modules[mi]!.lessons) {
+        targetIndex += lesson.slides.length;
+      }
+    }
+    setPreviewSlideIndex(targetIndex);
+    setShowLanding(false);
   };
 
   // Keyboard navigation
@@ -244,6 +261,30 @@ export function CoursePreview() {
   };
 
   const primaryColor = course.settings.primaryColor || '#4f46e5';
+
+  // Landing page screen
+  if (showLanding && course.settings.landingPage.enabled) {
+    return (
+      <div className="h-full flex flex-col bg-gray-900">
+        <header className="flex items-center justify-between px-6 py-3 bg-gray-800 flex-shrink-0">
+          <div className="flex items-center gap-4">
+            <button onClick={handleClose} className="text-gray-400 hover:text-white transition-colors">
+              <X className="w-5 h-5" />
+            </button>
+            <span className="text-white font-medium text-sm">{course.title}</span>
+          </div>
+          <span className="text-gray-400 text-sm">Landing Page</span>
+        </header>
+        <div className="flex-1 overflow-auto">
+          <CourseLandingPage
+            course={course}
+            onStartCourse={() => { setShowLanding(false); setPreviewSlideIndex(0); }}
+            onJumpToModule={handleJumpToModule}
+          />
+        </div>
+      </div>
+    );
+  }
 
   // Results screen
   if (showResults) {
@@ -402,6 +443,15 @@ export function CoursePreview() {
           <button onClick={handleClose} className="text-gray-400 hover:text-white transition-colors">
             <X className="w-5 h-5" />
           </button>
+          {course.settings.landingPage.enabled && (
+            <button
+              onClick={() => setShowLanding(true)}
+              className="text-gray-400 hover:text-white transition-colors"
+              title="Back to landing page"
+            >
+              <Home className="w-5 h-5" />
+            </button>
+          )}
           <div>
             <span className="text-white font-medium text-sm">{course.title}</span>
             <span className="text-gray-500 text-xs ml-3">

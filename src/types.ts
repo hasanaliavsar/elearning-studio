@@ -177,6 +177,21 @@ export interface Module {
   description: string;
   lessons: Lesson[];
   order: number;
+  thumbnail: string;
+}
+
+export interface LandingPageSettings {
+  enabled: boolean;
+  backgroundColor: string;
+  backgroundGradient: string;
+  textColor: string;
+  showModuleList: boolean;
+  showProgress: boolean;
+  showCompanyLogo: boolean;
+  companyLogoUrl: string;
+  companyName: string;
+  tagline: string;
+  heroImageUrl: string;
 }
 
 export interface CourseSettings {
@@ -200,6 +215,7 @@ export interface CourseSettings {
   certificateOrg: string;
   enableScrollReveal: boolean;
   enableKeyboardNav: boolean;
+  landingPage: LandingPageSettings;
 }
 
 export interface Course {

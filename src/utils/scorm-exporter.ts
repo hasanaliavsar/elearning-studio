@@ -339,6 +339,17 @@ function generateCourseData(course: Course): string {
     version: course.version,
     language: course.language,
     settings: course.settings,
+    modules: course.modules.map(mod => ({
+      id: mod.id,
+      title: mod.title,
+      description: mod.description,
+      thumbnail: mod.thumbnail,
+      lessonCount: mod.lessons.length,
+      slideCount: mod.lessons.reduce((t, l) => t + l.slides.length, 0),
+      duration: mod.lessons.reduce(
+        (t, l) => t + l.slides.reduce((st, s) => st + s.duration, 0), 0
+      ),
+    })),
     slides: slides.map(s => ({
       title: s.slide.title,
       layout: s.slide.layout,
@@ -368,6 +379,219 @@ function generatePlayer(): string {
   var visitedSlides = new Set();
   var startTime = new Date();
 
+  var showingLanding = false;
+
+  function goToSlide(index) {
+    currentSlide = index;
+    showingLanding = false;
+    var slideWrapper = document.getElementById('slide-wrapper');
+    var slideContent = document.getElementById('slide-content');
+    var nav = document.getElementById('navigation');
+    var progress = document.getElementById('progress-container');
+    var header = document.getElementById('header');
+    if (slideWrapper) slideWrapper.style.display = '';
+    if (slideContent) slideContent.style.display = '';
+    if (nav) nav.style.display = '';
+    if (progress) progress.style.display = '';
+    if (header) header.style.display = '';
+    var landingEl = document.getElementById('landing-page');
+    if (landingEl) landingEl.style.display = 'none';
+    renderSlide();
+    updateProgress();
+    updateNavigation();
+    saveState();
+  }
+
+  function getModuleFirstSlideIndex(moduleIdx) {
+    var idx = 0;
+    for (var i = 0; i < moduleIdx && i < COURSE_DATA.modules.length; i++) {
+      idx += COURSE_DATA.modules[i].slideCount;
+    }
+    return idx;
+  }
+
+  function formatDuration(seconds) {
+    if (seconds < 60) return seconds + 's';
+    var minutes = Math.round(seconds / 60);
+    if (minutes < 60) return minutes + ' min';
+    var hours = Math.floor(minutes / 60);
+    var remaining = minutes % 60;
+    return remaining > 0 ? hours + 'h ' + remaining + 'm' : hours + 'h';
+  }
+
+  function renderLandingPage() {
+    showingLanding = true;
+    var lp = COURSE_DATA.settings.landingPage;
+    var primaryColor = COURSE_DATA.settings.primaryColor || '#6366f1';
+    var textColor = lp.textColor || '#ffffff';
+
+    // Hide the normal player UI
+    var slideWrapper = document.getElementById('slide-wrapper');
+    var slideContent = document.getElementById('slide-content');
+    var nav = document.getElementById('navigation');
+    var progress = document.getElementById('progress-container');
+    var header = document.getElementById('header');
+    if (slideWrapper) slideWrapper.style.display = 'none';
+    if (slideContent) slideContent.style.display = 'none';
+    if (nav) nav.style.display = 'none';
+    if (progress) progress.style.display = 'none';
+    if (header) header.style.display = 'none';
+
+    // Create or show landing page element
+    var landingEl = document.getElementById('landing-page');
+    if (!landingEl) {
+      landingEl = document.createElement('div');
+      landingEl.id = 'landing-page';
+      document.body.appendChild(landingEl);
+    }
+    landingEl.style.display = '';
+
+    var totalSlideCount = COURSE_DATA.slides.length;
+    var totalQuestionCount = 0;
+    COURSE_DATA.slides.forEach(function(s) {
+      if (s.questions) totalQuestionCount += s.questions.length;
+    });
+
+    // Left panel background style
+    var leftStyle = '';
+    if (lp.heroImageUrl) {
+      leftStyle = 'background-image:url(' + lp.heroImageUrl + ');background-size:cover;background-position:center;';
+    } else if (lp.backgroundGradient) {
+      leftStyle = 'background:' + lp.backgroundGradient + ';';
+    } else {
+      leftStyle = 'background-color:' + (lp.backgroundColor || '#1e1b4b') + ';';
+    }
+
+    var placeholderColors = ['#6366f1','#8b5cf6','#ec4899','#f59e0b','#10b981','#3b82f6','#ef4444','#14b8a6'];
+
+    var html = '<div class="landing-page" style="' + leftStyle + '">';
+
+    // === LEFT HERO PANEL ===
+    html += '<div class="landing-hero">';
+    if (lp.heroImageUrl) {
+      html += '<div class="landing-hero-overlay" style="background-color:' + (lp.backgroundColor || '#1e1b4b') + ';opacity:0.82;"></div>';
+    }
+    html += '<div class="landing-hero-inner">';
+
+    // Logo
+    if (COURSE_DATA.settings.logoUrl) {
+      html += '<div class="landing-logo"><img src="' + COURSE_DATA.settings.logoUrl + '" alt="Logo" class="landing-logo-img"/></div>';
+    }
+
+    // Center content
+    html += '<div class="landing-center">';
+    html += '<h1 class="landing-title" style="color:' + textColor + ';">' + escapeHtml(COURSE_DATA.title) + '</h1>';
+
+    if (lp.tagline) {
+      html += '<p class="landing-tagline" style="color:' + textColor + ';">' + escapeHtml(lp.tagline) + '</p>';
+    } else if (COURSE_DATA.description) {
+      html += '<p class="landing-tagline" style="color:' + textColor + ';opacity:0.7;">' + escapeHtml(COURSE_DATA.description) + '</p>';
+    }
+
+    // Stats row
+    html += '<div class="landing-stats" style="color:' + textColor + ';">';
+    html += '<span>' + COURSE_DATA.modules.length + ' module' + (COURSE_DATA.modules.length !== 1 ? 's' : '') + '</span>';
+    html += '<span>' + totalSlideCount + ' slide' + (totalSlideCount !== 1 ? 's' : '') + '</span>';
+    if (totalQuestionCount > 0) {
+      html += '<span>' + totalQuestionCount + ' question' + (totalQuestionCount !== 1 ? 's' : '') + '</span>';
+    }
+    html += '</div>';
+
+    // Progress bar
+    if (lp.showProgress) {
+      var completionPercent = totalSlideCount > 0 ? Math.round((visitedSlides.size / totalSlideCount) * 100) : 0;
+      html += '<div class="landing-progress">';
+      html += '<span class="landing-progress-label" style="color:' + textColor + ';">You completed ' + completionPercent + '%</span>';
+      html += '<div class="landing-progress-track" style="background:' + textColor + '20;">';
+      html += '<div class="landing-progress-fill" style="width:' + completionPercent + '%;background:' + primaryColor + ';"></div>';
+      html += '</div></div>';
+    }
+
+    // Start button
+    html += '<button class="landing-start-btn" style="background:' + primaryColor + ';" onclick="window._startCourse()">&#9654; Start Course</button>';
+    html += '</div>';
+
+    // Company branding
+    if ((lp.showCompanyLogo && lp.companyLogoUrl) || lp.companyName) {
+      html += '<div class="landing-company">';
+      if (lp.showCompanyLogo && lp.companyLogoUrl) {
+        html += '<img src="' + lp.companyLogoUrl + '" alt="Company" class="landing-company-logo"/>';
+      }
+      if (lp.companyName) {
+        html += '<span class="landing-company-name" style="color:' + textColor + ';">' + escapeHtml(lp.companyName) + '</span>';
+      }
+      html += '</div>';
+    }
+
+    html += '</div>';
+    html += '</div>';
+
+    // === RIGHT MODULE LIST PANEL ===
+    html += '<div class="landing-modules">';
+    html += '<div class="landing-modules-header">';
+    html += '<h2>Course Content</h2>';
+    html += '<p>' + COURSE_DATA.modules.length + ' module' + (COURSE_DATA.modules.length !== 1 ? 's' : '') +
+      ' \\u00b7 ' + totalSlideCount + ' slide' + (totalSlideCount !== 1 ? 's' : '') +
+      (totalQuestionCount > 0 ? ' \\u00b7 ' + totalQuestionCount + ' question' + (totalQuestionCount !== 1 ? 's' : '') : '') +
+      '</p>';
+    html += '</div>';
+
+    html += '<div class="landing-modules-list">';
+    COURSE_DATA.modules.forEach(function(mod, idx) {
+      var color = placeholderColors[idx % placeholderColors.length];
+      html += '<button class="module-card" onclick="window._jumpToModule(' + idx + ')">';
+      html += '<div class="module-card-inner">';
+
+      // Thumbnail
+      html += '<div class="module-card-thumb">';
+      if (mod.thumbnail) {
+        html += '<img src="' + escapeHtml(mod.thumbnail) + '" alt="' + escapeHtml(mod.title) + '" class="module-card-thumb-img"/>';
+      } else {
+        html += '<div class="module-card-thumb-placeholder" style="background:' + color + ';">&#x1F4D6;</div>';
+      }
+      html += '<div class="module-card-badge">' + String(idx + 1).padStart(2, '0') + '</div>';
+      html += '</div>';
+
+      // Content
+      html += '<div class="module-card-content">';
+      html += '<h3 class="module-card-title">' + escapeHtml(mod.title) + '</h3>';
+      if (mod.description) {
+        html += '<p class="module-card-desc">' + escapeHtml(mod.description) + '</p>';
+      }
+      html += '<div class="module-card-meta">';
+      html += '<span>' + mod.lessonCount + ' lesson' + (mod.lessonCount !== 1 ? 's' : '') + '</span>';
+      html += '<span>' + mod.slideCount + ' slide' + (mod.slideCount !== 1 ? 's' : '') + '</span>';
+      if (mod.duration > 0) {
+        html += '<span>' + formatDuration(mod.duration) + '</span>';
+      }
+      html += '</div>';
+      html += '</div>';
+
+      html += '</div>';
+      html += '</button>';
+    });
+    html += '</div>';
+
+    html += '<div class="landing-footer">Powered by eLearning Studio</div>';
+    html += '</div>';
+
+    landingEl.innerHTML = html;
+  }
+
+  window._startCourse = function() {
+    goToSlide(0);
+  };
+
+  window._jumpToModule = function(moduleIdx) {
+    goToSlide(getModuleFirstSlideIndex(moduleIdx));
+  };
+
+  window._showLanding = function() {
+    if (COURSE_DATA.settings.landingPage && COURSE_DATA.settings.landingPage.enabled) {
+      renderLandingPage();
+    }
+  };
+
   // Initialize
   window.addEventListener('load', function() {
     ScormAPI.init();
@@ -389,13 +613,19 @@ function generatePlayer(): string {
       } catch(e) {}
     }
 
-    renderSlide();
-    updateProgress();
-    updateNavigation();
+    // Show landing page first if enabled
+    if (COURSE_DATA.settings.landingPage && COURSE_DATA.settings.landingPage.enabled) {
+      renderLandingPage();
+    } else {
+      renderSlide();
+      updateProgress();
+      updateNavigation();
+    }
 
     // Keyboard navigation
     if (COURSE_DATA.settings.enableKeyboardNav !== false) {
       document.addEventListener('keydown', function(e) {
+        if (showingLanding) return;
         if (e.key === 'ArrowRight') { window.goNext(); }
         else if (e.key === 'ArrowLeft') { window.goPrev(); }
       });
@@ -1985,6 +2215,264 @@ body {
   filter: brightness(1.1);
 }
 
+/* ========= Landing Page ========= */
+#landing-page {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+}
+.landing-page {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  width: 100%;
+}
+.landing-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 40%;
+  min-height: 100vh;
+  padding: 2.5rem 3rem;
+  overflow: hidden;
+}
+.landing-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.landing-hero-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+.landing-logo {
+  margin-bottom: 1.5rem;
+}
+.landing-logo-img {
+  height: 2.5rem;
+  width: auto;
+  object-fit: contain;
+}
+.landing-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 0;
+}
+.landing-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+.landing-tagline {
+  font-size: 1.125rem;
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+.landing-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.875rem;
+  opacity: 0.75;
+  margin-bottom: 2rem;
+}
+.landing-progress {
+  margin-bottom: 2rem;
+}
+.landing-progress-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.landing-progress-track {
+  width: 100%;
+  height: 6px;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.landing-progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.5s;
+}
+.landing-start-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: all 0.2s;
+  width: fit-content;
+}
+.landing-start-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+.landing-company {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.landing-company-logo {
+  height: 2rem;
+  width: auto;
+  object-fit: contain;
+}
+.landing-company-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  opacity: 0.6;
+}
+
+/* Right panel: module list */
+.landing-modules {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  background: #f8fafc;
+}
+.landing-modules-header {
+  padding: 2.5rem 3rem 1rem;
+}
+.landing-modules-header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+.landing-modules-header p {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+.landing-modules-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.landing-footer {
+  padding: 1rem 3rem;
+  text-align: right;
+  font-size: 0.75rem;
+  color: #cbd5e1;
+}
+
+/* Module card */
+.module-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  border-radius: 1rem;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s;
+  overflow: hidden;
+  padding: 0;
+}
+.module-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+}
+.module-card-inner {
+  display: flex;
+  align-items: stretch;
+}
+.module-card-thumb {
+  position: relative;
+  width: 10rem;
+  flex-shrink: 0;
+  min-height: 7.5rem;
+}
+.module-card-thumb-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.module-card-thumb-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: rgba(255,255,255,0.8);
+}
+.module-card-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.375rem;
+}
+.module-card-content {
+  flex: 1;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 7.5rem;
+}
+.module-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+}
+.module-card-desc {
+  font-size: 0.813rem;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.module-card-meta {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.75rem;
+}
+
 /* ========= Responsive / Mobile ========= */
 @media (max-width: 768px) {
   #slide-wrapper {
@@ -2046,6 +2534,33 @@ body {
   .timeline {
     padding-left: 1.5rem;
   }
+  /* Landing page mobile */
+  .landing-page {
+    flex-direction: column;
+  }
+  .landing-hero {
+    width: 100%;
+    min-height: 50vh;
+    padding: 2rem;
+  }
+  .landing-modules {
+    width: 100%;
+  }
+  .landing-modules-header {
+    padding: 1.5rem 1.5rem 0.75rem;
+  }
+  .landing-modules-list {
+    padding: 0 1.5rem 1.5rem;
+  }
+  .landing-title {
+    font-size: 1.75rem;
+  }
+  .module-card-thumb {
+    width: 6rem;
+  }
+  .landing-footer {
+    padding: 0.75rem 1.5rem;
+  }
 }
 
 @media print {
@@ -2072,7 +2587,10 @@ function generateIndexHtml(course: Course): string {
 </head>
 <body>
   <div id="header">
-    <h1>${escapeHtml(course.title)}</h1>
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <h1>${escapeHtml(course.title)}</h1>
+      ${course.settings.landingPage.enabled ? '<button id="btn-home" onclick="_showLanding()" title="Back to landing page" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.125rem;padding:0.25rem;line-height:1;" onmouseover="this.style.color=\'#f8fafc\'" onmouseout="this.style.color=\'#94a3b8\'">&#x2302;</button>' : ''}
+    </div>
     <span id="slide-counter">1 / 1</span>
   </div>
   <div id="progress-container">

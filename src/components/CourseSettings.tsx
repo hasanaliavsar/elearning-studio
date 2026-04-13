@@ -1,6 +1,6 @@
 import { useStore } from '../store';
 import type { Course, CourseSettings as CourseSettingsType, ThemeTemplate } from '../types';
-import { X, Save, Award } from 'lucide-react';
+import { X, Save, Award, Eye } from 'lucide-react';
 import { useState } from 'react';
 
 const THEME_OPTIONS: { id: ThemeTemplate; label: string; primary: string; accent: string; swatch: React.CSSProperties }[] = [
@@ -48,6 +48,214 @@ export function CourseSettings({ course, onClose }: Props) {
       </div>
 
       <div className="space-y-8">
+        {/* Course Landing Page */}
+        <section className="card p-6">
+          <h3 className="text-lg font-semibold mb-4">Course Landing Page</h3>
+          <label className="flex items-center gap-2 text-sm mb-4">
+            <input
+              type="checkbox"
+              checked={settings.landingPage.enabled}
+              onChange={e => setSettings({ ...settings, landingPage: { ...settings.landingPage, enabled: e.target.checked } })}
+              className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+            />
+            Show landing page when course opens
+          </label>
+          {settings.landingPage.enabled && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="label">Background Color</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={settings.landingPage.backgroundColor}
+                      onChange={e => setSettings({ ...settings, landingPage: { ...settings.landingPage, backgroundColor: e.target.value } })}
+                      className="w-10 h-10 rounded border cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      className="input"
+                      value={settings.landingPage.backgroundColor}
+                      onChange={e => setSettings({ ...settings, landingPage: { ...settings.landingPage, backgroundColor: e.target.value } })}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="label">Text Color</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={settings.landingPage.textColor}
+                      onChange={e => setSettings({ ...settings, landingPage: { ...settings.landingPage, textColor: e.target.value } })}
+                      className="w-10 h-10 rounded border cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      className="input"
+                      value={settings.landingPage.textColor}
+                      onChange={e => setSettings({ ...settings, landingPage: { ...settings.landingPage, textColor: e.target.value } })}
+                    />
+                  </div>
+                </div>
+                <div className="col-span-2">
+                  <label className="label">Background Gradient</label>
+                  <input
+                    type="text"
+                    className="input"
+                    placeholder="e.g. linear-gradient(135deg, #fdf0e8, #fce7f3)"
+                    value={settings.landingPage.backgroundGradient}
+                    onChange={e => setSettings({ ...settings, landingPage: { ...settings.landingPage, backgroundGradient: e.target.value } })}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="label">Hero Image URL</label>
+                  <input
+                    type="text"
+                    className="input"
+                    placeholder="https://..."
+                    value={settings.landingPage.heroImageUrl}
+                    onChange={e => setSettings({ ...settings, landingPage: { ...settings.landingPage, heroImageUrl: e.target.value } })}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="label">Tagline</label>
+                  <input
+                    type="text"
+                    className="input"
+                    placeholder="e.g. Investing is legacy."
+                    value={settings.landingPage.tagline}
+                    onChange={e => setSettings({ ...settings, landingPage: { ...settings.landingPage, tagline: e.target.value } })}
+                  />
+                </div>
+                <div>
+                  <label className="label">Company Logo URL</label>
+                  <input
+                    type="text"
+                    className="input"
+                    placeholder="https://..."
+                    value={settings.landingPage.companyLogoUrl}
+                    onChange={e => setSettings({ ...settings, landingPage: { ...settings.landingPage, companyLogoUrl: e.target.value } })}
+                  />
+                </div>
+                <div>
+                  <label className="label">Company Name</label>
+                  <input
+                    type="text"
+                    className="input"
+                    value={settings.landingPage.companyName}
+                    onChange={e => setSettings({ ...settings, landingPage: { ...settings.landingPage, companyName: e.target.value } })}
+                  />
+                </div>
+                <div className="col-span-2 flex flex-col gap-3">
+                  <label className="flex items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={settings.landingPage.showModuleList}
+                      onChange={e => setSettings({ ...settings, landingPage: { ...settings.landingPage, showModuleList: e.target.checked } })}
+                      className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+                    />
+                    Show Module List
+                  </label>
+                  <label className="flex items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={settings.landingPage.showProgress}
+                      onChange={e => setSettings({ ...settings, landingPage: { ...settings.landingPage, showProgress: e.target.checked } })}
+                      className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+                    />
+                    Show Progress Bar
+                  </label>
+                  <label className="flex items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={settings.landingPage.showCompanyLogo}
+                      onChange={e => setSettings({ ...settings, landingPage: { ...settings.landingPage, showCompanyLogo: e.target.checked } })}
+                      className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+                    />
+                    Show Company Logo
+                  </label>
+                </div>
+              </div>
+
+              {/* Live Preview */}
+              <div>
+                <label className="label mb-2 flex items-center gap-1">
+                  <Eye className="w-3.5 h-3.5" />
+                  Preview
+                </label>
+                <div
+                  className="relative rounded-lg overflow-hidden border border-gray-200"
+                  style={{ height: 200 }}
+                >
+                  <div className="flex h-full">
+                    {/* Left panel */}
+                    <div
+                      className="flex-1 flex flex-col justify-center px-6 py-4"
+                      style={{
+                        background: settings.landingPage.backgroundGradient || settings.landingPage.backgroundColor,
+                        color: settings.landingPage.textColor,
+                      }}
+                    >
+                      {settings.landingPage.showCompanyLogo && settings.landingPage.companyLogoUrl ? (
+                        <img
+                          src={settings.landingPage.companyLogoUrl}
+                          alt="Logo"
+                          className="h-5 w-auto object-contain mb-2"
+                          style={{ maxWidth: 80 }}
+                        />
+                      ) : settings.landingPage.showCompanyLogo && settings.landingPage.companyName ? (
+                        <span className="text-[10px] font-semibold opacity-70 mb-2">
+                          {settings.landingPage.companyName}
+                        </span>
+                      ) : null}
+                      <div className="text-sm font-bold leading-tight mb-1" style={{ color: settings.landingPage.textColor }}>
+                        {meta.title || 'Course Title'}
+                      </div>
+                      {settings.landingPage.tagline && (
+                        <div className="text-[10px] opacity-70" style={{ color: settings.landingPage.textColor }}>
+                          {settings.landingPage.tagline}
+                        </div>
+                      )}
+                      {settings.landingPage.showProgress && (
+                        <div className="mt-3 w-3/4">
+                          <div className="h-1 rounded-full bg-white/30">
+                            <div className="h-1 rounded-full bg-white/80" style={{ width: '35%' }} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    {/* Right panel */}
+                    <div className="w-2/5 bg-white flex flex-col justify-center px-4 py-3 border-l border-gray-100">
+                      {settings.landingPage.showModuleList ? (
+                        <div className="space-y-2">
+                          <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Modules</div>
+                          {[1, 2, 3].map(i => (
+                            <div key={i} className="flex items-center gap-2">
+                              <div className="w-4 h-4 rounded bg-gray-100 flex items-center justify-center text-[8px] text-gray-400 font-bold">{i}</div>
+                              <div className="h-2 rounded bg-gray-100 flex-1" />
+                            </div>
+                          ))}
+                          <div className="text-[9px] text-gray-300 mt-1">{course.modules.length} module{course.modules.length !== 1 ? 's' : ''}</div>
+                        </div>
+                      ) : settings.landingPage.heroImageUrl ? (
+                        <img
+                          src={settings.landingPage.heroImageUrl}
+                          alt="Hero"
+                          className="w-full h-full object-cover rounded"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full text-gray-300 text-xs">
+                          Right panel
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </section>
+
         {/* General Info */}
         <section className="card p-6">
           <h3 className="text-lg font-semibold mb-4">General Information</h3>

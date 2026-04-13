@@ -24,6 +24,19 @@ function createDefaultSettings() {
     certificateOrg: '',
     enableScrollReveal: true,
     enableKeyboardNav: true,
+    landingPage: {
+      enabled: true,
+      backgroundColor: '#fdf0e8',
+      backgroundGradient: '',
+      textColor: '#1e293b',
+      showModuleList: true,
+      showProgress: true,
+      showCompanyLogo: true,
+      companyLogoUrl: '',
+      companyName: '',
+      tagline: '',
+      heroImageUrl: '',
+    },
   };
 }
 
@@ -237,6 +250,7 @@ export const useStore = create<AppState>()(
               title: 'Module 1',
               description: '',
               order: 0,
+              thumbnail: '',
               lessons: [
                 {
                   id: lessonId,
@@ -351,6 +365,7 @@ export const useStore = create<AppState>()(
               title: `Module ${c.modules.length + 1}`,
               description: '',
               order: c.modules.length,
+              thumbnail: '',
               lessons: [
                 {
                   id: generateId(),
