@@ -10,6 +10,7 @@ const THEME_OPTIONS: { id: ThemeTemplate; label: string; primary: string; accent
   { id: 'dark', label: 'Dark', primary: '#0f172a', accent: '#22d3ee', swatch: { background: 'linear-gradient(135deg, #0f172a 60%, #22d3ee 60%)' } },
   { id: 'minimal', label: 'Minimal', primary: '#18181b', accent: '#f4f4f5', swatch: { background: 'linear-gradient(135deg, #18181b 60%, #f4f4f5 60%)' } },
   { id: 'elegant', label: 'Elegant', primary: '#7f1d1d', accent: '#d97706', swatch: { background: 'linear-gradient(135deg, #7f1d1d 60%, #d97706 60%)' } },
+  { id: 'moonfare', label: 'Moonfare', primary: '#171D97', accent: '#101321', swatch: { background: 'linear-gradient(135deg, #101321 30%, #121648 50%, #171D97 70%, #968F83 100%)' } },
 ];
 
 interface Props {

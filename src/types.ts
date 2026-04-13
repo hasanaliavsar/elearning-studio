@@ -179,7 +179,7 @@ export type ContentBlockType =
 // --- Animation types ---
 export type EntranceAnimation = 'none' | 'fade-in' | 'slide-up' | 'slide-left' | 'slide-right' | 'zoom-in' | 'bounce-in';
 export type SlideTransition = 'none' | 'fade' | 'slide-left' | 'slide-up' | 'zoom';
-export type ThemeTemplate = 'modern' | 'corporate' | 'playful' | 'dark' | 'minimal' | 'elegant';
+export type ThemeTemplate = 'modern' | 'corporate' | 'playful' | 'dark' | 'minimal' | 'elegant' | 'moonfare';
 
 export interface ContentBlock {
   id: string;
