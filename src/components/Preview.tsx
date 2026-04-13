@@ -5,7 +5,8 @@ import {
   ArrowLeft, ArrowRight, X, ChevronLeft, ChevronRight,
   CheckCircle2, XCircle, Award, RotateCcw, Home,
   ChevronDown, ChevronUp, Info, AlertTriangle, Lightbulb, CheckCircle,
-  ExternalLink, Volume2, GripVertical, Download, Star, MapPin
+  ExternalLink, Volume2, GripVertical, Download, Star, MapPin,
+  PanelLeftClose, PanelLeftOpen, FileText, Trophy, Circle
 } from 'lucide-react';
 import { CourseLandingPage } from './CourseLandingPage';
 
@@ -46,6 +47,11 @@ export function CoursePreview() {
   const [activeTabs, setActiveTabs] = useState<Record<string, string>>({});
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const [galleryLightbox, setGalleryLightbox] = useState<{ blockId: string; imageUrl: string } | null>(null);
+
+  // LMS sidebar state
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [visitedSlides, setVisitedSlides] = useState<Set<number>>(new Set([0]));
+  const [expandedModules, setExpandedModules] = useState<Set<number>>(new Set([0]));
 
   const toggleFlipCard = useCallback((blockId: string, cardId: string) => {
     setFlippedCards(prev => {
@@ -89,8 +95,8 @@ export function CoursePreview() {
 
   if (!course || flatSlides.length === 0) {
     return (
-      <div className="h-full flex items-center justify-center bg-gray-900">
-        <div className="text-center text-white">
+      <div className="h-full flex items-center justify-center bg-gray-50">
+        <div className="text-center text-gray-600">
           <p className="text-lg mb-4">No slides to preview</p>
           <button onClick={() => setViewMode('editor')} className="btn-primary">
             Back to Editor
@@ -260,6 +266,14 @@ export function CoursePreview() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   });
 
+  // Track visited slides and auto-expand current module
+  useEffect(() => {
+    setVisitedSlides(prev => new Set([...prev, previewSlideIndex]));
+    if (currentFlat) {
+      setExpandedModules(prev => new Set([...prev, currentFlat.moduleIdx]));
+    }
+  }, [previewSlideIndex]);
+
   // Scroll-reveal: Intersection Observer for content block animations
   // Uses a MutationObserver to catch refs that mount after the effect runs
   useEffect(() => {
@@ -321,16 +335,69 @@ export function CoursePreview() {
 
   const primaryColor = course.settings.primaryColor || '#4f46e5';
 
+  // Build sidebar module tree with flat indices
+  const sidebarModules = useMemo(() => {
+    let flatIdx = 0;
+    return course.modules.map((mod, mi) => {
+      const lessons = mod.lessons.map((lesson, li) => {
+        const slides = lesson.slides.map((slide, si) => {
+          const idx = flatIdx++;
+          return { slide, slideIdx: si, flatIndex: idx, title: slide.title || `Slide ${si + 1}` };
+        });
+        return { lesson, lessonIdx: li, slides, title: lesson.title };
+      });
+      return { module: mod, moduleIdx: mi, lessons, title: mod.title };
+    });
+  }, [course.modules]);
+
+  // Calculate progress per module
+  const getModuleProgress = (moduleIdx: number): { visited: number; total: number } => {
+    const mod = sidebarModules[moduleIdx];
+    if (!mod) return { visited: 0, total: 0 };
+    let total = 0;
+    let visited = 0;
+    for (const lesson of mod.lessons) {
+      for (const slide of lesson.slides) {
+        total++;
+        if (visitedSlides.has(slide.flatIndex)) visited++;
+      }
+    }
+    return { visited, total };
+  };
+
+  const toggleModule = (moduleIdx: number) => {
+    setExpandedModules(prev => {
+      const next = new Set(prev);
+      if (next.has(moduleIdx)) next.delete(moduleIdx); else next.add(moduleIdx);
+      return next;
+    });
+  };
+
+  const handleSidebarNavigate = (flatIndex: number) => {
+    setSlideDirection(flatIndex > previewSlideIndex ? 'next' : 'prev');
+    if (resolvedTransition !== 'none') {
+      setTransitioning(true);
+      setTimeout(() => {
+        setPreviewSlideIndex(flatIndex);
+        setTransitioning(false);
+        setRevealedBlocks(new Set());
+      }, 350);
+    } else {
+      setPreviewSlideIndex(flatIndex);
+      setRevealedBlocks(new Set());
+    }
+  };
+
   // Landing page screen
   if (showLanding && course.settings.landingPage.enabled) {
     return (
-      <div className="h-full flex flex-col bg-gray-900">
-        <header className="flex items-center justify-between px-6 py-3 bg-gray-800 flex-shrink-0">
-          <div className="flex items-center gap-4">
-            <button onClick={handleClose} className="text-gray-400 hover:text-white transition-colors">
-              <X className="w-5 h-5" />
+      <div className="h-full flex flex-col bg-gray-50">
+        <header className="flex items-center justify-between px-4 py-2.5 bg-white border-b border-gray-200 flex-shrink-0">
+          <div className="flex items-center gap-3">
+            <button onClick={handleClose} className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors">
+              <X className="w-4 h-4" />
             </button>
-            <span className="text-white font-medium text-sm">{course.title}</span>
+            <span className="text-gray-800 font-medium text-sm">{course.title}</span>
           </div>
           <span className="text-gray-400 text-sm">Landing Page</span>
         </header>
@@ -348,12 +415,15 @@ export function CoursePreview() {
   // Results screen
   if (showResults) {
     return (
-      <div className="h-full flex flex-col bg-gray-900">
-        <header className="flex items-center justify-between px-6 py-3 bg-gray-800">
-          <span className="text-white font-medium">{course.title}</span>
-          <button onClick={handleClose} className="text-gray-400 hover:text-white">
-            <X className="w-5 h-5" />
-          </button>
+      <div className="h-full flex flex-col bg-gray-50">
+        <header className="flex items-center justify-between px-4 py-2.5 bg-white border-b border-gray-200">
+          <div className="flex items-center gap-3">
+            <button onClick={handleClose} className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors">
+              <X className="w-4 h-4" />
+            </button>
+            <span className="text-gray-800 font-medium text-sm">{course.title}</span>
+          </div>
+          <span className="text-gray-400 text-sm">Results</span>
         </header>
         <div className="flex-1 flex items-center justify-center">
           <div className="bg-white rounded-2xl shadow-2xl p-10 max-w-md w-full text-center">
@@ -461,7 +531,7 @@ export function CoursePreview() {
   }
 
   return (
-    <div className="h-full flex flex-col bg-gray-900">
+    <div className="h-full flex flex-col bg-gray-50">
       {/* Animation & transition CSS */}
       <style>{`
         /* Entrance animations for content blocks */
@@ -497,37 +567,34 @@ export function CoursePreview() {
       `}</style>
 
       {/* Top bar */}
-      <header className="flex items-center justify-between px-6 py-3 bg-gray-800 flex-shrink-0">
-        <div className="flex items-center gap-4">
-          <button onClick={handleClose} className="text-gray-400 hover:text-white transition-colors">
-            <X className="w-5 h-5" />
+      <header className="flex items-center justify-between px-4 py-2.5 bg-white border-b border-gray-200 flex-shrink-0">
+        <div className="flex items-center gap-3">
+          <button onClick={handleClose} className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors">
+            <X className="w-4 h-4" />
           </button>
           {course.settings.landingPage.enabled && (
             <button
               onClick={() => setShowLanding(true)}
-              className="text-gray-400 hover:text-white transition-colors"
+              className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
               title="Back to landing page"
             >
-              <Home className="w-5 h-5" />
+              <Home className="w-4 h-4" />
             </button>
           )}
-          <div>
-            <span className="text-white font-medium text-sm">{course.title}</span>
-            <span className="text-gray-500 text-xs ml-3">
-              {currentFlat.moduleTitle} &gt; {currentFlat.lessonTitle}
-            </span>
+          <div className="border-l border-gray-200 pl-3">
+            <span className="text-gray-800 font-medium text-sm">{course.title}</span>
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-gray-400 text-sm">
-            {previewSlideIndex + 1} / {flatSlides.length}
+          <span className="text-gray-500 text-sm">
+            Page {previewSlideIndex + 1} of {flatSlides.length}
           </span>
         </div>
       </header>
 
       {/* Progress bar */}
       {course.settings.showProgress && (
-        <div className="h-1 bg-gray-800">
+        <div className="h-0.5 bg-gray-200">
           <div
             className="h-full transition-all duration-300"
             style={{ width: `${progress}%`, backgroundColor: primaryColor }}
@@ -535,14 +602,143 @@ export function CoursePreview() {
         </div>
       )}
 
-      {/* Slide content */}
-      <div className="flex-1 flex items-start justify-center p-4 overflow-auto">
-        <div
-          ref={slideContentRef}
-          className={`w-full max-w-5xl bg-white rounded-xl shadow-2xl overflow-hidden my-4 ${getSlideTransitionClass()}`}
-          key={`slide-${previewSlideIndex}`}
-          style={{ minHeight: 'calc(100vh - 10rem)' }}
+      {/* Body: Sidebar + Main content */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left sidebar */}
+        <aside
+          className={`bg-white border-r border-gray-200 flex-shrink-0 flex flex-col transition-all duration-200 ${
+            sidebarOpen ? 'w-72' : 'w-0'
+          } overflow-hidden`}
         >
+          {sidebarOpen && (
+            <>
+              {/* Sidebar header */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                <span className="text-sm font-semibold text-gray-800 truncate">{course.title}</span>
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className="p-1 text-gray-400 hover:text-gray-600 rounded hover:bg-gray-100 transition-colors flex-shrink-0"
+                  title="Collapse sidebar"
+                >
+                  <PanelLeftClose className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Module tree */}
+              <div className="flex-1 overflow-y-auto py-2">
+                {sidebarModules.map((mod) => {
+                  const isExpanded = expandedModules.has(mod.moduleIdx);
+                  const modProgress = getModuleProgress(mod.moduleIdx);
+                  const allVisited = modProgress.visited === modProgress.total && modProgress.total > 0;
+                  return (
+                    <div key={mod.moduleIdx} className="mb-1">
+                      {/* Module header */}
+                      <button
+                        onClick={() => toggleModule(mod.moduleIdx)}
+                        className="w-full flex items-center gap-2 px-4 py-2.5 text-left hover:bg-gray-50 transition-colors group"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-gray-400 uppercase tracking-wide">Section {mod.moduleIdx + 1}</p>
+                          <p className="text-sm font-semibold text-gray-800 truncate">{mod.title}</p>
+                        </div>
+                        {isExpanded ? (
+                          <ChevronUp className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                        )}
+                      </button>
+
+                      {/* Slide list */}
+                      {isExpanded && (
+                        <div className="ml-2">
+                          {mod.lessons.map((lesson) => (
+                            <div key={lesson.lessonIdx}>
+                              {mod.lessons.length > 1 && (
+                                <p className="px-4 py-1 text-xs text-gray-400 font-medium truncate">{lesson.title}</p>
+                              )}
+                              {lesson.slides.map((slideItem) => {
+                                const isCurrent = slideItem.flatIndex === previewSlideIndex;
+                                const isVisited = visitedSlides.has(slideItem.flatIndex);
+                                return (
+                                  <button
+                                    key={slideItem.flatIndex}
+                                    onClick={() => handleSidebarNavigate(slideItem.flatIndex)}
+                                    className={`w-full flex items-center gap-2.5 px-4 py-2 text-left text-sm transition-colors ${
+                                      isCurrent
+                                        ? 'font-medium bg-gray-50'
+                                        : 'text-gray-600 hover:bg-gray-50'
+                                    }`}
+                                    style={isCurrent ? {
+                                      color: primaryColor,
+                                      borderLeft: `3px solid ${primaryColor}`,
+                                      paddingLeft: '13px',
+                                    } : {
+                                      borderLeft: '3px solid transparent',
+                                      paddingLeft: '13px',
+                                    }}
+                                  >
+                                    {isCurrent ? (
+                                      <div
+                                        className="w-2 h-2 rounded-full flex-shrink-0"
+                                        style={{ backgroundColor: primaryColor }}
+                                      />
+                                    ) : isVisited ? (
+                                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+                                    ) : (
+                                      <Circle className="w-3.5 h-3.5 text-gray-300 flex-shrink-0" />
+                                    )}
+                                    <span className="truncate">{slideItem.title}</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          ))}
+                          <p className="px-4 py-1.5 text-xs text-gray-400">
+                            {allVisited ? 'Completed' : `${modProgress.visited} / ${modProgress.total} viewed`}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Results link */}
+              <div className="border-t border-gray-100 px-4 py-3">
+                <button
+                  onClick={() => setShowResults(true)}
+                  className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors w-full"
+                >
+                  <Trophy className="w-4 h-4" />
+                  Results
+                </button>
+              </div>
+            </>
+          )}
+        </aside>
+
+        {/* Sidebar toggle (when collapsed) */}
+        {!sidebarOpen && (
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white border border-gray-200 rounded-r-lg p-1.5 text-gray-400 hover:text-gray-600 shadow-sm transition-colors"
+            title="Open sidebar"
+          >
+            <PanelLeftOpen className="w-4 h-4" />
+          </button>
+        )}
+
+        {/* Main content area */}
+        <div className="flex-1 overflow-y-auto bg-white">
+          {/* Page indicator */}
+          <div className="px-10 pt-6 pb-2">
+            <span className="text-xs text-gray-400">Page {previewSlideIndex + 1} of {flatSlides.length}</span>
+          </div>
+          <div
+            ref={slideContentRef}
+            className={`${getSlideTransitionClass()}`}
+            key={`slide-${previewSlideIndex}`}
+          >
           {/* Cover slide layout */}
           {currentSlide.isCoverSlide ? (
             <div
@@ -1630,6 +1826,27 @@ export function CoursePreview() {
             )}
           </div>
           )}
+          </div>
+
+          {/* Inline navigation buttons */}
+          <div className="flex items-center justify-between px-10 py-6 border-t border-gray-100">
+            <button
+              onClick={goPrev}
+              disabled={previewSlideIndex === 0}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Previous
+            </button>
+            <button
+              onClick={goNext}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
+              style={{ backgroundColor: primaryColor }}
+            >
+              {isLastSlide ? 'Finish' : 'Next'}
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1654,42 +1871,6 @@ export function CoursePreview() {
         </div>
       )}
 
-      {/* Bottom navigation */}
-      <footer className="flex items-center justify-between px-8 py-4 bg-gray-800 flex-shrink-0">
-        <button
-          onClick={goPrev}
-          disabled={previewSlideIndex === 0}
-          className="flex items-center gap-2 text-gray-300 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-        >
-          <ChevronLeft className="w-5 h-5" />
-          Previous
-        </button>
-
-        {/* Slide dots */}
-        <div className="flex items-center gap-1.5 max-w-md overflow-hidden">
-          {flatSlides.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setPreviewSlideIndex(idx)}
-              className={`w-2 h-2 rounded-full transition-all ${
-                idx === previewSlideIndex
-                  ? 'w-6 bg-white'
-                  : idx < previewSlideIndex
-                    ? 'bg-gray-500'
-                    : 'bg-gray-700'
-              }`}
-            />
-          ))}
-        </div>
-
-        <button
-          onClick={goNext}
-          className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors"
-        >
-          {isLastSlide ? 'Finish' : 'Next'}
-          <ChevronRight className="w-5 h-5" />
-        </button>
-      </footer>
     </div>
   );
 }
