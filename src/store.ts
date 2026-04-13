@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Course, Module, Lesson, Slide, Question, ContentBlock, EditorState, ViewMode, SlideLayout, QuestionType } from './types';
+import type { Course, Module, Lesson, Slide, Question, ContentBlock, EditorState, ViewMode, SlideLayout, QuestionType, ContentBlockType } from './types';
 import { generateId, deepClone } from './utils/helpers';
 
 function createDefaultSettings() {
@@ -16,6 +16,14 @@ function createDefaultSettings() {
     accentColor: '#10b981',
     fontFamily: 'Inter',
     logoUrl: '',
+    theme: 'modern' as const,
+    defaultTransition: 'fade' as const,
+    defaultAnimation: 'fade-in' as const,
+    showCertificate: true,
+    certificateTitle: 'Certificate of Completion',
+    certificateOrg: '',
+    enableScrollReveal: true,
+    enableKeyboardNav: true,
   };
 }
 
@@ -73,6 +81,7 @@ function createDefaultQuestion(type: QuestionType = 'multiple-choice'): Question
     options: [],
     matchingPairs: [],
     correctAnswer: '',
+    correctOrder: [],
     explanation: '',
     points: 10,
   };
@@ -97,6 +106,14 @@ function createDefaultQuestion(type: QuestionType = 'multiple-choice'): Question
       { id: generateId(), left: 'Term 2', right: 'Definition 2' },
       { id: generateId(), left: 'Term 3', right: 'Definition 3' },
     ];
+  } else if (type === 'drag-sort') {
+    const opts = [
+      { id: generateId(), text: 'First item', isCorrect: false },
+      { id: generateId(), text: 'Second item', isCorrect: false },
+      { id: generateId(), text: 'Third item', isCorrect: false },
+    ];
+    base.options = opts;
+    base.correctOrder = opts.map(o => o.id);
   }
 
   return base;
@@ -154,6 +171,8 @@ interface AppState {
   selectLesson: (lessonId: string | null) => void;
   selectSlide: (slideId: string | null) => void;
   selectQuestion: (questionId: string | null) => void;
+  navigateToSlide: (moduleId: string, lessonId: string, slideId: string) => void;
+  navigateToLesson: (moduleId: string, lessonId: string) => void;
   toggleSidebar: () => void;
   setRightPanelTab: (tab: EditorState['rightPanelTab']) => void;
   setShowExportDialog: (show: boolean) => void;
@@ -568,9 +587,57 @@ export const useStore = create<AppState>()(
                    type === 'heading' ? '<h2>Heading</h2>' :
                    type === 'divider' ? '' :
                    type === 'code' ? '<pre><code>// Code here</code></pre>' :
+                   type === 'callout' ? '<p>Important information goes here.</p>' :
                    '',
           alt: '',
           caption: '',
+          data: type === 'flip-card' ? {
+            flipCards: [
+              { id: generateId(), front: 'Front side', back: 'Back side', frontImage: '', backImage: '' },
+              { id: generateId(), front: 'Term', back: 'Definition', frontImage: '', backImage: '' },
+            ],
+          } : type === 'hotspot' ? {
+            hotspotImage: '',
+            hotspotMarkers: [],
+          } : type === 'accordion' ? {
+            accordionItems: [
+              { id: generateId(), title: 'Section 1', content: '<p>Content for section 1</p>' },
+              { id: generateId(), title: 'Section 2', content: '<p>Content for section 2</p>' },
+            ],
+          } : type === 'tabs' ? {
+            tabItems: [
+              { id: generateId(), title: 'Tab 1', content: '<p>Content for tab 1</p>' },
+              { id: generateId(), title: 'Tab 2', content: '<p>Content for tab 2</p>' },
+            ],
+          } : type === 'timeline' ? {
+            timelineEvents: [
+              { id: generateId(), date: 'Step 1', title: 'First Event', description: 'Description of the first event', icon: '' },
+              { id: generateId(), date: 'Step 2', title: 'Second Event', description: 'Description of the second event', icon: '' },
+            ],
+          } : type === 'callout' ? {
+            calloutStyle: 'info' as const,
+            calloutTitle: 'Did you know?',
+          } : type === 'table' ? {
+            tableHeaders: ['Column 1', 'Column 2', 'Column 3'],
+            tableRows: [['Cell 1', 'Cell 2', 'Cell 3'], ['Cell 4', 'Cell 5', 'Cell 6']],
+            tableStriped: true,
+          } : type === 'button' ? {
+            buttonText: 'Learn More',
+            buttonUrl: '',
+            buttonStyle: 'primary' as const,
+            buttonNewTab: true,
+          } : type === 'audio' ? {
+            audioUrl: '',
+          } : type === 'embed' ? {
+            embedUrl: '',
+            embedHeight: 400,
+          } : type === 'gallery' ? {
+            galleryImages: [],
+            galleryColumns: 3,
+          } : type === 'labeled-graphic' ? {
+            labeledImage: '',
+            labeledMarkers: [],
+          } : undefined,
         };
         set(state => ({
           courses: state.courses.map(c => {
@@ -766,6 +833,26 @@ export const useStore = create<AppState>()(
 
       selectQuestion: (questionId) => set(state => ({
         editor: { ...state.editor, selectedQuestionId: questionId },
+      })),
+
+      navigateToSlide: (moduleId, lessonId, slideId) => set(state => ({
+        editor: {
+          ...state.editor,
+          selectedModuleId: moduleId,
+          selectedLessonId: lessonId,
+          selectedSlideId: slideId,
+          selectedQuestionId: null,
+        },
+      })),
+
+      navigateToLesson: (moduleId, lessonId) => set(state => ({
+        editor: {
+          ...state.editor,
+          selectedModuleId: moduleId,
+          selectedLessonId: lessonId,
+          selectedSlideId: null,
+          selectedQuestionId: null,
+        },
       })),
 
       toggleSidebar: () => set(state => ({

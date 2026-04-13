@@ -38,8 +38,8 @@ export function CourseEditor() {
   const deleteSlide = useStore(s => s.deleteSlide);
   const duplicateSlide = useStore(s => s.duplicateSlide);
   const selectModule = useStore(s => s.selectModule);
-  const selectLesson = useStore(s => s.selectLesson);
-  const selectSlide = useStore(s => s.selectSlide);
+  const navigateToLesson = useStore(s => s.navigateToLesson);
+  const navigateToSlide = useStore(s => s.navigateToSlide);
   const toggleSidebar = useStore(s => s.toggleSidebar);
   const setRightPanelTab = useStore(s => s.setRightPanelTab);
   const setShowExportDialog = useStore(s => s.setShowExportDialog);
@@ -244,7 +244,7 @@ export function CourseEditor() {
                             className={`flex items-center gap-1 px-2 py-1.5 rounded-lg text-sm cursor-pointer group ${
                               editor.selectedLessonId === lesson.id ? 'bg-sidebar-active text-white' : 'text-gray-400 hover:bg-sidebar-hover hover:text-gray-200'
                             }`}
-                            onClick={() => { selectLesson(lesson.id); selectModule(mod.id); toggleLessonExpand(lesson.id); }}
+                            onClick={() => { navigateToLesson(mod.id, lesson.id); toggleLessonExpand(lesson.id); }}
                           >
                             {expandedLessons.has(lesson.id) ? (
                               <ChevronDown className="w-3.5 h-3.5 flex-shrink-0 text-gray-600" />
@@ -316,7 +316,7 @@ export function CourseEditor() {
                                       ? 'bg-brand-600/30 text-brand-200 ring-1 ring-brand-500/50'
                                       : 'text-gray-500 hover:bg-sidebar-hover hover:text-gray-300'
                                   }`}
-                                  onClick={() => { selectSlide(slide.id); selectLesson(lesson.id); selectModule(mod.id); }}
+                                  onClick={() => navigateToSlide(mod.id, lesson.id, slide.id)}
                                 >
                                   <Presentation className="w-3 h-3 flex-shrink-0" />
                                   <span className="flex-1 truncate">{slide.title || `Slide ${sIdx + 1}`}</span>

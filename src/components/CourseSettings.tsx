@@ -1,7 +1,16 @@
 import { useStore } from '../store';
-import type { Course, CourseSettings as CourseSettingsType } from '../types';
-import { X, Save } from 'lucide-react';
+import type { Course, CourseSettings as CourseSettingsType, ThemeTemplate } from '../types';
+import { X, Save, Award } from 'lucide-react';
 import { useState } from 'react';
+
+const THEME_OPTIONS: { id: ThemeTemplate; label: string; primary: string; accent: string; swatch: React.CSSProperties }[] = [
+  { id: 'modern', label: 'Modern', primary: '#4f46e5', accent: '#ffffff', swatch: { background: 'linear-gradient(135deg, #4f46e5 60%, #ffffff 60%)' } },
+  { id: 'corporate', label: 'Corporate', primary: '#1e3a5f', accent: '#6b7280', swatch: { background: 'linear-gradient(135deg, #1e3a5f 60%, #6b7280 60%)' } },
+  { id: 'playful', label: 'Playful', primary: '#ec4899', accent: '#8b5cf6', swatch: { background: 'linear-gradient(135deg, #ec4899 50%, #8b5cf6 50%)' } },
+  { id: 'dark', label: 'Dark', primary: '#0f172a', accent: '#22d3ee', swatch: { background: 'linear-gradient(135deg, #0f172a 60%, #22d3ee 60%)' } },
+  { id: 'minimal', label: 'Minimal', primary: '#18181b', accent: '#f4f4f5', swatch: { background: 'linear-gradient(135deg, #18181b 60%, #f4f4f5 60%)' } },
+  { id: 'elegant', label: 'Elegant', primary: '#7f1d1d', accent: '#d97706', swatch: { background: 'linear-gradient(135deg, #7f1d1d 60%, #d97706 60%)' } },
+];
 
 interface Props {
   course: Course;
@@ -255,6 +264,173 @@ export function CourseSettings({ course, onClose }: Props) {
               />
             </div>
           </div>
+        </section>
+
+        {/* Theme Templates */}
+        <section className="card p-6">
+          <h3 className="text-lg font-semibold mb-4">Theme Templates</h3>
+          <div className="grid grid-cols-3 gap-3">
+            {THEME_OPTIONS.map(theme => (
+              <button
+                key={theme.id}
+                type="button"
+                className={`relative flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${
+                  settings.theme === theme.id
+                    ? 'border-brand-600 ring-2 ring-brand-200 bg-brand-50'
+                    : 'border-gray-200 hover:border-gray-300 bg-white'
+                }`}
+                onClick={() =>
+                  setSettings({
+                    ...settings,
+                    theme: theme.id,
+                    primaryColor: theme.primary,
+                    accentColor: theme.accent,
+                  })
+                }
+              >
+                <div
+                  className="w-full h-10 rounded-md border border-gray-200"
+                  style={theme.swatch}
+                />
+                <span className="text-sm font-medium text-gray-700">{theme.label}</span>
+                {settings.theme === theme.id && (
+                  <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-brand-600" />
+                )}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* Animations & Transitions */}
+        <section className="card p-6">
+          <h3 className="text-lg font-semibold mb-4">Animations &amp; Transitions</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="label">Default Slide Transition</label>
+              <select
+                className="input"
+                value={settings.defaultTransition}
+                onChange={e =>
+                  setSettings({ ...settings, defaultTransition: e.target.value as CourseSettingsType['defaultTransition'] })
+                }
+              >
+                <option value="none">None</option>
+                <option value="fade">Fade</option>
+                <option value="slide-left">Slide Left</option>
+                <option value="slide-up">Slide Up</option>
+                <option value="zoom">Zoom</option>
+              </select>
+            </div>
+            <div>
+              <label className="label">Default Block Entrance Animation</label>
+              <select
+                className="input"
+                value={settings.defaultAnimation}
+                onChange={e =>
+                  setSettings({ ...settings, defaultAnimation: e.target.value as CourseSettingsType['defaultAnimation'] })
+                }
+              >
+                <option value="none">None</option>
+                <option value="fade-in">Fade In</option>
+                <option value="slide-up">Slide Up</option>
+                <option value="slide-left">Slide Left</option>
+                <option value="slide-right">Slide Right</option>
+                <option value="zoom-in">Zoom In</option>
+                <option value="bounce-in">Bounce In</option>
+              </select>
+            </div>
+            <div className="col-span-2 flex flex-col gap-3">
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={settings.enableScrollReveal}
+                  onChange={e => setSettings({ ...settings, enableScrollReveal: e.target.checked })}
+                  className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+                />
+                Enable scroll-reveal animations
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={settings.enableKeyboardNav}
+                  onChange={e => setSettings({ ...settings, enableKeyboardNav: e.target.checked })}
+                  className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+                />
+                Enable keyboard navigation
+              </label>
+            </div>
+          </div>
+        </section>
+
+        {/* Completion Certificate */}
+        <section className="card p-6">
+          <h3 className="text-lg font-semibold mb-4">Completion Certificate</h3>
+          <label className="flex items-center gap-2 text-sm mb-4">
+            <input
+              type="checkbox"
+              checked={settings.showCertificate}
+              onChange={e => setSettings({ ...settings, showCertificate: e.target.checked })}
+              className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+            />
+            Show completion certificate
+          </label>
+          {settings.showCertificate && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="label">Certificate Title</label>
+                  <input
+                    type="text"
+                    className="input"
+                    placeholder="Certificate of Completion"
+                    value={settings.certificateTitle}
+                    onChange={e => setSettings({ ...settings, certificateTitle: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="label">Organization Name</label>
+                  <input
+                    type="text"
+                    className="input"
+                    placeholder="Your Organization"
+                    value={settings.certificateOrg}
+                    onChange={e => setSettings({ ...settings, certificateOrg: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              {/* Certificate Preview */}
+              <div>
+                <label className="label mb-2">Preview</label>
+                <div
+                  className="relative mx-auto bg-white rounded-lg p-6 text-center"
+                  style={{
+                    maxWidth: 420,
+                    border: `3px double ${settings.primaryColor}`,
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
+                  }}
+                >
+                  <div
+                    className="absolute inset-2 rounded pointer-events-none"
+                    style={{ border: `1px solid ${settings.accentColor}` }}
+                  />
+                  <Award className="w-8 h-8 mx-auto mb-2" style={{ color: settings.primaryColor }} />
+                  <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">This certifies that</p>
+                  <p className="text-lg font-semibold text-gray-800 mb-1">[Learner Name]</p>
+                  <p className="text-xs text-gray-400 mb-3">has successfully completed</p>
+                  <p className="text-sm font-bold mb-1" style={{ color: settings.primaryColor }}>
+                    {settings.certificateTitle || 'Certificate of Completion'}
+                  </p>
+                  {settings.certificateOrg && (
+                    <p className="text-xs text-gray-500">{settings.certificateOrg}</p>
+                  )}
+                  <p className="text-xs text-gray-400 mt-3">
+                    {new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </section>
 
         <div className="flex justify-end gap-3">

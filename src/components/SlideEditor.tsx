@@ -2,11 +2,14 @@ import { useState } from 'react';
 import { useStore } from '../store';
 import { RichTextEditor } from './RichTextEditor';
 import { QuizBuilder } from './QuizBuilder';
-import type { Course, Slide, SlideLayout, ContentBlock } from '../types';
+import { BlockEditor } from './BlockEditors';
+import type { Course, Slide, SlideLayout, ContentBlock, EntranceAnimation, SlideTransition, LearningObjective } from '../types';
 import {
   Type, Image, Video, FileText, List, Minus, Code, Plus, Trash2,
   Settings, MessageSquare, HelpCircle, GripVertical, ChevronUp, ChevronDown,
-  Layout, Columns, Palette
+  Layout, Columns, Palette,
+  RotateCw, MousePointerClick, ChevronsUpDown, LayoutPanelTop, Clock, AlertCircle,
+  Table2, MousePointer, Music, Code2, Images, MapPin, Sparkles, BookOpen, Play
 } from 'lucide-react';
 
 interface Props {
@@ -16,14 +19,42 @@ interface Props {
   slide: Slide;
 }
 
-const blockTypeOptions: { type: ContentBlock['type']; label: string; icon: React.ReactNode }[] = [
-  { type: 'heading', label: 'Heading', icon: <Type className="w-4 h-4" /> },
-  { type: 'text', label: 'Text', icon: <FileText className="w-4 h-4" /> },
-  { type: 'image', label: 'Image', icon: <Image className="w-4 h-4" /> },
-  { type: 'video', label: 'Video', icon: <Video className="w-4 h-4" /> },
-  { type: 'list', label: 'List', icon: <List className="w-4 h-4" /> },
-  { type: 'code', label: 'Code', icon: <Code className="w-4 h-4" /> },
-  { type: 'divider', label: 'Divider', icon: <Minus className="w-4 h-4" /> },
+type BlockOption = { type: ContentBlock['type']; label: string; icon: React.ReactNode };
+
+const blockCategories: { label: string; options: BlockOption[] }[] = [
+  {
+    label: 'Basic',
+    options: [
+      { type: 'heading', label: 'Heading', icon: <Type className="w-4 h-4" /> },
+      { type: 'text', label: 'Text', icon: <FileText className="w-4 h-4" /> },
+      { type: 'image', label: 'Image', icon: <Image className="w-4 h-4" /> },
+      { type: 'video', label: 'Video', icon: <Video className="w-4 h-4" /> },
+      { type: 'divider', label: 'Divider', icon: <Minus className="w-4 h-4" /> },
+      { type: 'code', label: 'Code', icon: <Code className="w-4 h-4" /> },
+    ],
+  },
+  {
+    label: 'Interactive',
+    options: [
+      { type: 'flip-card', label: 'Flip Cards', icon: <RotateCw className="w-4 h-4" /> },
+      { type: 'hotspot', label: 'Hotspot', icon: <MousePointerClick className="w-4 h-4" /> },
+      { type: 'accordion', label: 'Accordion', icon: <ChevronsUpDown className="w-4 h-4" /> },
+      { type: 'tabs', label: 'Tabs', icon: <LayoutPanelTop className="w-4 h-4" /> },
+      { type: 'timeline', label: 'Timeline', icon: <Clock className="w-4 h-4" /> },
+      { type: 'labeled-graphic', label: 'Labels', icon: <MapPin className="w-4 h-4" /> },
+    ],
+  },
+  {
+    label: 'Media & Data',
+    options: [
+      { type: 'audio', label: 'Audio', icon: <Music className="w-4 h-4" /> },
+      { type: 'embed', label: 'Embed', icon: <Code2 className="w-4 h-4" /> },
+      { type: 'gallery', label: 'Gallery', icon: <Images className="w-4 h-4" /> },
+      { type: 'table', label: 'Table', icon: <Table2 className="w-4 h-4" /> },
+      { type: 'button', label: 'Button', icon: <MousePointer className="w-4 h-4" /> },
+      { type: 'callout', label: 'Callout', icon: <AlertCircle className="w-4 h-4" /> },
+    ],
+  },
 ];
 
 export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
@@ -104,7 +135,30 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
           >
             <ChevronDown className="w-3 h-3" />
           </button>
+          <select
+            value={block.animation || 'none'}
+            onChange={e => handleBlockUpdate(block.id, { animation: e.target.value as EntranceAnimation })}
+            onClick={e => e.stopPropagation()}
+            className="w-6 h-6 text-[8px] bg-white border border-gray-200 rounded cursor-pointer appearance-none text-center hover:border-brand-300"
+            title="Entrance animation"
+          >
+            <option value="none">-</option>
+            <option value="fade-in">Fade</option>
+            <option value="slide-up">Up</option>
+            <option value="slide-left">Left</option>
+            <option value="slide-right">Right</option>
+            <option value="zoom-in">Zoom</option>
+            <option value="bounce-in">Bounce</option>
+          </select>
         </div>
+
+        {/* Animation badge */}
+        {block.animation && block.animation !== 'none' && (
+          <span className="absolute -top-2 left-2 bg-brand-100 text-brand-700 text-[9px] font-medium px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
+            <Play className="w-2.5 h-2.5" />
+            {block.animation}
+          </span>
+        )}
 
         {/* Delete button */}
         <button
@@ -225,6 +279,17 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
           {block.type === 'divider' && (
             <hr className="my-4 border-gray-300" />
           )}
+
+          {/* Interactive and advanced block types - delegate to BlockEditor */}
+          {['flip-card', 'hotspot', 'accordion', 'tabs', 'timeline', 'callout',
+            'table', 'button', 'audio', 'embed', 'gallery', 'labeled-graphic',
+          ].includes(block.type) && (
+            <BlockEditor
+              block={block}
+              onUpdate={(updates) => handleBlockUpdate(block.id, updates)}
+              onUpdateData={(dataUpdates) => handleBlockUpdate(block.id, { data: { ...block.data, ...dataUpdates } })}
+            />
+          )}
         </div>
       </div>
     );
@@ -280,30 +345,39 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
               </button>
 
               {showAddBlock && (
-                <div className="absolute left-1/2 -translate-x-1/2 mt-2 bg-white rounded-xl shadow-xl border p-3 grid grid-cols-4 gap-2 z-10 min-w-[320px]">
-                  {blockTypeOptions.map(opt => (
+                <div className="absolute left-1/2 -translate-x-1/2 mt-2 bg-white rounded-xl shadow-xl border p-4 z-10 min-w-[480px] space-y-3">
+                  {blockCategories.map(cat => (
+                    <div key={cat.label}>
+                      <h4 className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5 px-1">{cat.label}</h4>
+                      <div className="grid grid-cols-6 gap-1">
+                        {cat.options.map(opt => (
+                          <button
+                            key={opt.type}
+                            onClick={() => {
+                              addContentBlock(course.id, moduleId, lessonId, slide.id, opt.type);
+                              setShowAddBlock(false);
+                            }}
+                            className="flex flex-col items-center gap-1 p-2.5 rounded-lg hover:bg-gray-50 text-gray-600 hover:text-brand-600 transition-colors"
+                          >
+                            {opt.icon}
+                            <span className="text-[10px] leading-tight">{opt.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                  <div className="border-t pt-2">
                     <button
-                      key={opt.type}
                       onClick={() => {
-                        addContentBlock(course.id, moduleId, lessonId, slide.id, opt.type);
+                        addQuestion(course.id, moduleId, lessonId, slide.id);
                         setShowAddBlock(false);
                       }}
-                      className="flex flex-col items-center gap-1.5 p-3 rounded-lg hover:bg-gray-50 text-gray-600 hover:text-brand-600 transition-colors"
+                      className="flex flex-col items-center gap-1 p-2.5 rounded-lg hover:bg-amber-50 text-amber-600 transition-colors"
                     >
-                      {opt.icon}
-                      <span className="text-xs">{opt.label}</span>
+                      <HelpCircle className="w-4 h-4" />
+                      <span className="text-[10px] leading-tight">Quiz</span>
                     </button>
-                  ))}
-                  <button
-                    onClick={() => {
-                      addQuestion(course.id, moduleId, lessonId, slide.id);
-                      setShowAddBlock(false);
-                    }}
-                    className="flex flex-col items-center gap-1.5 p-3 rounded-lg hover:bg-amber-50 text-amber-600 transition-colors"
-                  >
-                    <HelpCircle className="w-4 h-4" />
-                    <span className="text-xs">Quiz</span>
-                  </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -423,6 +497,101 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
                 <div className="space-y-1 text-xs text-gray-500">
                   <p>{slide.content.length} content blocks</p>
                   <p>{slide.questions.length} questions</p>
+                </div>
+              </div>
+
+              {/* Transition */}
+              <div className="pt-4 border-t">
+                <label className="label flex items-center gap-1">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  Transition
+                </label>
+                <select
+                  className="input"
+                  value={slide.transition || 'none'}
+                  onChange={e => handleUpdateSlide({ transition: e.target.value as SlideTransition })}
+                >
+                  <option value="none">None</option>
+                  <option value="fade">Fade</option>
+                  <option value="slide-left">Slide Left</option>
+                  <option value="slide-up">Slide Up</option>
+                  <option value="zoom">Zoom</option>
+                </select>
+              </div>
+
+              {/* Cover Slide */}
+              <div className="pt-4 border-t">
+                <label className="flex items-center gap-2 text-sm cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={slide.isCoverSlide || false}
+                    onChange={e => handleUpdateSlide({ isCoverSlide: e.target.checked })}
+                    className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+                  />
+                  <span className="text-xs font-medium text-gray-700">Cover Slide</span>
+                </label>
+                {slide.isCoverSlide && (
+                  <div className="mt-2">
+                    <label className="label">Subtitle</label>
+                    <input
+                      type="text"
+                      className="input"
+                      placeholder="Enter cover subtitle..."
+                      value={slide.coverSubtitle || ''}
+                      onChange={e => handleUpdateSlide({ coverSubtitle: e.target.value })}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Learning Objectives */}
+              <div className="pt-4 border-t">
+                <label className="label flex items-center gap-1">
+                  <BookOpen className="w-3.5 h-3.5" />
+                  Learning Objectives
+                </label>
+                <div className="space-y-2">
+                  {(slide.learningObjectives || []).map((obj, objIdx) => (
+                    <div key={obj.id} className="flex items-center gap-1">
+                      <span className="text-[10px] text-gray-400 w-4 shrink-0">{objIdx + 1}.</span>
+                      <input
+                        type="text"
+                        className="input flex-1 text-xs"
+                        placeholder="Objective..."
+                        value={obj.text}
+                        onChange={e => {
+                          const updated = (slide.learningObjectives || []).map(o =>
+                            o.id === obj.id ? { ...o, text: e.target.value } : o
+                          );
+                          handleUpdateSlide({ learningObjectives: updated });
+                        }}
+                      />
+                      <button
+                        onClick={() => {
+                          const updated = (slide.learningObjectives || []).filter(o => o.id !== obj.id);
+                          handleUpdateSlide({ learningObjectives: updated });
+                        }}
+                        className="btn-icon w-5 h-5 text-red-400 hover:text-red-600 shrink-0"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => {
+                      const newObj: LearningObjective = {
+                        id: crypto.randomUUID(),
+                        text: '',
+                      };
+                      handleUpdateSlide({
+                        learningObjectives: [...(slide.learningObjectives || []), newObj],
+                      });
+                    }}
+                    className="flex items-center gap-1 text-xs text-brand-600 hover:text-brand-700 font-medium"
+                  >
+                    <Plus className="w-3 h-3" />
+                    Add Objective
+                  </button>
                 </div>
               </div>
             </div>
