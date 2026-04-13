@@ -384,19 +384,16 @@ function generatePlayer(): string {
   function goToSlide(index) {
     currentSlide = index;
     showingLanding = false;
-    var slideWrapper = document.getElementById('slide-wrapper');
-    var slideContent = document.getElementById('slide-content');
-    var nav = document.getElementById('navigation');
-    var progress = document.getElementById('progress-container');
+    var body = document.getElementById('body');
     var header = document.getElementById('header');
-    if (slideWrapper) slideWrapper.style.display = '';
-    if (slideContent) slideContent.style.display = '';
-    if (nav) nav.style.display = '';
-    if (progress) progress.style.display = '';
+    var progress = document.getElementById('progress-container');
+    if (body) body.style.display = '';
     if (header) header.style.display = '';
+    if (progress) progress.style.display = '';
     var landingEl = document.getElementById('landing-page');
     if (landingEl) landingEl.style.display = 'none';
     renderSlide();
+    renderSidebar();
     updateProgress();
     updateNavigation();
     saveState();
@@ -426,14 +423,10 @@ function generatePlayer(): string {
     var textColor = lp.textColor || '#ffffff';
 
     // Hide the normal player UI
-    var slideWrapper = document.getElementById('slide-wrapper');
-    var slideContent = document.getElementById('slide-content');
-    var nav = document.getElementById('navigation');
+    var body = document.getElementById('body');
     var progress = document.getElementById('progress-container');
     var header = document.getElementById('header');
-    if (slideWrapper) slideWrapper.style.display = 'none';
-    if (slideContent) slideContent.style.display = 'none';
-    if (nav) nav.style.display = 'none';
+    if (body) body.style.display = 'none';
     if (progress) progress.style.display = 'none';
     if (header) header.style.display = 'none';
 
@@ -592,6 +585,117 @@ function generatePlayer(): string {
     }
   };
 
+  window._showResults = function() {
+    finishCourse();
+  };
+
+  // Sidebar rendering
+  function renderSidebar() {
+    var tree = document.getElementById('sidebar-tree');
+    if (!tree) return;
+
+    var flatIndex = 0;
+    var html = '';
+
+    COURSE_DATA.modules.forEach(function(mod, modIdx) {
+      var moduleStartIdx = flatIndex;
+      var moduleEndIdx = flatIndex + mod.slideCount - 1;
+      var isCurrentModule = currentSlide >= moduleStartIdx && currentSlide <= moduleEndIdx;
+      var sectionOpen = isCurrentModule ? ' open' : '';
+
+      html += '<div class="sidebar-section' + sectionOpen + '" data-module-idx="' + modIdx + '">';
+      html += '<button class="sidebar-section-header" data-module-toggle="' + modIdx + '">';
+      html += '<div class="sidebar-section-info">';
+      html += '<span class="sidebar-section-label">Section ' + (modIdx + 1) + '</span>';
+      html += '<span class="sidebar-section-title">' + escapeHtml(mod.title) + '</span>';
+      html += '</div>';
+      html += '<span class="sidebar-section-arrow">\\u25B6</span>';
+      html += '</button>';
+      html += '<div class="sidebar-section-slides">';
+
+      // Walk through lessons and slides for this module
+      var modSlideIdx = 0;
+      var lessonIdx = 0;
+      while (modSlideIdx < mod.slideCount && flatIndex < totalSlides) {
+        var slide = COURSE_DATA.slides[flatIndex];
+        var isActive = flatIndex === currentSlide;
+        var isVisited = visitedSlides.has(flatIndex);
+
+        var icon = isVisited ? '\\u2713' : '\\u25CB';
+        var iconClass = isVisited ? ' visited' : '';
+        var activeClass = isActive ? ' active' : '';
+
+        html += '<button class="sidebar-slide' + activeClass + iconClass + '" data-slide-idx="' + flatIndex + '">';
+        html += '<span class="sidebar-slide-icon">' + icon + '</span>';
+        html += '<span class="sidebar-slide-title">' + escapeHtml(slide.title || 'Slide ' + (flatIndex + 1)) + '</span>';
+        html += '</button>';
+
+        flatIndex++;
+        modSlideIdx++;
+      }
+
+      // Progress for this module
+      var viewedInModule = 0;
+      for (var vi = moduleStartIdx; vi <= moduleEndIdx; vi++) {
+        if (visitedSlides.has(vi)) viewedInModule++;
+      }
+      var allViewed = viewedInModule >= mod.slideCount;
+      html += '<div class="sidebar-progress">' + (allViewed ? 'Completed' : viewedInModule + ' / ' + mod.slideCount + ' viewed') + '</div>';
+
+      html += '</div>';
+      html += '</div>';
+    });
+
+    tree.innerHTML = html;
+
+    // Attach section toggle listeners
+    tree.querySelectorAll('.sidebar-section-header').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var section = btn.closest('.sidebar-section');
+        if (section) section.classList.toggle('open');
+      });
+    });
+
+    // Attach slide click listeners
+    tree.querySelectorAll('.sidebar-slide').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = parseInt(btn.getAttribute('data-slide-idx'));
+        if (!isNaN(idx)) goToSlide(idx);
+      });
+    });
+
+    // Scroll active slide into view
+    var activeSlide = tree.querySelector('.sidebar-slide.active');
+    if (activeSlide) {
+      activeSlide.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }
+
+  // Sidebar collapse/expand
+  function initSidebar() {
+    var collapseBtn = document.getElementById('sidebar-collapse-btn');
+    var sidebar = document.getElementById('sidebar');
+
+    if (collapseBtn && sidebar) {
+      collapseBtn.addEventListener('click', function() {
+        sidebar.classList.toggle('collapsed');
+        // Show/create expand button when collapsed
+        var expandBtn = document.getElementById('sidebar-expand-btn');
+        if (!expandBtn) {
+          expandBtn = document.createElement('button');
+          expandBtn.id = 'sidebar-expand-btn';
+          expandBtn.innerHTML = '\\u203A';
+          expandBtn.addEventListener('click', function() {
+            sidebar.classList.remove('collapsed');
+            expandBtn.style.display = 'none';
+          });
+          document.body.appendChild(expandBtn);
+        }
+        expandBtn.style.display = sidebar.classList.contains('collapsed') ? 'flex' : 'none';
+      });
+    }
+  }
+
   // Initialize
   window.addEventListener('load', function() {
     ScormAPI.init();
@@ -613,11 +717,15 @@ function generatePlayer(): string {
       } catch(e) {}
     }
 
+    // Init sidebar collapse/expand
+    initSidebar();
+
     // Show landing page first if enabled
     if (COURSE_DATA.settings.landingPage && COURSE_DATA.settings.landingPage.enabled) {
       renderLandingPage();
     } else {
       renderSlide();
+      renderSidebar();
       updateProgress();
       updateNavigation();
     }
@@ -1615,7 +1723,11 @@ function generatePlayer(): string {
     }
     var counter = document.getElementById('slide-counter');
     if (counter) {
-      counter.textContent = (currentSlide + 1) + ' / ' + totalSlides;
+      counter.textContent = 'Page ' + (currentSlide + 1) + ' of ' + totalSlides;
+    }
+    var pageIndicator = document.getElementById('page-indicator');
+    if (pageIndicator) {
+      pageIndicator.textContent = 'Page ' + (currentSlide + 1) + ' of ' + totalSlides;
     }
   }
 
@@ -1633,6 +1745,7 @@ function generatePlayer(): string {
     if (currentSlide < totalSlides - 1) {
       currentSlide++;
       renderSlide();
+      renderSidebar();
       updateProgress();
       updateNavigation();
       saveState();
@@ -1645,6 +1758,7 @@ function generatePlayer(): string {
     if (currentSlide > 0) {
       currentSlide--;
       renderSlide();
+      renderSidebar();
       updateProgress();
       updateNavigation();
       saveState();
@@ -1745,8 +1859,8 @@ function generatePlayer(): string {
     }
 
     // Hide navigation
-    document.getElementById('btn-prev').style.display = 'none';
-    document.getElementById('btn-next').style.display = 'none';
+    var nav = document.getElementById('navigation');
+    if (nav) nav.style.display = 'none';
   }
 
   function escapeHtml(str) {
@@ -1772,7 +1886,7 @@ function generateStyles(course: Course): string {
 
 body {
   font-family: '${font}', system-ui, -apple-system, sans-serif;
-  background: #0f172a;
+  background: #f9fafb;
   color: #1e293b;
   height: 100vh;
   display: flex;
@@ -1780,29 +1894,66 @@ body {
   overflow: hidden;
 }
 
+/* ========= Header ========= */
 #header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1.5rem;
-  background: #1e293b;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
   flex-shrink: 0;
 }
 
-#header h1 {
-  color: #f8fafc;
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+#btn-home {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 0.813rem;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+#btn-home:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.header-sep {
+  color: #d1d5db;
   font-size: 0.875rem;
+}
+
+#header h1 {
+  color: #1e293b;
+  font-size: 14px;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #slide-counter {
-  color: #94a3b8;
-  font-size: 0.875rem;
+  color: #6b7280;
+  font-size: 0.813rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
+/* ========= Progress Bar ========= */
 #progress-container {
   height: 3px;
-  background: #1e293b;
+  background: #e5e7eb;
   flex-shrink: 0;
 }
 
@@ -1813,26 +1964,271 @@ body {
   width: 0%;
 }
 
-#slide-wrapper {
+/* ========= Body: Sidebar + Main ========= */
+#body {
   flex: 1;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+/* ========= Sidebar ========= */
+#sidebar {
+  width: 280px;
+  min-width: 280px;
+  background: #fff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: width 0.2s ease, min-width 0.2s ease;
+}
+#sidebar.collapsed {
+  width: 0;
+  min-width: 0;
+  border-right: none;
+  overflow: hidden;
+}
+#sidebar.collapsed > * {
+  display: none;
+}
+
+#sidebar-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+#sidebar-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+#sidebar-collapse-btn {
+  background: none;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 1rem;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  overflow: auto;
-  align-items: flex-start;
+  padding: 0;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+#sidebar-collapse-btn:hover {
+  background: #f3f4f6;
+  color: #1e293b;
+}
+
+#sidebar-tree {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+.sidebar-section {
+  border-bottom: 1px solid #f3f4f6;
+}
+.sidebar-section:last-child {
+  border-bottom: none;
+}
+
+.sidebar-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+}
+.sidebar-section-header:hover {
+  background: #f9fafb;
+}
+
+.sidebar-section-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.sidebar-section-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+}
+
+.sidebar-section-title {
+  font-size: 0.813rem;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-section-arrow {
+  font-size: 0.625rem;
+  color: #9ca3af;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+  margin-left: 8px;
+}
+.sidebar-section.open .sidebar-section-arrow {
+  transform: rotate(90deg);
+}
+
+.sidebar-section-slides {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+}
+.sidebar-section.open .sidebar-section-slides {
+  max-height: 2000px;
+}
+
+.sidebar-slide {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 16px 7px 28px;
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.813rem;
+  color: #4b5563;
+  transition: all 0.1s;
+}
+.sidebar-slide:hover {
+  background: #f9fafb;
+}
+.sidebar-slide.active {
+  border-left-color: ${primary};
+  background: #f0f5ff;
+  color: ${primary};
+  font-weight: 600;
+}
+.sidebar-slide.visited .sidebar-slide-icon {
+  color: #10b981;
+}
+
+.sidebar-slide-icon {
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+  color: #d1d5db;
+}
+
+.sidebar-slide-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar-progress {
+  padding: 6px 16px;
+  font-size: 0.688rem;
+  color: #9ca3af;
+}
+
+#sidebar-footer {
+  border-top: 1px solid #e5e7eb;
+  padding: 10px 16px;
+  flex-shrink: 0;
+}
+
+#sidebar-results-btn {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 0.813rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.15s;
+}
+#sidebar-results-btn:hover {
+  color: ${primary};
+}
+
+/* Sidebar expand button (shown when collapsed) */
+#sidebar-expand-btn {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-left: none;
+  border-radius: 0 6px 6px 0;
+  width: 20px;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 0.875rem;
+  padding: 0;
+  box-shadow: 2px 0 4px rgba(0,0,0,0.05);
+}
+#sidebar-expand-btn:hover {
+  background: #f3f4f6;
+  color: #1e293b;
+}
+
+/* ========= Main Content ========= */
+#main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+  min-width: 0;
+}
+
+#page-indicator {
+  padding: 12px 2.5rem 0;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  flex-shrink: 0;
 }
 
 #slide-content {
-  width: 100%;
-  max-width: 64rem;
-  background: #fff;
-  border-radius: 0.75rem;
-  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-  padding: 2.5rem;
-  min-height: calc(100vh - 9rem);
-  overflow: auto;
-  margin: 1rem 0;
+  flex: 1;
+  padding: 1rem 2.5rem 2rem;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #slide-content h1 { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.2; }
@@ -1850,18 +2246,19 @@ body {
 
 .content-block { margin-bottom: 1rem; }
 
+/* ========= Navigation (inside main content) ========= */
 #navigation {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 2rem;
-  background: #1e293b;
+  padding: 16px 2.5rem;
+  border-top: 1px solid #e5e7eb;
   flex-shrink: 0;
+  background: #fff;
 }
 
-#navigation button {
+.btn-prev, .btn-next {
   padding: 0.5rem 1.25rem;
-  border: none;
   border-radius: 0.5rem;
   font-size: 0.875rem;
   cursor: pointer;
@@ -1869,20 +2266,26 @@ body {
   font-weight: 500;
 }
 
-#btn-prev {
-  background: #334155;
-  color: #cbd5e1;
+.btn-prev {
+  background: #fff;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
 }
 
-#btn-prev:hover:not(:disabled) { background: #475569; color: #f8fafc; }
-#btn-prev:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn-prev:hover:not(:disabled) {
+  background: #f9fafb;
+  color: #1e293b;
+  border-color: #9ca3af;
+}
+.btn-prev:disabled { opacity: 0.3; cursor: not-allowed; }
 
-#btn-next {
+.btn-next {
   background: ${primary};
   color: #fff;
+  border: none;
 }
 
-#btn-next:hover { filter: brightness(1.1); }
+.btn-next:hover { filter: brightness(1.1); }
 
 .quiz-option:hover:not(:disabled) {
   border-color: ${primary} !important;
@@ -3232,13 +3635,20 @@ body {
 
 /* ========= Responsive / Mobile ========= */
 @media (max-width: 768px) {
-  #slide-wrapper {
-    padding: 0.75rem;
+  #sidebar {
+    display: none;
+  }
+  #sidebar-expand-btn {
+    display: none !important;
   }
   #slide-content {
     padding: 1.25rem;
-    border-radius: 0.5rem;
-    max-height: calc(100vh - 8rem);
+  }
+  #page-indicator {
+    padding: 10px 1.25rem 0;
+  }
+  #navigation {
+    padding: 12px 1.25rem;
   }
   #slide-content h1 {
     font-size: 1.375rem;
@@ -3293,7 +3703,7 @@ body {
   #header h1 {
     font-size: 0.75rem;
   }
-  #navigation button {
+  .btn-prev, .btn-next {
     padding: 0.375rem 0.875rem;
     font-size: 0.813rem;
   }
@@ -3334,12 +3744,9 @@ body {
 
 @media print {
   body { background: #fff; }
-  #header, #navigation, #progress-container { display: none !important; }
-  #slide-wrapper { padding: 0; }
+  #header, #navigation, #progress-container, #sidebar { display: none !important; }
   #slide-content {
-    box-shadow: none;
-    max-height: none;
-    border-radius: 0;
+    padding: 1rem;
   }
 }
 `;
@@ -3356,21 +3763,34 @@ function generateIndexHtml(course: Course): string {
 </head>
 <body>
   <div id="header">
-    <div style="display:flex;align-items:center;gap:0.75rem;">
+    <div class="header-left">
+      ${course.settings.landingPage.enabled ? '<button id="btn-home" onclick="_showLanding()" title="Back to landing page">&#x2302; Home</button><span class="header-sep">|</span>' : ''}
       <h1>${escapeHtml(course.title)}</h1>
-      ${course.settings.landingPage.enabled ? '<button id="btn-home" onclick="_showLanding()" title="Back to landing page" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.125rem;padding:0.25rem;line-height:1;" onmouseover="this.style.color=\'#f8fafc\'" onmouseout="this.style.color=\'#94a3b8\'">&#x2302;</button>' : ''}
     </div>
-    <span id="slide-counter">1 / 1</span>
+    <span id="slide-counter">Page 1 of 1</span>
   </div>
   <div id="progress-container">
     <div id="progress-bar"></div>
   </div>
-  <div id="slide-wrapper">
-    <div id="slide-content"></div>
-  </div>
-  <div id="navigation">
-    <button id="btn-prev" onclick="goPrev()">&lsaquo; Previous</button>
-    <button id="btn-next" onclick="goNext()">Next &rsaquo;</button>
+  <div id="body">
+    <div id="sidebar">
+      <div id="sidebar-header">
+        <span id="sidebar-title">${escapeHtml(course.title)}</span>
+        <button id="sidebar-collapse-btn" title="Collapse sidebar">&#x2039;</button>
+      </div>
+      <div id="sidebar-tree"></div>
+      <div id="sidebar-footer">
+        <button id="sidebar-results-btn" onclick="window._showResults && window._showResults()">Results</button>
+      </div>
+    </div>
+    <div id="main-content">
+      <div id="page-indicator">Page 1 of 1</div>
+      <div id="slide-content"></div>
+      <div id="navigation">
+        <button id="btn-prev" class="btn-prev" onclick="goPrev()">&lsaquo; Previous</button>
+        <button id="btn-next" class="btn-next" onclick="goNext()">Next &rsaquo;</button>
+      </div>
+    </div>
   </div>
   <script src="scorm-api.js"></script>
   <script src="course-data.js"></script>
