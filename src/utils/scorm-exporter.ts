@@ -1069,6 +1069,94 @@ function generatePlayer(): string {
           html += '</div>';
         });
         html += '</div>';
+
+      } else if (block.type === 'image-top') {
+        var liImgs = d.layoutImages || [];
+        var liImg = liImgs[0] || { url: '', caption: '', alt: '' };
+        html += '<div class="layout-image-top">';
+        if (liImg.url) {
+          html += '<img src="' + escapeHtml(liImg.url) + '" alt="' + escapeHtml(liImg.alt || '') + '" class="layout-img"/>';
+        } else {
+          html += '<div class="layout-img-placeholder"></div>';
+        }
+        if (liImg.caption) html += '<p class="layout-caption">' + escapeHtml(liImg.caption) + '</p>';
+        if (d.layoutText) html += '<div class="layout-text">' + escapeHtml(d.layoutText) + '</div>';
+        html += '</div>';
+
+      } else if (block.type === 'image-bottom') {
+        var biImgs = d.layoutImages || [];
+        var biImg = biImgs[0] || { url: '', caption: '', alt: '' };
+        html += '<div class="layout-image-bottom">';
+        if (d.layoutText) html += '<div class="layout-text">' + escapeHtml(d.layoutText) + '</div>';
+        if (biImg.url) {
+          html += '<img src="' + escapeHtml(biImg.url) + '" alt="' + escapeHtml(biImg.alt || '') + '" class="layout-img"/>';
+        } else {
+          html += '<div class="layout-img-placeholder"></div>';
+        }
+        if (biImg.caption) html += '<p class="layout-caption">' + escapeHtml(biImg.caption) + '</p>';
+        html += '</div>';
+
+      } else if (block.type === 'image-left') {
+        var liLImgs = d.layoutImages || [];
+        var liLImg = liLImgs[0] || { url: '', caption: '', alt: '' };
+        html += '<div class="layout-image-left">';
+        html += '<div class="layout-side-img">';
+        if (liLImg.url) {
+          html += '<img src="' + escapeHtml(liLImg.url) + '" alt="' + escapeHtml(liLImg.alt || '') + '" class="layout-img"/>';
+        } else {
+          html += '<div class="layout-img-placeholder"></div>';
+        }
+        if (liLImg.caption) html += '<p class="layout-caption">' + escapeHtml(liLImg.caption) + '</p>';
+        html += '</div>';
+        html += '<div class="layout-side-text">' + escapeHtml(d.layoutText || '') + '</div>';
+        html += '</div>';
+
+      } else if (block.type === 'image-right') {
+        var liRImgs = d.layoutImages || [];
+        var liRImg = liRImgs[0] || { url: '', caption: '', alt: '' };
+        html += '<div class="layout-image-right">';
+        html += '<div class="layout-side-text">' + escapeHtml(d.layoutText || '') + '</div>';
+        html += '<div class="layout-side-img">';
+        if (liRImg.url) {
+          html += '<img src="' + escapeHtml(liRImg.url) + '" alt="' + escapeHtml(liRImg.alt || '') + '" class="layout-img"/>';
+        } else {
+          html += '<div class="layout-img-placeholder"></div>';
+        }
+        if (liRImg.caption) html += '<p class="layout-caption">' + escapeHtml(liRImg.caption) + '</p>';
+        html += '</div>';
+        html += '</div>';
+
+      } else if (block.type === 'two-images') {
+        var twoImgs = d.layoutImages || [];
+        html += '<div class="layout-two-images">';
+        for (var ti = 0; ti < 2; ti++) {
+          var tImg = twoImgs[ti] || { url: '', caption: '', alt: '' };
+          html += '<div class="layout-multi-item">';
+          if (tImg.url) {
+            html += '<img src="' + escapeHtml(tImg.url) + '" alt="' + escapeHtml(tImg.alt || '') + '" class="layout-img"/>';
+          } else {
+            html += '<div class="layout-img-placeholder"></div>';
+          }
+          if (tImg.caption) html += '<p class="layout-caption">' + escapeHtml(tImg.caption) + '</p>';
+          html += '</div>';
+        }
+        html += '</div>';
+
+      } else if (block.type === 'three-images') {
+        var threeImgs = d.layoutImages || [];
+        html += '<div class="layout-three-images">';
+        for (var tri = 0; tri < 3; tri++) {
+          var trImg = threeImgs[tri] || { url: '', caption: '', alt: '' };
+          html += '<div class="layout-multi-item">';
+          if (trImg.url) {
+            html += '<img src="' + escapeHtml(trImg.url) + '" alt="' + escapeHtml(trImg.alt || '') + '" class="layout-img"/>';
+          } else {
+            html += '<div class="layout-img-placeholder"></div>';
+          }
+          if (trImg.caption) html += '<p class="layout-caption">' + escapeHtml(trImg.caption) + '</p>';
+          html += '</div>';
+        }
+        html += '</div>';
       }
       // Close animation wrapper if needed
       if (anim && anim !== 'none') {
@@ -2799,6 +2887,72 @@ body {
   color: #64748b;
   padding: 0.5rem 0.625rem;
   margin: 0;
+}
+
+/* Image Layout Blocks */
+.layout-img {
+  width: 100%;
+  border-radius: 0.75rem;
+  object-fit: cover;
+  display: block;
+}
+.layout-img-placeholder {
+  width: 100%;
+  height: 12rem;
+  background: #f1f5f9;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.layout-caption {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-align: center;
+  margin-top: 0.25rem;
+}
+.layout-text {
+  font-size: 0.875rem;
+  color: #374151;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+.layout-image-top,
+.layout-image-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.layout-image-left,
+.layout-image-right {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+.layout-side-img {
+  width: 40%;
+  flex-shrink: 0;
+}
+.layout-side-text {
+  width: 60%;
+  font-size: 0.875rem;
+  color: #374151;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+.layout-two-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.layout-three-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+.layout-multi-item {
+  display: flex;
+  flex-direction: column;
 }
 
 /* Labeled Graphic */

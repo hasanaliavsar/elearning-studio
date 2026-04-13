@@ -1209,6 +1209,199 @@ function LabeledGraphicEditor({ block, onUpdateData }: BlockEditorProps) {
 }
 
 // ---------------------------------------------------------------------------
+// 13. Image Layout Editors (image-top, image-bottom, image-left, image-right, two-images, three-images)
+// ---------------------------------------------------------------------------
+
+function useLayoutImageUpload(
+  onUpdateData: BlockEditorProps['onUpdateData'],
+  images: { url: string; caption: string; alt: string }[],
+  index: number,
+) {
+  return () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const updated = [...images];
+        updated[index] = { ...updated[index]!, url: reader.result as string };
+        onUpdateData({ layoutImages: updated });
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  };
+}
+
+function LayoutImageInput({
+  image,
+  index,
+  images,
+  onUpdateData,
+}: {
+  image: { url: string; caption: string; alt: string };
+  index: number;
+  images: { url: string; caption: string; alt: string }[];
+  onUpdateData: BlockEditorProps['onUpdateData'];
+}) {
+  const handleUpload = useLayoutImageUpload(onUpdateData, images, index);
+  const updateField = (field: string, value: string) => {
+    const updated = [...images];
+    updated[index] = { ...updated[index]!, [field]: value };
+    onUpdateData({ layoutImages: updated });
+  };
+
+  return (
+    <div className="space-y-1.5">
+      {image.url ? (
+        <div className="relative group/img">
+          <img src={image.url} alt={image.alt || ''} className="w-full rounded-lg max-h-40 object-cover" />
+          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/img:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+            <button onClick={handleUpload} className="btn-secondary text-xs">Replace</button>
+          </div>
+        </div>
+      ) : (
+        <div
+          onClick={handleUpload}
+          className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/50 transition-colors"
+        >
+          <Image className="w-6 h-6 text-gray-400 mx-auto mb-1" />
+          <p className="text-[10px] text-gray-500">Upload image</p>
+        </div>
+      )}
+      <input
+        className="input text-xs"
+        placeholder="Image URL"
+        value={image.url.startsWith('data:') ? '' : image.url}
+        onChange={e => updateField('url', e.target.value)}
+      />
+      <input
+        className="input text-xs"
+        placeholder="Caption"
+        value={image.caption}
+        onChange={e => updateField('caption', e.target.value)}
+      />
+    </div>
+  );
+}
+
+function ensureLayoutImages(data: ContentBlockData, count: number) {
+  const existing = data.layoutImages ?? [];
+  const result = [...existing];
+  while (result.length < count) result.push({ url: '', caption: '', alt: '' });
+  return result.slice(0, count);
+}
+
+function ImageTopEditor({ block, onUpdateData }: BlockEditorProps) {
+  const data = ensureData(block);
+  const images = ensureLayoutImages(data, 1);
+  return (
+    <div className="space-y-3">
+      <SectionHeading>Image Top Layout</SectionHeading>
+      <LayoutImageInput image={images[0]!} index={0} images={images} onUpdateData={onUpdateData} />
+      <textarea
+        className="input text-xs resize-none"
+        rows={4}
+        placeholder="Text content below the image..."
+        value={data.layoutText ?? ''}
+        onChange={e => onUpdateData({ layoutText: e.target.value })}
+      />
+    </div>
+  );
+}
+
+function ImageBottomEditor({ block, onUpdateData }: BlockEditorProps) {
+  const data = ensureData(block);
+  const images = ensureLayoutImages(data, 1);
+  return (
+    <div className="space-y-3">
+      <SectionHeading>Image Bottom Layout</SectionHeading>
+      <textarea
+        className="input text-xs resize-none"
+        rows={4}
+        placeholder="Text content above the image..."
+        value={data.layoutText ?? ''}
+        onChange={e => onUpdateData({ layoutText: e.target.value })}
+      />
+      <LayoutImageInput image={images[0]!} index={0} images={images} onUpdateData={onUpdateData} />
+    </div>
+  );
+}
+
+function ImageLeftEditor({ block, onUpdateData }: BlockEditorProps) {
+  const data = ensureData(block);
+  const images = ensureLayoutImages(data, 1);
+  return (
+    <div className="space-y-3">
+      <SectionHeading>Image Left Layout</SectionHeading>
+      <div className="grid grid-cols-2 gap-3">
+        <LayoutImageInput image={images[0]!} index={0} images={images} onUpdateData={onUpdateData} />
+        <textarea
+          className="input text-xs resize-none h-full"
+          rows={6}
+          placeholder="Text content..."
+          value={data.layoutText ?? ''}
+          onChange={e => onUpdateData({ layoutText: e.target.value })}
+        />
+      </div>
+    </div>
+  );
+}
+
+function ImageRightEditor({ block, onUpdateData }: BlockEditorProps) {
+  const data = ensureData(block);
+  const images = ensureLayoutImages(data, 1);
+  return (
+    <div className="space-y-3">
+      <SectionHeading>Image Right Layout</SectionHeading>
+      <div className="grid grid-cols-2 gap-3">
+        <textarea
+          className="input text-xs resize-none h-full"
+          rows={6}
+          placeholder="Text content..."
+          value={data.layoutText ?? ''}
+          onChange={e => onUpdateData({ layoutText: e.target.value })}
+        />
+        <LayoutImageInput image={images[0]!} index={0} images={images} onUpdateData={onUpdateData} />
+      </div>
+    </div>
+  );
+}
+
+function TwoImagesEditor({ block, onUpdateData }: BlockEditorProps) {
+  const data = ensureData(block);
+  const images = ensureLayoutImages(data, 2);
+  return (
+    <div className="space-y-3">
+      <SectionHeading>Two Images Layout</SectionHeading>
+      <div className="grid grid-cols-2 gap-3">
+        {images.map((img, idx) => (
+          <LayoutImageInput key={idx} image={img} index={idx} images={images} onUpdateData={onUpdateData} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ThreeImagesEditor({ block, onUpdateData }: BlockEditorProps) {
+  const data = ensureData(block);
+  const images = ensureLayoutImages(data, 3);
+  return (
+    <div className="space-y-3">
+      <SectionHeading>Three Images Layout</SectionHeading>
+      <div className="grid grid-cols-3 gap-3">
+        {images.map((img, idx) => (
+          <LayoutImageInput key={idx} image={img} index={idx} images={images} onUpdateData={onUpdateData} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Main BlockEditor component
 // ---------------------------------------------------------------------------
 
@@ -1240,6 +1433,18 @@ export function BlockEditor(props: BlockEditorProps) {
       return <GalleryEditor {...props} />;
     case 'labeled-graphic':
       return <LabeledGraphicEditor {...props} />;
+    case 'image-top':
+      return <ImageTopEditor {...props} />;
+    case 'image-bottom':
+      return <ImageBottomEditor {...props} />;
+    case 'image-left':
+      return <ImageLeftEditor {...props} />;
+    case 'image-right':
+      return <ImageRightEditor {...props} />;
+    case 'two-images':
+      return <TwoImagesEditor {...props} />;
+    case 'three-images':
+      return <ThreeImagesEditor {...props} />;
     default:
       return null;
   }

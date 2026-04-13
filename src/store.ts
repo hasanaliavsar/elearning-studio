@@ -764,6 +764,13 @@ export const useStore = create<AppState>()(
           } : type === 'labeled-graphic' ? {
             labeledImage: '',
             labeledMarkers: [],
+          } : type === 'image-top' || type === 'image-bottom' || type === 'image-left' || type === 'image-right' ? {
+            layoutText: '<p>Add your description text here...</p>',
+            layoutImages: [{ url: '', caption: '', alt: '' }],
+          } : type === 'two-images' ? {
+            layoutImages: [{ url: '', caption: 'Image 1', alt: '' }, { url: '', caption: 'Image 2', alt: '' }],
+          } : type === 'three-images' ? {
+            layoutImages: [{ url: '', caption: 'Image 1', alt: '' }, { url: '', caption: 'Image 2', alt: '' }, { url: '', caption: 'Image 3', alt: '' }],
           } : undefined,
         };
         set(state => ({

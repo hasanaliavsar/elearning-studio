@@ -168,13 +168,18 @@ export interface ContentBlockData {
   // Labeled Graphic
   labeledImage?: string;
   labeledMarkers?: LabeledMarker[];
+  // Image layouts (image-top, image-bottom, image-left, image-right, two-images, three-images)
+  layoutText?: string; // HTML text paired with image
+  layoutImages?: { url: string; caption: string; alt: string }[];
 }
 
 export type ContentBlockType =
   | 'text' | 'image' | 'video' | 'heading' | 'list' | 'divider' | 'code'
   | 'flip-card' | 'hotspot' | 'accordion' | 'tabs' | 'timeline'
   | 'callout' | 'table' | 'button' | 'audio' | 'embed'
-  | 'gallery' | 'labeled-graphic';
+  | 'gallery' | 'labeled-graphic'
+  | 'image-top' | 'image-bottom' | 'image-left' | 'image-right'
+  | 'two-images' | 'three-images';
 
 // --- Animation types ---
 export type EntranceAnimation = 'none' | 'fade-in' | 'slide-up' | 'slide-left' | 'slide-right' | 'zoom-in' | 'bounce-in';

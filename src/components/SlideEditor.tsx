@@ -9,7 +9,8 @@ import {
   Settings, MessageSquare, HelpCircle, GripVertical, ChevronUp, ChevronDown,
   Layout, Columns, Palette,
   RotateCw, MousePointerClick, ChevronsUpDown, LayoutPanelTop, Clock, AlertCircle,
-  Table2, MousePointer, Music, Code2, Images, MapPin, Sparkles, BookOpen, Play
+  Table2, MousePointer, Music, Code2, Images, MapPin, Sparkles, BookOpen, Play,
+  ArrowUpFromLine, ArrowDownFromLine, PanelLeft, PanelRight, Columns2, Grid3x3
 } from 'lucide-react';
 
 interface Props {
@@ -31,6 +32,17 @@ const blockCategories: { label: string; options: BlockOption[] }[] = [
       { type: 'video', label: 'Video', icon: <Video className="w-4 h-4" /> },
       { type: 'divider', label: 'Divider', icon: <Minus className="w-4 h-4" /> },
       { type: 'code', label: 'Code', icon: <Code className="w-4 h-4" /> },
+    ],
+  },
+  {
+    label: 'Image Layouts',
+    options: [
+      { type: 'image-top', label: 'Img Top', icon: <ArrowUpFromLine className="w-4 h-4" /> },
+      { type: 'image-bottom', label: 'Img Bottom', icon: <ArrowDownFromLine className="w-4 h-4" /> },
+      { type: 'image-left', label: 'Img Left', icon: <PanelLeft className="w-4 h-4" /> },
+      { type: 'image-right', label: 'Img Right', icon: <PanelRight className="w-4 h-4" /> },
+      { type: 'two-images', label: '2 Images', icon: <Columns2 className="w-4 h-4" /> },
+      { type: 'three-images', label: '3 Images', icon: <Grid3x3 className="w-4 h-4" /> },
     ],
   },
   {
@@ -283,6 +295,7 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
           {/* Interactive and advanced block types - delegate to BlockEditor */}
           {['flip-card', 'hotspot', 'accordion', 'tabs', 'timeline', 'callout',
             'table', 'button', 'audio', 'embed', 'gallery', 'labeled-graphic',
+            'image-top', 'image-bottom', 'image-left', 'image-right', 'two-images', 'three-images',
           ].includes(block.type) && (
             <BlockEditor
               block={block}

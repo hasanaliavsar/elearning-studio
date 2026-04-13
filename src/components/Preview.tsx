@@ -1297,6 +1297,114 @@ export function CoursePreview() {
                       ))}
                     </div>
                   )}
+
+                  {/* Image Top Layout */}
+                  {block.type === 'image-top' && (() => {
+                    const img = block.data?.layoutImages?.[0];
+                    return (
+                      <div>
+                        {img?.url ? (
+                          <img src={img.url} alt={img.alt || ''} className="w-full rounded-xl object-cover" />
+                        ) : (
+                          <div className="w-full h-48 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 text-sm">No image</div>
+                        )}
+                        {img?.caption && <p className="text-xs text-gray-500 mt-1 text-center">{img.caption}</p>}
+                        {block.data?.layoutText && (
+                          <div className="mt-3 text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">{block.data.layoutText}</div>
+                        )}
+                      </div>
+                    );
+                  })()}
+
+                  {/* Image Bottom Layout */}
+                  {block.type === 'image-bottom' && (() => {
+                    const img = block.data?.layoutImages?.[0];
+                    return (
+                      <div>
+                        {block.data?.layoutText && (
+                          <div className="mb-3 text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">{block.data.layoutText}</div>
+                        )}
+                        {img?.url ? (
+                          <img src={img.url} alt={img.alt || ''} className="w-full rounded-xl object-cover" />
+                        ) : (
+                          <div className="w-full h-48 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 text-sm">No image</div>
+                        )}
+                        {img?.caption && <p className="text-xs text-gray-500 mt-1 text-center">{img.caption}</p>}
+                      </div>
+                    );
+                  })()}
+
+                  {/* Image Left Layout */}
+                  {block.type === 'image-left' && (() => {
+                    const img = block.data?.layoutImages?.[0];
+                    return (
+                      <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
+                        <div style={{ width: '40%', flexShrink: 0 }}>
+                          {img?.url ? (
+                            <img src={img.url} alt={img.alt || ''} className="w-full rounded-xl object-cover" />
+                          ) : (
+                            <div className="w-full h-48 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 text-sm">No image</div>
+                          )}
+                          {img?.caption && <p className="text-xs text-gray-500 mt-1 text-center">{img.caption}</p>}
+                        </div>
+                        <div style={{ width: '60%' }} className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
+                          {block.data?.layoutText || ''}
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Image Right Layout */}
+                  {block.type === 'image-right' && (() => {
+                    const img = block.data?.layoutImages?.[0];
+                    return (
+                      <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
+                        <div style={{ width: '60%' }} className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
+                          {block.data?.layoutText || ''}
+                        </div>
+                        <div style={{ width: '40%', flexShrink: 0 }}>
+                          {img?.url ? (
+                            <img src={img.url} alt={img.alt || ''} className="w-full rounded-xl object-cover" />
+                          ) : (
+                            <div className="w-full h-48 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 text-sm">No image</div>
+                          )}
+                          {img?.caption && <p className="text-xs text-gray-500 mt-1 text-center">{img.caption}</p>}
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Two Images Layout */}
+                  {block.type === 'two-images' && block.data?.layoutImages && (
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                      {block.data.layoutImages.slice(0, 2).map((img, idx) => (
+                        <div key={idx}>
+                          {img.url ? (
+                            <img src={img.url} alt={img.alt || ''} className="w-full rounded-xl object-cover" />
+                          ) : (
+                            <div className="w-full h-48 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 text-sm">No image</div>
+                          )}
+                          {img.caption && <p className="text-xs text-gray-500 mt-1 text-center">{img.caption}</p>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Three Images Layout */}
+                  {block.type === 'three-images' && block.data?.layoutImages && (
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+                      {block.data.layoutImages.slice(0, 3).map((img, idx) => (
+                        <div key={idx}>
+                          {img.url ? (
+                            <img src={img.url} alt={img.alt || ''} className="w-full rounded-xl object-cover" />
+                          ) : (
+                            <div className="w-full h-48 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 text-sm">No image</div>
+                          )}
+                          {img.caption && <p className="text-xs text-gray-500 mt-1 text-center">{img.caption}</p>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 );
               })}
