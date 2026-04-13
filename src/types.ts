@@ -228,6 +228,7 @@ export interface Module {
   lessons: Lesson[];
   order: number;
   thumbnail: string;
+  color: string; // card color for landing page
 }
 
 export interface LandingPageSettings {

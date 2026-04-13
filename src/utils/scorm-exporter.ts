@@ -344,6 +344,7 @@ function generateCourseData(course: Course): string {
       title: mod.title,
       description: mod.description,
       thumbnail: mod.thumbnail,
+      color: mod.color || '',
       lessonCount: mod.lessons.length,
       slideCount: mod.lessons.reduce((t, l) => t + l.slides.length, 0),
       duration: mod.lessons.reduce(
@@ -531,7 +532,7 @@ function generatePlayer(): string {
 
     html += '<div class="landing-modules-list">';
     COURSE_DATA.modules.forEach(function(mod, idx) {
-      var color = placeholderColors[idx % placeholderColors.length];
+      var color = mod.color || placeholderColors[idx % placeholderColors.length];
       html += '<button class="module-card" onclick="window._jumpToModule(' + idx + ')">';
       html += '<div class="module-card-inner">';
 

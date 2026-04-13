@@ -277,7 +277,15 @@ export function CourseEditor() {
                             ) : (
                               <ChevronRight className="w-4 h-4 flex-shrink-0 text-gray-500" />
                             )}
-                            <FolderOpen className="w-4 h-4 flex-shrink-0 text-brand-400" />
+                            <label className="flex-shrink-0 cursor-pointer" onClick={e => e.stopPropagation()} title="Module color">
+                              <div className="w-4 h-4 rounded-full border border-white/30" style={{ backgroundColor: mod.color || '#6366f1' }} />
+                              <input
+                                type="color"
+                                value={mod.color || '#6366f1'}
+                                onChange={e => updateModule(course.id, mod.id, { color: e.target.value })}
+                                className="sr-only"
+                              />
+                            </label>
                             {editingTitle === mod.id ? (
                               <input
                                 type="text"

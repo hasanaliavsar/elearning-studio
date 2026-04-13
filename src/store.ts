@@ -317,6 +317,7 @@ export const useStore = create<AppState>()(
               description: '',
               order: 0,
               thumbnail: '',
+              color: '',
               lessons: [
                 {
                   id: lessonId,
@@ -426,12 +427,14 @@ export const useStore = create<AppState>()(
         set(state => ({
           courses: state.courses.map(c => {
             if (c.id !== courseId) return c;
+            const defaultColors = ['#171D97', '#f59e0b', '#ec4899', '#8b5cf6', '#10b981', '#f97316', '#06b6d4', '#ef4444'];
             const newModule: Module = {
               id: generateId(),
               title: `Module ${c.modules.length + 1}`,
               description: '',
               order: c.modules.length,
               thumbnail: '',
+              color: defaultColors[c.modules.length % defaultColors.length] ?? '#171D97',
               lessons: [
                 {
                   id: generateId(),

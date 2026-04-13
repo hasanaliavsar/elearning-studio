@@ -297,7 +297,7 @@ interface ModuleCardProps {
 }
 
 function ModuleCard({ module, index, primaryColor, onJumpToModule }: ModuleCardProps) {
-  const placeholderColor = PLACEHOLDER_COLORS[index % PLACEHOLDER_COLORS.length];
+  const placeholderColor = module.color || PLACEHOLDER_COLORS[index % PLACEHOLDER_COLORS.length];
   const lessonCount = getModuleLessonCount(module);
   const slideCount = getModuleSlideCount(module);
   const duration = getModuleDuration(module);
