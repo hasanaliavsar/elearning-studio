@@ -11,6 +11,14 @@ import {
   Image, Video, HelpCircle, Layout, LayoutTemplate, Columns,
   Type, Eye
 } from 'lucide-react';
+import {
+  DndContext, closestCenter, PointerSensor, useSensor, useSensors,
+} from '@dnd-kit/core';
+import type { DragEndEvent } from '@dnd-kit/core';
+import {
+  SortableContext, useSortable, verticalListSortingStrategy, arrayMove,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const layoutOptions: { layout: SlideLayout; label: string; icon: React.ReactNode }[] = [
   { layout: 'title', label: 'Title Slide', icon: <Type className="w-4 h-4" /> },
@@ -21,6 +29,48 @@ const layoutOptions: { layout: SlideLayout; label: string; icon: React.ReactNode
   { layout: 'quiz', label: 'Quiz', icon: <HelpCircle className="w-4 h-4" /> },
   { layout: 'blank', label: 'Blank', icon: <Layout className="w-4 h-4" /> },
 ];
+
+function SortableModule({ id, children }: { id: string; children: (handleProps: { listeners: ReturnType<typeof useSortable>['listeners']; attributes: ReturnType<typeof useSortable>['attributes'] }) => React.ReactNode }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : undefined,
+  };
+  return (
+    <div ref={setNodeRef} style={style}>
+      {children({ listeners, attributes })}
+    </div>
+  );
+}
+
+function SortableLesson({ id, children }: { id: string; children: (handleProps: { listeners: ReturnType<typeof useSortable>['listeners']; attributes: ReturnType<typeof useSortable>['attributes'] }) => React.ReactNode }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : undefined,
+  };
+  return (
+    <div ref={setNodeRef} style={style}>
+      {children({ listeners, attributes })}
+    </div>
+  );
+}
+
+function SortableSlide({ id, children }: { id: string; children: (handleProps: { listeners: ReturnType<typeof useSortable>['listeners']; attributes: ReturnType<typeof useSortable>['attributes'] }) => React.ReactNode }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : undefined,
+  };
+  return (
+    <div ref={setNodeRef} style={style}>
+      {children({ listeners, attributes })}
+    </div>
+  );
+}
 
 export function CourseEditor() {
   const course = useStore(s => s.getActiveCourse());
@@ -44,6 +94,13 @@ export function CourseEditor() {
   const setRightPanelTab = useStore(s => s.setRightPanelTab);
   const setShowExportDialog = useStore(s => s.setShowExportDialog);
   const setPreviewSlideIndex = useStore(s => s.setPreviewSlideIndex);
+  const reorderModules = useStore(s => s.reorderModules);
+  const reorderLessons = useStore(s => s.reorderLessons);
+  const reorderSlides = useStore(s => s.reorderSlides);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  );
 
   const [expandedModules, setExpandedModules] = useState<Set<string>>(
     new Set(course?.modules.map(m => m.id) ?? [])
@@ -183,82 +240,51 @@ export function CourseEditor() {
             </div>
 
             <div className="flex-1 overflow-auto p-2 space-y-1">
-              {course.modules.map((mod, modIdx) => (
-                <div key={mod.id}>
-                  {/* Module item */}
-                  <div
-                    className={`flex items-center gap-1 px-2 py-1.5 rounded-lg text-sm cursor-pointer group ${
-                      editor.selectedModuleId === mod.id ? 'bg-sidebar-active text-white' : 'text-gray-300 hover:bg-sidebar-hover'
-                    }`}
-                    onClick={() => { selectModule(mod.id); toggleModule(mod.id); }}
-                  >
-                    {expandedModules.has(mod.id) ? (
-                      <ChevronDown className="w-4 h-4 flex-shrink-0 text-gray-500" />
-                    ) : (
-                      <ChevronRight className="w-4 h-4 flex-shrink-0 text-gray-500" />
-                    )}
-                    <FolderOpen className="w-4 h-4 flex-shrink-0 text-brand-400" />
-                    {editingTitle === mod.id ? (
-                      <input
-                        type="text"
-                        value={editTitleValue}
-                        onChange={e => setEditTitleValue(e.target.value)}
-                        onBlur={() => commitEditTitle('module', mod.id)}
-                        onKeyDown={e => { if (e.key === 'Enter') commitEditTitle('module', mod.id); if (e.key === 'Escape') setEditingTitle(null); }}
-                        className="flex-1 bg-gray-700 text-white text-sm px-1 rounded outline-none"
-                        autoFocus
-                        onClick={e => e.stopPropagation()}
-                      />
-                    ) : (
-                      <span
-                        className="flex-1 truncate"
-                        onDoubleClick={e => { e.stopPropagation(); startEditTitle(mod.id, mod.title); }}
-                      >
-                        {mod.title}
-                      </span>
-                    )}
-                    <div className="hidden group-hover:flex items-center gap-0.5">
-                      <button
-                        onClick={e => { e.stopPropagation(); addLesson(course.id, mod.id); toggleModule(mod.id); }}
-                        className="text-gray-500 hover:text-white"
-                        title="Add Lesson"
-                      >
-                        <Plus className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={e => { e.stopPropagation(); deleteModule(course.id, mod.id); }}
-                        className="text-gray-500 hover:text-red-400"
-                        title="Delete Module"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Lessons */}
-                  {expandedModules.has(mod.id) && (
-                    <div className="ml-4 space-y-0.5 mt-0.5">
-                      {mod.lessons.map((lesson, lesIdx) => (
-                        <div key={lesson.id}>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event: DragEndEvent) => {
+                  const { active, over } = event;
+                  if (!over || active.id === over.id) return;
+                  const oldIndex = course.modules.findIndex(m => m.id === active.id);
+                  const newIndex = course.modules.findIndex(m => m.id === over.id);
+                  if (oldIndex === -1 || newIndex === -1) return;
+                  const newOrder = arrayMove(course.modules.map(m => m.id), oldIndex, newIndex);
+                  reorderModules(course.id, newOrder);
+                }}
+              >
+                <SortableContext items={course.modules.map(m => m.id)} strategy={verticalListSortingStrategy}>
+                  {course.modules.map((mod, modIdx) => (
+                    <SortableModule key={mod.id} id={mod.id}>
+                      {({ listeners: modListeners, attributes: modAttributes }) => (
+                        <>
+                          {/* Module item */}
                           <div
                             className={`flex items-center gap-1 px-2 py-1.5 rounded-lg text-sm cursor-pointer group ${
-                              editor.selectedLessonId === lesson.id ? 'bg-sidebar-active text-white' : 'text-gray-400 hover:bg-sidebar-hover hover:text-gray-200'
+                              editor.selectedModuleId === mod.id ? 'bg-sidebar-active text-white' : 'text-gray-300 hover:bg-sidebar-hover'
                             }`}
-                            onClick={() => { navigateToLesson(mod.id, lesson.id); toggleLessonExpand(lesson.id); }}
+                            onClick={() => { selectModule(mod.id); toggleModule(mod.id); }}
                           >
-                            {expandedLessons.has(lesson.id) ? (
-                              <ChevronDown className="w-3.5 h-3.5 flex-shrink-0 text-gray-600" />
+                            <div
+                              className="hidden group-hover:flex items-center flex-shrink-0 cursor-grab text-gray-500 hover:text-gray-300"
+                              {...modListeners}
+                              {...modAttributes}
+                            >
+                              <GripVertical className="w-3.5 h-3.5" />
+                            </div>
+                            {expandedModules.has(mod.id) ? (
+                              <ChevronDown className="w-4 h-4 flex-shrink-0 text-gray-500" />
                             ) : (
-                              <ChevronRight className="w-3.5 h-3.5 flex-shrink-0 text-gray-600" />
+                              <ChevronRight className="w-4 h-4 flex-shrink-0 text-gray-500" />
                             )}
-                            <BookOpen className="w-3.5 h-3.5 flex-shrink-0 text-emerald-400" />
-                            {editingTitle === lesson.id ? (
+                            <FolderOpen className="w-4 h-4 flex-shrink-0 text-brand-400" />
+                            {editingTitle === mod.id ? (
                               <input
                                 type="text"
                                 value={editTitleValue}
                                 onChange={e => setEditTitleValue(e.target.value)}
-                                onBlur={() => commitEditTitle('lesson', mod.id, lesson.id)}
-                                onKeyDown={e => { if (e.key === 'Enter') commitEditTitle('lesson', mod.id, lesson.id); if (e.key === 'Escape') setEditingTitle(null); }}
+                                onBlur={() => commitEditTitle('module', mod.id)}
+                                onKeyDown={e => { if (e.key === 'Enter') commitEditTitle('module', mod.id); if (e.key === 'Escape') setEditingTitle(null); }}
                                 className="flex-1 bg-gray-700 text-white text-sm px-1 rounded outline-none"
                                 autoFocus
                                 onClick={e => e.stopPropagation()}
@@ -266,89 +292,200 @@ export function CourseEditor() {
                             ) : (
                               <span
                                 className="flex-1 truncate"
-                                onDoubleClick={e => { e.stopPropagation(); startEditTitle(lesson.id, lesson.title); }}
+                                onDoubleClick={e => { e.stopPropagation(); startEditTitle(mod.id, mod.title); }}
                               >
-                                {lesson.title}
+                                {mod.title}
                               </span>
                             )}
                             <div className="hidden group-hover:flex items-center gap-0.5">
                               <button
-                                onClick={e => { e.stopPropagation(); setShowAddSlideMenu(showAddSlideMenu === lesson.id ? null : lesson.id); }}
+                                onClick={e => { e.stopPropagation(); addLesson(course.id, mod.id); toggleModule(mod.id); }}
                                 className="text-gray-500 hover:text-white"
-                                title="Add Slide"
+                                title="Add Lesson"
                               >
                                 <Plus className="w-3.5 h-3.5" />
                               </button>
                               <button
-                                onClick={e => { e.stopPropagation(); deleteLesson(course.id, mod.id, lesson.id); }}
+                                onClick={e => { e.stopPropagation(); deleteModule(course.id, mod.id); }}
                                 className="text-gray-500 hover:text-red-400"
-                                title="Delete Lesson"
+                                title="Delete Module"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
                             </div>
                           </div>
 
-                          {/* Add slide menu */}
-                          {showAddSlideMenu === lesson.id && (
-                            <div className="ml-6 my-1 bg-gray-800 rounded-lg border border-gray-700 p-2 grid grid-cols-2 gap-1">
-                              {layoutOptions.map(opt => (
-                                <button
-                                  key={opt.layout}
-                                  onClick={() => handleAddSlide(mod.id, lesson.id, opt.layout)}
-                                  className="flex items-center gap-2 px-2 py-1.5 text-xs text-gray-300 hover:bg-gray-700 rounded"
-                                >
-                                  {opt.icon}
-                                  {opt.label}
-                                </button>
-                              ))}
-                            </div>
-                          )}
+                          {/* Lessons */}
+                          {expandedModules.has(mod.id) && (
+                            <DndContext
+                              sensors={sensors}
+                              collisionDetection={closestCenter}
+                              onDragEnd={(event: DragEndEvent) => {
+                                const { active, over } = event;
+                                if (!over || active.id === over.id) return;
+                                const oldIndex = mod.lessons.findIndex(l => l.id === active.id);
+                                const newIndex = mod.lessons.findIndex(l => l.id === over.id);
+                                if (oldIndex === -1 || newIndex === -1) return;
+                                const newOrder = arrayMove(mod.lessons.map(l => l.id), oldIndex, newIndex);
+                                reorderLessons(course.id, mod.id, newOrder);
+                              }}
+                            >
+                              <SortableContext items={mod.lessons.map(l => l.id)} strategy={verticalListSortingStrategy}>
+                                <div className="ml-4 space-y-0.5 mt-0.5">
+                                  {mod.lessons.map((lesson, lesIdx) => (
+                                    <SortableLesson key={lesson.id} id={lesson.id}>
+                                      {({ listeners: lessonListeners, attributes: lessonAttributes }) => (
+                                        <>
+                                          <div
+                                            className={`flex items-center gap-1 px-2 py-1.5 rounded-lg text-sm cursor-pointer group ${
+                                              editor.selectedLessonId === lesson.id ? 'bg-sidebar-active text-white' : 'text-gray-400 hover:bg-sidebar-hover hover:text-gray-200'
+                                            }`}
+                                            onClick={() => { navigateToLesson(mod.id, lesson.id); toggleLessonExpand(lesson.id); }}
+                                          >
+                                            <div
+                                              className="hidden group-hover:flex items-center flex-shrink-0 cursor-grab text-gray-500 hover:text-gray-300"
+                                              {...lessonListeners}
+                                              {...lessonAttributes}
+                                            >
+                                              <GripVertical className="w-3 h-3" />
+                                            </div>
+                                            {expandedLessons.has(lesson.id) ? (
+                                              <ChevronDown className="w-3.5 h-3.5 flex-shrink-0 text-gray-600" />
+                                            ) : (
+                                              <ChevronRight className="w-3.5 h-3.5 flex-shrink-0 text-gray-600" />
+                                            )}
+                                            <BookOpen className="w-3.5 h-3.5 flex-shrink-0 text-emerald-400" />
+                                            {editingTitle === lesson.id ? (
+                                              <input
+                                                type="text"
+                                                value={editTitleValue}
+                                                onChange={e => setEditTitleValue(e.target.value)}
+                                                onBlur={() => commitEditTitle('lesson', mod.id, lesson.id)}
+                                                onKeyDown={e => { if (e.key === 'Enter') commitEditTitle('lesson', mod.id, lesson.id); if (e.key === 'Escape') setEditingTitle(null); }}
+                                                className="flex-1 bg-gray-700 text-white text-sm px-1 rounded outline-none"
+                                                autoFocus
+                                                onClick={e => e.stopPropagation()}
+                                              />
+                                            ) : (
+                                              <span
+                                                className="flex-1 truncate"
+                                                onDoubleClick={e => { e.stopPropagation(); startEditTitle(lesson.id, lesson.title); }}
+                                              >
+                                                {lesson.title}
+                                              </span>
+                                            )}
+                                            <div className="hidden group-hover:flex items-center gap-0.5">
+                                              <button
+                                                onClick={e => { e.stopPropagation(); setShowAddSlideMenu(showAddSlideMenu === lesson.id ? null : lesson.id); }}
+                                                className="text-gray-500 hover:text-white"
+                                                title="Add Slide"
+                                              >
+                                                <Plus className="w-3.5 h-3.5" />
+                                              </button>
+                                              <button
+                                                onClick={e => { e.stopPropagation(); deleteLesson(course.id, mod.id, lesson.id); }}
+                                                className="text-gray-500 hover:text-red-400"
+                                                title="Delete Lesson"
+                                              >
+                                                <Trash2 className="w-3.5 h-3.5" />
+                                              </button>
+                                            </div>
+                                          </div>
 
-                          {/* Slides */}
-                          {expandedLessons.has(lesson.id) && (
-                            <div className="ml-8 space-y-0.5 mt-0.5">
-                              {lesson.slides.map((slide, sIdx) => (
-                                <div
-                                  key={slide.id}
-                                  className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs cursor-pointer group relative ${
-                                    editor.selectedSlideId === slide.id
-                                      ? 'bg-brand-600/30 text-brand-200 ring-1 ring-brand-500/50'
-                                      : 'text-gray-500 hover:bg-sidebar-hover hover:text-gray-300'
-                                  }`}
-                                  onClick={() => navigateToSlide(mod.id, lesson.id, slide.id)}
-                                >
-                                  <Presentation className="w-3 h-3 flex-shrink-0" />
-                                  <span className="flex-1 truncate">{slide.title || `Slide ${sIdx + 1}`}</span>
-                                  {slide.questions.length > 0 && (
-                                    <span className="text-[10px] bg-amber-500/20 text-amber-300 px-1 rounded">Q</span>
-                                  )}
-                                  <div className="hidden group-hover:flex items-center gap-0.5">
-                                    <button
-                                      onClick={e => { e.stopPropagation(); duplicateSlide(course.id, mod.id, lesson.id, slide.id); }}
-                                      className="text-gray-500 hover:text-white"
-                                      title="Duplicate"
-                                    >
-                                      <Copy className="w-3 h-3" />
-                                    </button>
-                                    <button
-                                      onClick={e => { e.stopPropagation(); deleteSlide(course.id, mod.id, lesson.id, slide.id); }}
-                                      className="text-gray-500 hover:text-red-400"
-                                      title="Delete"
-                                    >
-                                      <Trash2 className="w-3 h-3" />
-                                    </button>
-                                  </div>
+                                          {/* Add slide menu */}
+                                          {showAddSlideMenu === lesson.id && (
+                                            <div className="ml-6 my-1 bg-gray-800 rounded-lg border border-gray-700 p-2 grid grid-cols-2 gap-1">
+                                              {layoutOptions.map(opt => (
+                                                <button
+                                                  key={opt.layout}
+                                                  onClick={() => handleAddSlide(mod.id, lesson.id, opt.layout)}
+                                                  className="flex items-center gap-2 px-2 py-1.5 text-xs text-gray-300 hover:bg-gray-700 rounded"
+                                                >
+                                                  {opt.icon}
+                                                  {opt.label}
+                                                </button>
+                                              ))}
+                                            </div>
+                                          )}
+
+                                          {/* Slides */}
+                                          {expandedLessons.has(lesson.id) && (
+                                            <DndContext
+                                              sensors={sensors}
+                                              collisionDetection={closestCenter}
+                                              onDragEnd={(event: DragEndEvent) => {
+                                                const { active, over } = event;
+                                                if (!over || active.id === over.id) return;
+                                                const oldIndex = lesson.slides.findIndex(s => s.id === active.id);
+                                                const newIndex = lesson.slides.findIndex(s => s.id === over.id);
+                                                if (oldIndex === -1 || newIndex === -1) return;
+                                                const newOrder = arrayMove(lesson.slides.map(s => s.id), oldIndex, newIndex);
+                                                reorderSlides(course.id, mod.id, lesson.id, newOrder);
+                                              }}
+                                            >
+                                              <SortableContext items={lesson.slides.map(s => s.id)} strategy={verticalListSortingStrategy}>
+                                                <div className="ml-8 space-y-0.5 mt-0.5">
+                                                  {lesson.slides.map((slide, sIdx) => (
+                                                    <SortableSlide key={slide.id} id={slide.id}>
+                                                      {({ listeners: slideListeners, attributes: slideAttributes }) => (
+                                                        <div
+                                                          className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs cursor-pointer group relative ${
+                                                            editor.selectedSlideId === slide.id
+                                                              ? 'bg-brand-600/30 text-brand-200 ring-1 ring-brand-500/50'
+                                                              : 'text-gray-500 hover:bg-sidebar-hover hover:text-gray-300'
+                                                          }`}
+                                                          onClick={() => navigateToSlide(mod.id, lesson.id, slide.id)}
+                                                        >
+                                                          <div
+                                                            className="hidden group-hover:flex items-center flex-shrink-0 cursor-grab text-gray-500 hover:text-gray-300"
+                                                            {...slideListeners}
+                                                            {...slideAttributes}
+                                                          >
+                                                            <GripVertical className="w-2.5 h-2.5" />
+                                                          </div>
+                                                          <Presentation className="w-3 h-3 flex-shrink-0" />
+                                                          <span className="flex-1 truncate">{slide.title || `Slide ${sIdx + 1}`}</span>
+                                                          {slide.questions.length > 0 && (
+                                                            <span className="text-[10px] bg-amber-500/20 text-amber-300 px-1 rounded">Q</span>
+                                                          )}
+                                                          <div className="hidden group-hover:flex items-center gap-0.5">
+                                                            <button
+                                                              onClick={e => { e.stopPropagation(); duplicateSlide(course.id, mod.id, lesson.id, slide.id); }}
+                                                              className="text-gray-500 hover:text-white"
+                                                              title="Duplicate"
+                                                            >
+                                                              <Copy className="w-3 h-3" />
+                                                            </button>
+                                                            <button
+                                                              onClick={e => { e.stopPropagation(); deleteSlide(course.id, mod.id, lesson.id, slide.id); }}
+                                                              className="text-gray-500 hover:text-red-400"
+                                                              title="Delete"
+                                                            >
+                                                              <Trash2 className="w-3 h-3" />
+                                                            </button>
+                                                          </div>
+                                                        </div>
+                                                      )}
+                                                    </SortableSlide>
+                                                  ))}
+                                                </div>
+                                              </SortableContext>
+                                            </DndContext>
+                                          )}
+                                        </>
+                                      )}
+                                    </SortableLesson>
+                                  ))}
                                 </div>
-                              ))}
-                            </div>
+                              </SortableContext>
+                            </DndContext>
                           )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
+                        </>
+                      )}
+                    </SortableModule>
+                  ))}
+                </SortableContext>
+              </DndContext>
             </div>
           </aside>
         )}

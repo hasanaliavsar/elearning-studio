@@ -162,12 +162,14 @@ interface AppState {
   addLesson: (courseId: string, moduleId: string) => void;
   updateLesson: (courseId: string, moduleId: string, lessonId: string, updates: Partial<Lesson>) => void;
   deleteLesson: (courseId: string, moduleId: string, lessonId: string) => void;
+  reorderLessons: (courseId: string, moduleId: string, lessonIds: string[]) => void;
 
   // Slide CRUD
   addSlide: (courseId: string, moduleId: string, lessonId: string, layout?: SlideLayout) => void;
   updateSlide: (courseId: string, moduleId: string, lessonId: string, slideId: string, updates: Partial<Slide>) => void;
   deleteSlide: (courseId: string, moduleId: string, lessonId: string, slideId: string) => void;
   duplicateSlide: (courseId: string, moduleId: string, lessonId: string, slideId: string) => void;
+  reorderSlides: (courseId: string, moduleId: string, lessonId: string, slideIds: string[]) => void;
 
   // Content block CRUD
   addContentBlock: (courseId: string, moduleId: string, lessonId: string, slideId: string, type: ContentBlock['type']) => void;
@@ -423,6 +425,26 @@ export const useStore = create<AppState>()(
         }));
       },
 
+      reorderLessons: (courseId, moduleId, lessonIds) => {
+        set(state => ({
+          courses: state.courses.map(c => {
+            if (c.id !== courseId) return c;
+            return {
+              ...c,
+              modules: c.modules.map(m => {
+                if (m.id !== moduleId) return m;
+                const reordered = lessonIds.map((id, idx) => {
+                  const lesson = m.lessons.find(l => l.id === id);
+                  return lesson ? { ...lesson, order: idx } : null;
+                }).filter((l): l is Lesson => l !== null);
+                return { ...m, lessons: reordered };
+              }),
+              updatedAt: new Date().toISOString(),
+            };
+          }),
+        }));
+      },
+
       addLesson: (courseId, moduleId) => {
         set(state => ({
           courses: state.courses.map(c => {
@@ -585,6 +607,29 @@ export const useStore = create<AppState>()(
                     const newSlides = [...l.slides];
                     newSlides.splice(idx + 1, 0, dup);
                     return { ...l, slides: newSlides };
+                  }),
+                };
+              }),
+              updatedAt: new Date().toISOString(),
+            };
+          }),
+        }));
+      },
+
+      reorderSlides: (courseId, moduleId, lessonId, slideIds) => {
+        set(state => ({
+          courses: state.courses.map(c => {
+            if (c.id !== courseId) return c;
+            return {
+              ...c,
+              modules: c.modules.map(m => {
+                if (m.id !== moduleId) return m;
+                return {
+                  ...m,
+                  lessons: m.lessons.map(l => {
+                    if (l.id !== lessonId) return l;
+                    const reordered = slideIds.map(id => l.slides.find(s => s.id === id)).filter((s): s is Slide => s !== null);
+                    return { ...l, slides: reordered };
                   }),
                 };
               }),
