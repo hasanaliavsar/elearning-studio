@@ -5,7 +5,7 @@ import {
   ArrowLeft, ArrowRight, X, ChevronLeft, ChevronRight,
   CheckCircle2, XCircle, Award, RotateCcw, Home,
   ChevronDown, ChevronUp, Info, AlertTriangle, Lightbulb, CheckCircle,
-  ExternalLink, Volume2, GripVertical, Download
+  ExternalLink, Volume2, GripVertical, Download, Star, MapPin
 } from 'lucide-react';
 import { CourseLandingPage } from './CourseLandingPage';
 
@@ -160,6 +160,51 @@ export function CoursePreview() {
     }
     if (question.type === 'fill-in-blank') {
       return answer.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim();
+    }
+    if (question.type === 'likert') {
+      return question.likertCorrectIndex !== undefined && Number(answer) === question.likertCorrectIndex;
+    }
+    if (question.type === 'rating') {
+      return question.ratingCorrect !== undefined && Number(answer) >= question.ratingCorrect;
+    }
+    if (question.type === 'slider') {
+      return question.sliderCorrect !== undefined && Number(answer) >= question.sliderCorrect;
+    }
+    if (question.type === 'image-choice' || question.type === 'dropdown') {
+      const correctOption = question.options.find(o => o.isCorrect);
+      return correctOption?.id === answer;
+    }
+    if (question.type === 'matrix') {
+      if (!question.matrixGraded) return true; // ungraded always "correct"
+      try {
+        const selections = JSON.parse(answer) as Record<string, number>;
+        return (question.matrixRows || []).every(row =>
+          row.correctColumn !== undefined && selections[row.id] === row.correctColumn
+        );
+      } catch { return false; }
+    }
+    if (question.type === 'open-ended') {
+      const keywords = question.openEndedKeywords || [];
+      if (keywords.length === 0) return true; // no keywords = always accepted
+      const lowerAnswer = answer.toLowerCase();
+      const matched = keywords.filter(kw => lowerAnswer.includes(kw.toLowerCase()));
+      return matched.length > 0;
+    }
+    if (question.type === 'ranking') {
+      try {
+        const userOrder = JSON.parse(answer) as string[];
+        return JSON.stringify(userOrder) === JSON.stringify(question.correctOrder);
+      } catch { return false; }
+    }
+    if (question.type === 'hotspot-question') {
+      try {
+        const click = JSON.parse(answer) as { x: number; y: number };
+        return (question.hotspotZones || []).some(zone => {
+          if (!zone.isCorrect) return false;
+          const dist = Math.sqrt((click.x - zone.x) ** 2 + (click.y - zone.y) ** 2);
+          return dist <= zone.radius;
+        });
+      } catch { return false; }
     }
     return false;
   };
@@ -1105,6 +1150,459 @@ export function CoursePreview() {
                           ))}
                         </div>
                       )}
+
+                      {/* Likert scale */}
+                      {question.type === 'likert' && (
+                        <div className="ml-10">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            {(question.likertLabels || ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree']).map((label, idx) => {
+                              const isSelected = quizAnswers[question.id] === String(idx);
+                              const isCorrectChoice = isSubmitted && question.likertCorrectIndex === idx;
+                              const isWrongChoice = isSubmitted && isSelected && question.likertCorrectIndex !== idx;
+                              let btnClass = 'border-gray-200 hover:border-gray-300 bg-white';
+                              if (isSubmitted) {
+                                if (isCorrectChoice) btnClass = 'border-emerald-500 bg-emerald-50';
+                                else if (isWrongChoice) btnClass = 'border-red-500 bg-red-50';
+                              } else if (isSelected) {
+                                btnClass = 'border-2 bg-opacity-10';
+                              }
+                              return (
+                                <button
+                                  key={idx}
+                                  onClick={() => !isSubmitted && handleAnswer(question.id, String(idx))}
+                                  disabled={isSubmitted}
+                                  className={`px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all ${btnClass}`}
+                                  style={isSelected && !isSubmitted ? { borderColor: primaryColor, backgroundColor: `${primaryColor}15` } : undefined}
+                                >
+                                  {label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Rating */}
+                      {question.type === 'rating' && (() => {
+                        const max = question.ratingMax || 5;
+                        const selected = quizAnswers[question.id] ? Number(quizAnswers[question.id]) : 0;
+                        const style = question.ratingStyle || 'stars';
+                        const emojis = ['😞', '😕', '😐', '🙂', '😄', '🤩', '🥳', '😎', '🤗', '🌟'];
+                        return (
+                          <div className="ml-10">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              {Array.from({ length: max }, (_, i) => i + 1).map(val => {
+                                const isActive = val <= selected;
+                                if (style === 'stars') {
+                                  return (
+                                    <button
+                                      key={val}
+                                      onClick={() => !isSubmitted && handleAnswer(question.id, String(val))}
+                                      disabled={isSubmitted}
+                                      className="transition-transform hover:scale-110"
+                                    >
+                                      <Star
+                                        className="w-8 h-8"
+                                        fill={isActive ? (primaryColor) : 'none'}
+                                        stroke={isActive ? primaryColor : '#d1d5db'}
+                                        strokeWidth={1.5}
+                                      />
+                                    </button>
+                                  );
+                                }
+                                if (style === 'emoji') {
+                                  return (
+                                    <button
+                                      key={val}
+                                      onClick={() => !isSubmitted && handleAnswer(question.id, String(val))}
+                                      disabled={isSubmitted}
+                                      className={`text-2xl p-1 rounded-lg border-2 transition-all ${
+                                        val === selected ? 'border-current scale-110' : 'border-transparent opacity-60 hover:opacity-100'
+                                      }`}
+                                      style={val === selected ? { borderColor: primaryColor } : undefined}
+                                    >
+                                      {emojis[val - 1] || '⭐'}
+                                    </button>
+                                  );
+                                }
+                                // numbers
+                                return (
+                                  <button
+                                    key={val}
+                                    onClick={() => !isSubmitted && handleAnswer(question.id, String(val))}
+                                    disabled={isSubmitted}
+                                    className={`w-10 h-10 rounded-lg border-2 text-sm font-bold transition-all ${
+                                      val === selected
+                                        ? 'text-white'
+                                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                                    }`}
+                                    style={val === selected ? { backgroundColor: primaryColor, borderColor: primaryColor } : undefined}
+                                  >
+                                    {val}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            {isSubmitted && question.ratingCorrect !== undefined && (
+                              <p className={`text-sm mt-2 ${selected >= question.ratingCorrect ? 'text-emerald-600' : 'text-red-600'}`}>
+                                {selected >= question.ratingCorrect
+                                  ? 'Your rating meets the threshold.'
+                                  : `Minimum required: ${question.ratingCorrect}`}
+                              </p>
+                            )}
+                          </div>
+                        );
+                      })()}
+
+                      {/* Slider */}
+                      {question.type === 'slider' && (() => {
+                        const min = question.sliderMin ?? 0;
+                        const max = question.sliderMax ?? 100;
+                        const step = question.sliderStep ?? 1;
+                        const unit = question.sliderUnit || '';
+                        const currentVal = quizAnswers[question.id] !== undefined ? Number(quizAnswers[question.id]) : min;
+                        return (
+                          <div className="ml-10">
+                            <div className="flex items-center gap-4">
+                              <span className="text-xs text-gray-400 w-10 text-right">{min}</span>
+                              <input
+                                type="range"
+                                min={min}
+                                max={max}
+                                step={step}
+                                value={currentVal}
+                                onChange={e => !isSubmitted && handleAnswer(question.id, e.target.value)}
+                                disabled={isSubmitted}
+                                className="flex-1 accent-brand-500 h-2"
+                                style={{ accentColor: primaryColor }}
+                              />
+                              <span className="text-xs text-gray-400 w-10">{max}</span>
+                            </div>
+                            <div className="text-center mt-2">
+                              <span className="inline-block px-3 py-1 rounded-full text-sm font-bold text-white" style={{ backgroundColor: primaryColor }}>
+                                {currentVal}{unit ? ` ${unit}` : ''}
+                              </span>
+                            </div>
+                            {isSubmitted && question.sliderCorrect !== undefined && (
+                              <p className={`text-sm mt-2 text-center ${currentVal >= question.sliderCorrect ? 'text-emerald-600' : 'text-red-600'}`}>
+                                {currentVal >= question.sliderCorrect
+                                  ? 'Correct!'
+                                  : `Expected at least ${question.sliderCorrect}${unit ? ` ${unit}` : ''}`}
+                              </p>
+                            )}
+                          </div>
+                        );
+                      })()}
+
+                      {/* Image choice */}
+                      {question.type === 'image-choice' && (
+                        <div
+                          className="ml-10 grid gap-3"
+                          style={{ gridTemplateColumns: `repeat(${question.imageChoiceColumns || 2}, minmax(0, 1fr))` }}
+                        >
+                          {question.options.map(option => {
+                            const isSelected = quizAnswers[question.id] === option.id;
+                            let cardClass = 'border-gray-200 hover:border-gray-300';
+                            if (isSubmitted) {
+                              if (option.isCorrect) cardClass = 'border-emerald-500 ring-2 ring-emerald-200';
+                              else if (isSelected && !option.isCorrect) cardClass = 'border-red-500 ring-2 ring-red-200';
+                            } else if (isSelected) {
+                              cardClass = 'ring-2';
+                            }
+                            return (
+                              <button
+                                key={option.id}
+                                onClick={() => !isSubmitted && handleAnswer(question.id, option.id)}
+                                disabled={isSubmitted}
+                                className={`rounded-xl border-2 overflow-hidden transition-all text-left ${cardClass}`}
+                                style={isSelected && !isSubmitted ? { borderColor: primaryColor } : undefined}
+                              >
+                                {option.imageUrl && (
+                                  <img src={option.imageUrl} alt={option.text} className="w-full h-32 object-cover" />
+                                )}
+                                <div className="p-3 flex items-center gap-2">
+                                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                                    isSelected ? '' : 'border-gray-300'
+                                  }`} style={isSelected ? { borderColor: primaryColor } : undefined}>
+                                    {isSelected && (
+                                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: primaryColor }} />
+                                    )}
+                                  </div>
+                                  <span className="text-sm font-medium text-gray-700">{option.text}</span>
+                                  {isSubmitted && option.isCorrect && <CheckCircle2 className="w-4 h-4 text-emerald-500 ml-auto" />}
+                                  {isSubmitted && isSelected && !option.isCorrect && <XCircle className="w-4 h-4 text-red-500 ml-auto" />}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      {/* Matrix */}
+                      {question.type === 'matrix' && (() => {
+                        const columns = question.matrixColumns || [];
+                        const rows = question.matrixRows || [];
+                        let selections: Record<string, number> = {};
+                        try { selections = quizAnswers[question.id] ? JSON.parse(quizAnswers[question.id] ?? '{}') : {}; } catch { /* empty */ }
+                        const updateMatrix = (rowId: string, colIdx: number) => {
+                          const next = { ...selections, [rowId]: colIdx };
+                          handleAnswer(question.id, JSON.stringify(next));
+                        };
+                        return (
+                          <div className="ml-10 overflow-x-auto">
+                            <table className="w-full text-sm border-collapse">
+                              <thead>
+                                <tr>
+                                  <th className="text-left p-2 border-b border-gray-200" />
+                                  {columns.map((col, ci) => (
+                                    <th key={ci} className="text-center p-2 border-b border-gray-200 font-medium text-gray-600 min-w-[80px]">
+                                      {col}
+                                    </th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {rows.map(row => {
+                                  const selectedCol = selections[row.id];
+                                  return (
+                                    <tr key={row.id} className="border-b border-gray-100">
+                                      <td className="p-2 font-medium text-gray-700">{row.label}</td>
+                                      {columns.map((_, ci) => {
+                                        const isSel = selectedCol === ci;
+                                        const isRowCorrect = isSubmitted && question.matrixGraded && row.correctColumn === ci;
+                                        const isRowWrong = isSubmitted && question.matrixGraded && isSel && row.correctColumn !== ci;
+                                        return (
+                                          <td key={ci} className="text-center p-2">
+                                            <button
+                                              onClick={() => !isSubmitted && updateMatrix(row.id, ci)}
+                                              disabled={isSubmitted}
+                                              className={`w-5 h-5 rounded-full border-2 inline-flex items-center justify-center transition-all ${
+                                                isRowCorrect ? 'border-emerald-500' : isRowWrong ? 'border-red-500' : isSel ? '' : 'border-gray-300'
+                                              }`}
+                                              style={isSel && !isSubmitted ? { borderColor: primaryColor } : undefined}
+                                            >
+                                              {isSel && (
+                                                <div
+                                                  className="w-2.5 h-2.5 rounded-full"
+                                                  style={{ backgroundColor: isSubmitted ? (isRowWrong ? '#ef4444' : isRowCorrect ? '#10b981' : primaryColor) : primaryColor }}
+                                                />
+                                              )}
+                                              {isRowCorrect && !isSel && (
+                                                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                                              )}
+                                            </button>
+                                          </td>
+                                        );
+                                      })}
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+                        );
+                      })()}
+
+                      {/* Dropdown */}
+                      {question.type === 'dropdown' && (
+                        <div className="ml-10">
+                          <select
+                            value={quizAnswers[question.id] || ''}
+                            onChange={e => handleAnswer(question.id, e.target.value)}
+                            disabled={isSubmitted}
+                            className={`input w-full max-w-xs ${
+                              isSubmitted
+                                ? correct ? 'border-emerald-500 bg-emerald-50' : 'border-red-500 bg-red-50'
+                                : ''
+                            }`}
+                          >
+                            <option value="">{question.dropdownPlaceholder || 'Select an answer...'}</option>
+                            {question.options.map(option => (
+                              <option key={option.id} value={option.id}>{option.text}</option>
+                            ))}
+                          </select>
+                          {isSubmitted && !correct && (
+                            <p className="text-sm text-emerald-600 mt-1">
+                              Correct answer: {question.options.find(o => o.isCorrect)?.text}
+                            </p>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Open-ended */}
+                      {question.type === 'open-ended' && (() => {
+                        const maxLen = question.openEndedMaxLength || 500;
+                        const currentLen = (quizAnswers[question.id] || '').length;
+                        const keywords = question.openEndedKeywords || [];
+                        const matchedKeywords = isSubmitted && keywords.length > 0
+                          ? keywords.filter(kw => (quizAnswers[question.id] || '').toLowerCase().includes(kw.toLowerCase()))
+                          : [];
+                        return (
+                          <div className="ml-10">
+                            <textarea
+                              value={quizAnswers[question.id] || ''}
+                              onChange={e => {
+                                if (e.target.value.length <= maxLen) handleAnswer(question.id, e.target.value);
+                              }}
+                              disabled={isSubmitted}
+                              placeholder={question.openEndedPlaceholder || 'Type your answer...'}
+                              rows={4}
+                              className={`input w-full resize-y ${
+                                isSubmitted
+                                  ? correct ? 'border-emerald-500 bg-emerald-50' : keywords.length > 0 ? 'border-red-500 bg-red-50' : 'border-emerald-500 bg-emerald-50'
+                                  : ''
+                              }`}
+                            />
+                            <div className="flex items-center justify-between mt-1">
+                              <span className={`text-xs ${currentLen >= maxLen ? 'text-red-500' : 'text-gray-400'}`}>
+                                {currentLen} / {maxLen}
+                              </span>
+                              {isSubmitted && keywords.length > 0 && (
+                                <span className="text-xs text-gray-500">
+                                  Keywords matched: {matchedKeywords.length} / {keywords.length}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })()}
+
+                      {/* Ranking */}
+                      {question.type === 'ranking' && (() => {
+                        let currentOrder: string[];
+                        try {
+                          currentOrder = quizAnswers[question.id] ? JSON.parse(quizAnswers[question.id] ?? '[]') : question.options.map(o => o.id);
+                        } catch { currentOrder = question.options.map(o => o.id); }
+                        // Ensure we have an answer stored
+                        if (!quizAnswers[question.id]) {
+                          // Initialize with default order on first render
+                          setTimeout(() => handleAnswer(question.id, JSON.stringify(currentOrder)), 0);
+                        }
+                        const moveItem = (idx: number, direction: -1 | 1) => {
+                          if (isSubmitted) return;
+                          const newIdx = idx + direction;
+                          if (newIdx < 0 || newIdx >= currentOrder.length) return;
+                          const next = [...currentOrder];
+                          [next[idx], next[newIdx]] = [next[newIdx]!, next[idx]!];
+                          handleAnswer(question.id, JSON.stringify(next));
+                        };
+                        return (
+                          <div className="ml-10 space-y-2">
+                            <p className="text-xs text-gray-500 mb-2 italic">
+                              Use the arrows to rank items in the correct order:
+                            </p>
+                            {currentOrder.map((optId, idx) => {
+                              const option = question.options.find(o => o.id === optId);
+                              if (!option) return null;
+                              const isCorrectPos = isSubmitted && question.correctOrder[idx] === optId;
+                              const isWrongPos = isSubmitted && question.correctOrder[idx] !== optId;
+                              return (
+                                <div
+                                  key={optId}
+                                  className={`flex items-center gap-3 px-4 py-3 rounded-lg border ${
+                                    isCorrectPos ? 'border-emerald-500 bg-emerald-50' : isWrongPos ? 'border-red-500 bg-red-50' : 'border-gray-200 bg-gray-50'
+                                  }`}
+                                >
+                                  <span
+                                    className="flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-bold flex-shrink-0"
+                                    style={{ backgroundColor: primaryColor }}
+                                  >
+                                    {idx + 1}
+                                  </span>
+                                  <span className="text-sm text-gray-700 flex-1">{option.text}</span>
+                                  {!isSubmitted && (
+                                    <div className="flex flex-col gap-0.5">
+                                      <button
+                                        onClick={() => moveItem(idx, -1)}
+                                        disabled={idx === 0}
+                                        className="p-0.5 text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                      >
+                                        <ChevronUp className="w-4 h-4" />
+                                      </button>
+                                      <button
+                                        onClick={() => moveItem(idx, 1)}
+                                        disabled={idx === currentOrder.length - 1}
+                                        className="p-0.5 text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                      >
+                                        <ChevronDown className="w-4 h-4" />
+                                      </button>
+                                    </div>
+                                  )}
+                                  {isSubmitted && isCorrectPos && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
+                                  {isSubmitted && isWrongPos && <XCircle className="w-4 h-4 text-red-500" />}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        );
+                      })()}
+
+                      {/* Hotspot question */}
+                      {question.type === 'hotspot-question' && (() => {
+                        let clickPos: { x: number; y: number } | null = null;
+                        try { clickPos = quizAnswers[question.id] ? JSON.parse(quizAnswers[question.id] ?? 'null') : null; } catch { /* empty */ }
+                        const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+                          if (isSubmitted) return;
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          const x = ((e.clientX - rect.left) / rect.width) * 100;
+                          const y = ((e.clientY - rect.top) / rect.height) * 100;
+                          handleAnswer(question.id, JSON.stringify({ x, y }));
+                        };
+                        return (
+                          <div className="ml-10">
+                            <p className="text-xs text-gray-500 mb-2 italic">
+                              Click on the correct area of the image:
+                            </p>
+                            <div
+                              className="relative inline-block cursor-crosshair rounded-lg overflow-hidden border border-gray-200"
+                              onClick={handleImageClick}
+                            >
+                              {question.hotspotImage ? (
+                                <img src={question.hotspotImage} alt="Hotspot" className="max-w-full h-auto block" />
+                              ) : (
+                                <div className="w-full h-64 bg-gray-100 flex items-center justify-center text-gray-400 text-sm">
+                                  No image set
+                                </div>
+                              )}
+                              {/* Show click marker */}
+                              {clickPos && (
+                                <div
+                                  className="absolute w-6 h-6 -ml-3 -mt-3 rounded-full border-3 border-white shadow-lg flex items-center justify-center"
+                                  style={{
+                                    left: `${clickPos.x}%`,
+                                    top: `${clickPos.y}%`,
+                                    backgroundColor: primaryColor,
+                                    borderWidth: '3px',
+                                  }}
+                                >
+                                  <MapPin className="w-3 h-3 text-white" />
+                                </div>
+                              )}
+                              {/* Show zones after submission */}
+                              {isSubmitted && (question.hotspotZones || []).map(zone => (
+                                <div
+                                  key={zone.id}
+                                  className={`absolute rounded-full border-2 ${
+                                    zone.isCorrect ? 'border-emerald-500 bg-emerald-500/20' : 'border-gray-400 bg-gray-400/10'
+                                  }`}
+                                  style={{
+                                    left: `${zone.x - zone.radius}%`,
+                                    top: `${zone.y - zone.radius}%`,
+                                    width: `${zone.radius * 2}%`,
+                                    height: `${zone.radius * 2}%`,
+                                  }}
+                                  title={zone.label}
+                                />
+                              ))}
+                            </div>
+                            {isSubmitted && (
+                              <p className={`text-sm mt-2 ${correct ? 'text-emerald-600' : 'text-red-600'}`}>
+                                {correct ? 'You clicked the correct zone!' : 'Incorrect area. The correct zones are highlighted above.'}
+                              </p>
+                            )}
+                          </div>
+                        );
+                      })()}
 
                       {/* Submit / Feedback */}
                       <div className="ml-10 mt-4">

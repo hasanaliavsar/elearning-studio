@@ -1,17 +1,38 @@
 export type SlideLayout = 'title' | 'content' | 'two-column' | 'image-text' | 'video' | 'quiz' | 'blank';
 
-export type QuestionType = 'multiple-choice' | 'true-false' | 'fill-in-blank' | 'matching' | 'drag-sort';
+export type QuestionType =
+  | 'multiple-choice' | 'true-false' | 'fill-in-blank' | 'matching' | 'drag-sort'
+  | 'likert' | 'rating' | 'slider' | 'image-choice' | 'matrix'
+  | 'dropdown' | 'open-ended' | 'ranking' | 'hotspot-question';
 
 export interface QuizOption {
   id: string;
   text: string;
   isCorrect: boolean;
+  imageUrl?: string; // for image-choice
 }
 
 export interface MatchingPair {
   id: string;
   left: string;
   right: string;
+}
+
+export type LikertLabel = 'strongly-disagree' | 'disagree' | 'neutral' | 'agree' | 'strongly-agree';
+
+export interface MatrixRow {
+  id: string;
+  label: string;
+  correctColumn?: number; // index of correct answer column (if graded)
+}
+
+export interface HotspotZone {
+  id: string;
+  x: number; // percentage
+  y: number;
+  radius: number; // percentage
+  label: string;
+  isCorrect: boolean;
 }
 
 export interface Question {
@@ -21,9 +42,38 @@ export interface Question {
   options: QuizOption[];
   matchingPairs: MatchingPair[];
   correctAnswer: string;
-  correctOrder: string[]; // for drag-sort: ordered option IDs
+  correctOrder: string[];
   explanation: string;
   points: number;
+  // Likert
+  likertLabels?: string[];
+  likertCorrectIndex?: number;
+  // Rating
+  ratingMax?: number; // 5 or 10
+  ratingCorrect?: number;
+  ratingStyle?: 'stars' | 'numbers' | 'emoji';
+  // Slider
+  sliderMin?: number;
+  sliderMax?: number;
+  sliderStep?: number;
+  sliderCorrect?: number;
+  sliderUnit?: string;
+  // Image choice (uses options with imageUrl)
+  imageChoiceColumns?: number;
+  // Matrix
+  matrixRows?: MatrixRow[];
+  matrixColumns?: string[];
+  matrixGraded?: boolean;
+  // Dropdown (uses options)
+  dropdownPlaceholder?: string;
+  // Open-ended
+  openEndedMaxLength?: number;
+  openEndedPlaceholder?: string;
+  openEndedKeywords?: string[]; // keywords for auto-grading
+  // Ranking (uses options, correctOrder)
+  // Hotspot question
+  hotspotImage?: string;
+  hotspotZones?: HotspotZone[];
 }
 
 // --- Interactive block sub-types ---

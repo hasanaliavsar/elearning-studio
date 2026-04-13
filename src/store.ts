@@ -127,6 +127,70 @@ function createDefaultQuestion(type: QuestionType = 'multiple-choice'): Question
     ];
     base.options = opts;
     base.correctOrder = opts.map(o => o.id);
+  } else if (type === 'likert') {
+    base.text = 'I am satisfied with this experience.';
+    base.likertLabels = ['Strongly disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly agree'];
+    base.likertCorrectIndex = 3; // "Agree"
+  } else if (type === 'rating') {
+    base.text = 'How would you rate this experience?';
+    base.ratingMax = 5;
+    base.ratingCorrect = 4;
+    base.ratingStyle = 'stars';
+  } else if (type === 'slider') {
+    base.text = 'How likely are you to recommend this to a colleague?';
+    base.sliderMin = 0;
+    base.sliderMax = 100;
+    base.sliderStep = 1;
+    base.sliderCorrect = 80;
+    base.sliderUnit = '%';
+  } else if (type === 'image-choice') {
+    base.text = 'Which image best represents the concept?';
+    base.options = [
+      { id: generateId(), text: 'Option A', isCorrect: true, imageUrl: '' },
+      { id: generateId(), text: 'Option B', isCorrect: false, imageUrl: '' },
+      { id: generateId(), text: 'Option C', isCorrect: false, imageUrl: '' },
+    ];
+    base.imageChoiceColumns = 3;
+  } else if (type === 'matrix') {
+    base.text = 'Rate each of the following:';
+    base.matrixColumns = ['Poor', 'Fair', 'Good', 'Excellent'];
+    base.matrixRows = [
+      { id: generateId(), label: 'Content quality', correctColumn: 2 },
+      { id: generateId(), label: 'Ease of use', correctColumn: 3 },
+      { id: generateId(), label: 'Visual design', correctColumn: 2 },
+    ];
+    base.matrixGraded = false;
+  } else if (type === 'dropdown') {
+    base.text = 'Select the correct answer:';
+    base.options = [
+      { id: generateId(), text: 'Option A', isCorrect: false },
+      { id: generateId(), text: 'Option B', isCorrect: true },
+      { id: generateId(), text: 'Option C', isCorrect: false },
+      { id: generateId(), text: 'Option D', isCorrect: false },
+    ];
+    base.dropdownPlaceholder = 'Choose an answer...';
+  } else if (type === 'open-ended') {
+    base.text = 'Describe your understanding of this concept:';
+    base.openEndedMaxLength = 500;
+    base.openEndedPlaceholder = 'Type your answer here...';
+    base.openEndedKeywords = ['key concept', 'important'];
+    base.points = 0; // typically not auto-graded
+  } else if (type === 'ranking') {
+    const opts = [
+      { id: generateId(), text: 'Feature A', isCorrect: false },
+      { id: generateId(), text: 'Feature B', isCorrect: false },
+      { id: generateId(), text: 'Feature C', isCorrect: false },
+      { id: generateId(), text: 'Feature D', isCorrect: false },
+    ];
+    base.options = opts;
+    base.correctOrder = opts.map(o => o.id);
+    base.text = 'Rank these items from most to least important:';
+  } else if (type === 'hotspot-question') {
+    base.text = 'Click on the correct area in the image:';
+    base.hotspotImage = '';
+    base.hotspotZones = [
+      { id: generateId(), x: 50, y: 50, radius: 10, label: 'Correct zone', isCorrect: true },
+    ];
   }
 
   return base;
