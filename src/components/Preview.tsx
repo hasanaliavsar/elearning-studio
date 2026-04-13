@@ -536,19 +536,19 @@ export function CoursePreview() {
       )}
 
       {/* Slide content */}
-      <div className="flex-1 flex items-center justify-center p-8 overflow-auto">
+      <div className="flex-1 flex items-start justify-center p-4 overflow-auto">
         <div
           ref={slideContentRef}
-          className={`w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden ${getSlideTransitionClass()}`}
+          className={`w-full max-w-5xl bg-white rounded-xl shadow-2xl overflow-hidden my-4 ${getSlideTransitionClass()}`}
           key={`slide-${previewSlideIndex}`}
-          style={{ minHeight: '500px' }}
+          style={{ minHeight: 'calc(100vh - 10rem)' }}
         >
           {/* Cover slide layout */}
           {currentSlide.isCoverSlide ? (
             <div
               className="relative flex flex-col items-center justify-center text-center"
               style={{
-                minHeight: '500px',
+                minHeight: 'calc(100vh - 12rem)',
                 backgroundColor: currentSlide.backgroundColor || '#1e293b',
                 backgroundImage: currentSlide.backgroundImage ? `url(${currentSlide.backgroundImage})` : undefined,
                 backgroundSize: 'cover',

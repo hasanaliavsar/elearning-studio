@@ -1818,20 +1818,21 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1rem;
   overflow: auto;
+  align-items: flex-start;
 }
 
 #slide-content {
   width: 100%;
-  max-width: 56rem;
+  max-width: 64rem;
   background: #fff;
-  border-radius: 1rem;
+  border-radius: 0.75rem;
   box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
   padding: 2.5rem;
-  min-height: 400px;
+  min-height: calc(100vh - 9rem);
   overflow: auto;
-  max-height: calc(100vh - 10rem);
+  margin: 1rem 0;
 }
 
 #slide-content h1 { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.2; }
