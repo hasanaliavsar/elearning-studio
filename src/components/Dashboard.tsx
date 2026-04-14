@@ -467,13 +467,15 @@ export function Dashboard() {
           const rawBaseUrl = baseUrlMatch[1];
           // Strip query params to get the clean base path
           const baseUrl = rawBaseUrl.split('?')[0]!.replace(/\/$/, '');
+          // Convert CDN URL to local proxy URL to bypass CORS
+          const proxyBase = baseUrl.replace('https://elearning-package.easygenerator.com', '/eg-proxy');
 
-          // Fetch course data from CDN
+          // Fetch course data via proxy
           setImportingScorm(true);
           try {
-            const dataResponse = await fetch(`${baseUrl}/content/data.js`);
+            const dataResponse = await fetch(`${proxyBase}/content/data.js`);
             if (!dataResponse.ok) {
-              throw new Error(`Failed to fetch course data from EasyGenerator CDN (HTTP ${dataResponse.status}). The course may no longer be available.`);
+              throw new Error(`Failed to fetch course data (HTTP ${dataResponse.status}). The course may no longer be available on EasyGenerator's servers.`);
             }
 
             const dataJsText = await dataResponse.text();
@@ -487,7 +489,7 @@ export function Dashboard() {
             // Optionally fetch settings for branding
             let egSettings: any = null;
             try {
-              const settingsResponse = await fetch(`${baseUrl}/settings.js`);
+              const settingsResponse = await fetch(`${proxyBase}/settings.js`);
               if (settingsResponse.ok) {
                 const settingsJsText = await settingsResponse.text();
                 egSettings = parseEasyGeneratorJS(settingsJsText);
@@ -524,8 +526,8 @@ export function Dashboard() {
             const message = fetchErr instanceof Error ? fetchErr.message : 'Unknown error';
             if (message.includes('Failed to fetch') || message.includes('NetworkError') || message.includes('CORS')) {
               setImportError(
-                'Could not fetch course data from the EasyGenerator CDN. This may be due to CORS restrictions or the course being offline. ' +
-                'Try opening the course URL directly in your browser first, or check your network connection.'
+                'Could not fetch course data from EasyGenerator. The course may no longer be available on their servers, or you may be offline. ' +
+                'Make sure the dev server is running (npm run dev) — the proxy only works in development mode.'
               );
             } else {
               setImportError(`Failed to import EasyGenerator package: ${message}`);

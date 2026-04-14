@@ -6,5 +6,13 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
+    proxy: {
+      '/eg-proxy': {
+        target: 'https://elearning-package.easygenerator.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/eg-proxy/, ''),
+        secure: true,
+      },
+    },
   },
 })
