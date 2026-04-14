@@ -811,6 +811,7 @@ export function CoursePreview() {
               </div>
 
               {/* Gamification bar */}
+              {course.settings.enableGamification && (
               <div className="border-t border-gray-100 px-4 py-3">
                 <GamificationBar
                   totalSlides={flatSlides.length}
@@ -821,6 +822,7 @@ export function CoursePreview() {
                   primaryColor={primaryColor}
                 />
               </div>
+              )}
 
               {/* Results link */}
               <div className="border-t border-gray-100 px-4 py-3">

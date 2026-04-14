@@ -568,6 +568,15 @@ export function CourseSettings({ course, onClose }: Props) {
                 />
                 Enable keyboard navigation
               </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={settings.enableGamification}
+                  onChange={e => setSettings({ ...settings, enableGamification: e.target.checked })}
+                  className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+                />
+                Enable gamification (XP, badges, levels)
+              </label>
             </div>
           </div>
         </section>

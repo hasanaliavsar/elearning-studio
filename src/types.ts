@@ -311,6 +311,7 @@ export interface CourseSettings {
   certificateOrg: string;
   enableScrollReveal: boolean;
   enableKeyboardNav: boolean;
+  enableGamification: boolean;
   landingPage: LandingPageSettings;
 }
 
