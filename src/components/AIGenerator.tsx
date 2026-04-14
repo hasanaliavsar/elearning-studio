@@ -1123,6 +1123,7 @@ export function AIGenerateCourseModal({ open, onClose }: AIGenerateCourseModalPr
         certificateOrg: '',
         enableScrollReveal: true,
         enableKeyboardNav: true,
+        enableGamification: true,
         landingPage: {
           enabled: true,
           backgroundColor: '#fdf0e8',
