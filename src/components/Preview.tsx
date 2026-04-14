@@ -225,6 +225,12 @@ export function CoursePreview() {
     if (question.type === 'fill-in-blank') {
       return answer.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim();
     }
+    if (question.type === 'matching') {
+      try {
+        const selections = JSON.parse(answer) as Record<string, string>;
+        return question.matchingPairs.every(pair => selections[pair.id] === pair.right);
+      } catch { return false; }
+    }
     if (question.type === 'likert') {
       return question.likertCorrectIndex !== undefined && Number(answer) === question.likertCorrectIndex;
     }
@@ -1775,21 +1781,68 @@ export function CoursePreview() {
                       )}
 
                       {/* Matching */}
-                      {question.type === 'matching' && (
-                        <div className="ml-10 space-y-2">
-                          {question.matchingPairs.map(pair => (
-                            <div key={pair.id} className="flex items-center gap-3">
-                              <span className="px-3 py-2 bg-gray-100 rounded-lg text-sm font-medium min-w-[120px]">
-                                {pair.left}
-                              </span>
-                              <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                              <span className="px-3 py-2 bg-brand-50 rounded-lg text-sm min-w-[120px]" style={{ borderColor: primaryColor }}>
-                                {pair.right}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                      {question.type === 'matching' && (() => {
+                        // Parse stored answers: JSON map of { leftPairId: selectedRight }
+                        let selections: Record<string, string> = {};
+                        try { selections = quizAnswers[question.id] ? JSON.parse(quizAnswers[question.id] ?? '{}') : {}; } catch { /* empty */ }
+                        const updateMatch = (pairId: string, rightValue: string) => {
+                          const next = { ...selections, [pairId]: rightValue };
+                          handleAnswer(question.id, JSON.stringify(next));
+                        };
+                        // Shuffled right-side options (shuffle once based on question id as seed)
+                        const rightOptions = question.matchingPairs.map(p => p.right);
+                        const shuffledRight = [...rightOptions].sort((a, b) => {
+                          const ha = Array.from(a + question.id).reduce((h, c) => ((h << 5) - h + c.charCodeAt(0)) | 0, 0);
+                          const hb = Array.from(b + question.id).reduce((h, c) => ((h << 5) - h + c.charCodeAt(0)) | 0, 0);
+                          return ha - hb;
+                        });
+                        const allMatched = question.matchingPairs.every(p => selections[p.id]);
+
+                        return (
+                          <div className="ml-10 space-y-3">
+                            {question.matchingPairs.map((pair, pIdx) => {
+                              const selected = selections[pair.id] || '';
+                              const isCorrectMatch = selected === pair.right;
+                              let rowClass = '';
+                              if (isSubmitted) {
+                                rowClass = isCorrectMatch ? 'ring-2 ring-emerald-300 bg-emerald-50' : 'ring-2 ring-red-300 bg-red-50';
+                              }
+                              return (
+                                <div key={pair.id} className={`flex items-center gap-3 p-2 rounded-lg transition-all ${rowClass}`}>
+                                  <span className="px-3 py-2 bg-gray-100 rounded-lg text-sm font-medium flex-1 min-w-0">
+                                    {pair.left}
+                                  </span>
+                                  <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                  {isSubmitted ? (
+                                    <span className={`px-3 py-2 rounded-lg text-sm flex-1 min-w-0 ${isCorrectMatch ? 'bg-emerald-100 text-emerald-800 font-medium' : 'bg-red-100 text-red-800'}`}>
+                                      {selected || '—'}
+                                      {!isCorrectMatch && <span className="block text-xs text-emerald-600 mt-0.5">Correct: {pair.right}</span>}
+                                    </span>
+                                  ) : (
+                                    <select
+                                      value={selected}
+                                      onChange={(e) => updateMatch(pair.id, e.target.value)}
+                                      className="flex-1 min-w-0 px-3 py-2 border-2 rounded-lg text-sm transition-colors focus:outline-none"
+                                      style={{
+                                        borderColor: selected ? primaryColor : '#e5e7eb',
+                                        backgroundColor: selected ? `${primaryColor}08` : '#ffffff',
+                                      }}
+                                    >
+                                      <option value="">Select a match...</option>
+                                      {shuffledRight.map((right, ri) => (
+                                        <option key={ri} value={right}>{right}</option>
+                                      ))}
+                                    </select>
+                                  )}
+                                </div>
+                              );
+                            })}
+                            {!isSubmitted && allMatched && !quizAnswers[question.id] && (
+                              <p className="text-xs text-gray-400 italic">Select a match for each item, then check your answers.</p>
+                            )}
+                          </div>
+                        );
+                      })()}
 
                       {/* Drag-sort (preview: show as numbered list in correct order) */}
                       {question.type === 'drag-sort' && (
