@@ -5,8 +5,9 @@ import JSZip from 'jszip';
 import {
   Plus, Search, BookOpen, Clock, HelpCircle, MoreVertical,
   Copy, Trash2, Download, Upload, GraduationCap, LayoutGrid,
-  List, FileDown, FileUp, Settings, X, FileArchive
+  List, FileDown, FileUp, Settings, X, FileArchive, Wand2
 } from 'lucide-react';
+import { AIGenerateCourseModal } from './AIGenerator';
 
 export function Dashboard() {
   const courses = useStore(s => s.courses);
@@ -22,6 +23,7 @@ export function Dashboard() {
   const [newDescription, setNewDescription] = useState('');
   const [viewStyle, setViewStyle] = useState<'grid' | 'list'>('grid');
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
+  const [showAIGenerator, setShowAIGenerator] = useState(false);
 
   const filtered = courses.filter(c =>
     c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -623,6 +625,10 @@ export function Dashboard() {
               <Upload className="w-4 h-4" />
               Import JSON
             </button>
+            <button onClick={() => setShowAIGenerator(true)} className="btn-secondary">
+              <Wand2 className="w-4 h-4" />
+              AI Generate
+            </button>
             <button onClick={() => setShowCreateModal(true)} className="btn-primary">
               <Plus className="w-4 h-4" />
               New Course
@@ -930,6 +936,8 @@ export function Dashboard() {
           </div>
         </div>
       )}
+
+      <AIGenerateCourseModal open={showAIGenerator} onClose={() => setShowAIGenerator(false)} />
     </div>
   );
 }

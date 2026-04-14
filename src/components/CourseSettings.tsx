@@ -2,6 +2,7 @@ import { useStore } from '../store';
 import type { Course, CourseSettings as CourseSettingsType, ThemeTemplate } from '../types';
 import { X, Save, Award, Eye } from 'lucide-react';
 import { useState } from 'react';
+import { AISettingsSection } from './AIGenerator';
 
 const THEME_OPTIONS: { id: ThemeTemplate; label: string; primary: string; accent: string; swatch: React.CSSProperties }[] = [
   { id: 'modern', label: 'Modern', primary: '#4f46e5', accent: '#ffffff', swatch: { background: 'linear-gradient(135deg, #4f46e5 60%, #ffffff 60%)' } },
@@ -640,6 +641,12 @@ export function CourseSettings({ course, onClose }: Props) {
               </div>
             </div>
           )}
+        </section>
+
+        {/* AI Assistant */}
+        <section className="card p-6">
+          <h3 className="text-lg font-semibold mb-4">AI Assistant</h3>
+          <AISettingsSection />
         </section>
 
         <div className="flex justify-end gap-3">

@@ -3,6 +3,8 @@ import { useStore } from '../store';
 import { RichTextEditor } from './RichTextEditor';
 import { QuizBuilder } from './QuizBuilder';
 import { BlockEditor } from './BlockEditors';
+import { AIQuizGeneratorButton } from './AIGenerator';
+import { VideoRecorderModal } from './VideoRecorder';
 import type { Course, Slide, SlideLayout, ContentBlock, EntranceAnimation, SlideTransition, LearningObjective } from '../types';
 import {
   Type, Image, Video, FileText, List, Minus, Code, Plus, Trash2,
@@ -84,6 +86,7 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
 
   const [showAddBlock, setShowAddBlock] = useState(false);
   const [activeBlockId, setActiveBlockId] = useState<string | null>(null);
+  const [showVideoRecorder, setShowVideoRecorder] = useState(false);
 
   const handleUpdateSlide = (updates: Partial<Slide>) => {
     updateSlide(course.id, moduleId, lessonId, slide.id, updates);
@@ -399,6 +402,30 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
                 </div>
               )}
             </div>
+
+            {/* Premium feature toolbar */}
+            <div className="flex items-center gap-2 mt-2 justify-center">
+              <AIQuizGeneratorButton
+                courseId={course.id}
+                moduleId={moduleId}
+                lessonId={lessonId}
+                slideId={slide.id}
+                slideContent={slide.content.map(b => b.content).filter(Boolean).join(' ')}
+              />
+              <button className="btn-ghost text-sm" onClick={() => setShowVideoRecorder(true)}>
+                <Video className="w-4 h-4" /> Record Video
+              </button>
+            </div>
+
+            <VideoRecorderModal
+              open={showVideoRecorder}
+              onClose={() => setShowVideoRecorder(false)}
+              onRecordingComplete={(videoUrl) => {
+                const newBlock = { id: crypto.randomUUID(), type: 'video' as const, content: videoUrl, alt: 'Recorded video', caption: '' };
+                updateSlide(course.id, moduleId, lessonId, slide.id, { content: [...slide.content, newBlock] });
+                setShowVideoRecorder(false);
+              }}
+            />
           </div>
         </div>
       </div>

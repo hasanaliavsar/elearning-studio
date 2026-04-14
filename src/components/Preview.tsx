@@ -9,6 +9,7 @@ import {
   PanelLeftClose, PanelLeftOpen, FileText, Trophy, Circle
 } from 'lucide-react';
 import { CourseLandingPage } from './CourseLandingPage';
+import { GamificationBar } from './Gamification';
 
 interface FlatSlide {
   slide: Slide;
@@ -285,6 +286,11 @@ export function CoursePreview() {
   const earnedPoints = allQuestions.reduce((t, q) => t + (isCorrect(q) ? q.points : 0), 0);
   const scorePercent = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 100) : 100;
   const passed = scorePercent >= (course.settings.passingScore || 70);
+
+  // Gamification stats
+  const correctAnswerCount = useMemo(() => {
+    return allQuestions.filter(q => submittedQuizzes.has(q.id) && isCorrect(q)).length;
+  }, [submittedQuizzes.size]);
 
   const handleClose = () => {
     stopNarration();
@@ -802,6 +808,18 @@ export function CoursePreview() {
                     </div>
                   );
                 })}
+              </div>
+
+              {/* Gamification bar */}
+              <div className="border-t border-gray-100 px-4 py-3">
+                <GamificationBar
+                  totalSlides={flatSlides.length}
+                  visitedSlides={visitedSlides.size}
+                  correctAnswers={correctAnswerCount}
+                  totalQuestions={allQuestions.length}
+                  currentStreak={0}
+                  primaryColor={primaryColor}
+                />
               </div>
 
               {/* Results link */}
