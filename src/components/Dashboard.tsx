@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useStore } from '../store';
 import { formatDate, getSlideCount, getQuestionCount, getEstimatedDuration } from '../utils/helpers';
+import JSZip from 'jszip';
 import {
   Plus, Search, BookOpen, Clock, HelpCircle, MoreVertical,
   Copy, Trash2, Download, Upload, GraduationCap, LayoutGrid,
-  List, FileDown, FileUp, Settings, X
+  List, FileDown, FileUp, Settings, X, FileArchive
 } from 'lucide-react';
 
 export function Dashboard() {
@@ -69,6 +70,128 @@ export function Dashboard() {
     input.click();
   };
 
+  const [importError, setImportError] = useState<string | null>(null);
+
+  const handleImportSCORM = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.zip';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      setImportError(null);
+      try {
+        const zip = await JSZip.loadAsync(file);
+
+        // Try to find course-data.js in the zip (our format)
+        let courseDataFile = zip.file('content/course-data.js') || zip.file('course-data.js');
+
+        // Also search recursively
+        if (!courseDataFile) {
+          zip.forEach((path, entry) => {
+            if (path.endsWith('course-data.js') && !courseDataFile) {
+              courseDataFile = entry;
+            }
+          });
+        }
+
+        if (!courseDataFile) {
+          setImportError('This SCORM package was not exported from eLearning Studio. Only packages exported from this tool can be re-imported for editing.');
+          return;
+        }
+
+        const jsContent = await courseDataFile.async('text');
+
+        // Extract JSON from "var COURSE_DATA = {...};"
+        const match = jsContent.match(/(?:var|const|let)\s+COURSE_DATA\s*=\s*(\{[\s\S]*\});?\s*$/);
+        if (!match || !match[1]) {
+          setImportError('Could not parse course data from the SCORM package.');
+          return;
+        }
+
+        const courseData = JSON.parse(match[1]);
+
+        // Reconstruct a full Course object from the SCORM data
+        // The SCORM courseData has: title, description, author, version, language, settings, slides[], modules[]
+        const course = {
+          id: '',
+          title: courseData.title || 'Imported Course',
+          description: courseData.description || '',
+          author: courseData.author || '',
+          version: courseData.version || '1.0',
+          language: courseData.language || 'en',
+          thumbnail: '',
+          tags: [] as string[],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          settings: courseData.settings || {},
+          modules: [] as any[],
+        };
+
+        // If the SCORM data has the full modules structure (our export includes it)
+        if (courseData.modules && courseData.slides) {
+          // Rebuild modules from flat slides + module metadata
+          let slideIdx = 0;
+          const modulesMeta = courseData.modules as any[];
+          const allSlides = courseData.slides as any[];
+
+          for (const modMeta of modulesMeta) {
+            const mod: any = {
+              id: modMeta.id || crypto.randomUUID(),
+              title: modMeta.title || 'Module',
+              description: modMeta.description || '',
+              order: 0,
+              thumbnail: modMeta.thumbnail || '',
+              color: modMeta.color || '',
+              lessons: [{
+                id: crypto.randomUUID(),
+                title: 'Lesson 1',
+                description: '',
+                order: 0,
+                slides: [],
+              }],
+            };
+
+            // Assign slides to this module based on slideCount
+            const modSlideCount = modMeta.slideCount || 0;
+            for (let i = 0; i < modSlideCount && slideIdx < allSlides.length; i++) {
+              const s = allSlides[slideIdx]!;
+              mod.lessons[0].slides.push({
+                id: crypto.randomUUID(),
+                title: s.title || `Slide ${i + 1}`,
+                layout: s.layout || 'content',
+                content: s.content || [],
+                questions: s.questions || [],
+                notes: '',
+                backgroundColor: s.backgroundColor || '#ffffff',
+                backgroundImage: s.backgroundImage || '',
+                duration: s.duration || 2,
+                transition: s.transition,
+                isCoverSlide: s.isCoverSlide,
+                coverSubtitle: s.coverSubtitle,
+                learningObjectives: s.learningObjectives,
+              });
+              slideIdx++;
+            }
+
+            course.modules.push(mod);
+          }
+        }
+
+        if (course.modules.length === 0) {
+          setImportError('No course content found in the SCORM package.');
+          return;
+        }
+
+        importCourse(course as any);
+        setImportError(null);
+      } catch (err) {
+        setImportError(`Failed to import: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      }
+    };
+    input.click();
+  };
+
   const colorPalette = [
     'from-brand-500 to-purple-600',
     'from-emerald-500 to-teal-600',
@@ -93,9 +216,13 @@ export function Dashboard() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            <button onClick={handleImportSCORM} className="btn-secondary">
+              <FileArchive className="w-4 h-4" />
+              Import SCORM
+            </button>
             <button onClick={handleImportJSON} className="btn-secondary">
               <Upload className="w-4 h-4" />
-              Import
+              Import JSON
             </button>
             <button onClick={() => setShowCreateModal(true)} className="btn-primary">
               <Plus className="w-4 h-4" />
@@ -161,6 +288,20 @@ export function Dashboard() {
               </div>
             </div>
           </div>
+
+          {/* Import error banner */}
+          {importError && (
+            <div className="mb-4 flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
+              <HelpCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="font-medium">Import Notice</p>
+                <p className="mt-0.5">{importError}</p>
+              </div>
+              <button onClick={() => setImportError(null)} className="text-amber-400 hover:text-amber-600">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
 
           {/* Search and filter bar */}
           <div className="flex items-center justify-between mb-6">
