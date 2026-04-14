@@ -71,6 +71,258 @@ export function Dashboard() {
   };
 
   const [importError, setImportError] = useState<string | null>(null);
+  const [importingScorm, setImportingScorm] = useState(false);
+
+  const MODULE_COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#14b8a6'];
+
+  /**
+   * Convert an EasyGenerator data.js course object into our Course format.
+   */
+  const convertEasyGeneratorCourse = (egData: any): any => {
+    const modules: any[] = [];
+
+    const sections = egData.sections || [];
+    for (let si = 0; si < sections.length; si++) {
+      const section = sections[si];
+      const sectionTitle = section.title?.en || section.title || `Section ${si + 1}`;
+
+      const slides: any[] = [];
+
+      const questions = section.questions || [];
+      for (let qi = 0; qi < questions.length; qi++) {
+        const q = questions[qi];
+        const pageTitle = q.title?.en || q.title || `Page ${qi + 1}`;
+        const voiceOver = q.voiceOver?.en || '';
+
+        if (q.type === 'informationContent') {
+          // Content slide
+          const contentBlocks: any[] = [];
+
+          // Extract text from learningContents
+          if (q.learningContents && q.learningContents.length > 0) {
+            for (const lc of q.learningContents) {
+              const htmlText = extractTextFromLearningContent(lc);
+              if (htmlText) {
+                contentBlocks.push({
+                  id: crypto.randomUUID(),
+                  type: 'text',
+                  content: htmlText,
+                });
+              }
+            }
+          }
+
+          // If no content was extracted, add the title as a heading
+          if (contentBlocks.length === 0) {
+            contentBlocks.push({
+              id: crypto.randomUUID(),
+              type: 'heading',
+              content: pageTitle,
+            });
+          }
+
+          slides.push({
+            id: crypto.randomUUID(),
+            title: pageTitle,
+            layout: 'content' as const,
+            content: contentBlocks,
+            questions: [],
+            notes: voiceOver,
+            backgroundColor: '#ffffff',
+            backgroundImage: '',
+            duration: 2,
+          });
+        } else if (q.type === 'singleSelectText') {
+          // Multiple-choice quiz slide
+          const quizOptions = (q.answers || []).map((a: any) => ({
+            id: a.id || crypto.randomUUID(),
+            text: a.text?.en || a.text || '',
+            isCorrect: !!a.isCorrect,
+          }));
+
+          const correctFeedback = q.questionCorrectFeedbacks?.en || q.questionCorrectFeedbacks || '';
+          const incorrectFeedback = q.questionIncorrectFeedbacks?.en || q.questionIncorrectFeedbacks || '';
+          const explanation = correctFeedback
+            ? `Correct: ${correctFeedback}${incorrectFeedback ? ` | Incorrect: ${incorrectFeedback}` : ''}`
+            : '';
+
+          slides.push({
+            id: crypto.randomUUID(),
+            title: pageTitle,
+            layout: 'quiz' as const,
+            content: [],
+            questions: [{
+              id: crypto.randomUUID(),
+              type: 'multiple-choice',
+              text: pageTitle,
+              options: quizOptions,
+              matchingPairs: [],
+              correctAnswer: '',
+              correctOrder: [],
+              explanation,
+              points: q.scoringMode === 2 ? 10 : 1,
+            }],
+            notes: voiceOver,
+            backgroundColor: '#ffffff',
+            backgroundImage: '',
+            duration: 3,
+          });
+        } else if (q.type === 'textMatching') {
+          // Matching quiz slide
+          const matchingPairs = (q.answers || []).map((a: any) => ({
+            id: a.id || crypto.randomUUID(),
+            left: a.key?.en || a.key || a.text?.en || '',
+            right: a.value?.en || a.value || '',
+          }));
+
+          slides.push({
+            id: crypto.randomUUID(),
+            title: pageTitle,
+            layout: 'quiz' as const,
+            content: [],
+            questions: [{
+              id: crypto.randomUUID(),
+              type: 'matching',
+              text: pageTitle,
+              options: [],
+              matchingPairs,
+              correctAnswer: '',
+              correctOrder: [],
+              explanation: '',
+              points: q.scoringMode === 2 ? 10 : 1,
+            }],
+            notes: voiceOver,
+            backgroundColor: '#ffffff',
+            backgroundImage: '',
+            duration: 3,
+          });
+        } else if (q.isSurvey) {
+          // Survey/Likert slide
+          const quizOptions = (q.answers || []).map((a: any) => ({
+            id: a.id || crypto.randomUUID(),
+            text: a.text?.en || a.text || '',
+            isCorrect: false,
+          }));
+
+          slides.push({
+            id: crypto.randomUUID(),
+            title: pageTitle,
+            layout: 'quiz' as const,
+            content: [],
+            questions: [{
+              id: crypto.randomUUID(),
+              type: 'likert',
+              text: pageTitle,
+              options: quizOptions,
+              matchingPairs: [],
+              correctAnswer: '',
+              correctOrder: [],
+              explanation: '',
+              points: 0,
+              likertLabels: quizOptions.map((o: any) => o.text),
+            }],
+            notes: voiceOver,
+            backgroundColor: '#ffffff',
+            backgroundImage: '',
+            duration: 2,
+          });
+        } else {
+          // Unknown question type — import as content slide with title
+          slides.push({
+            id: crypto.randomUUID(),
+            title: pageTitle,
+            layout: 'content' as const,
+            content: [{
+              id: crypto.randomUUID(),
+              type: 'heading',
+              content: pageTitle,
+            }],
+            questions: [],
+            notes: voiceOver,
+            backgroundColor: '#ffffff',
+            backgroundImage: '',
+            duration: 2,
+          });
+        }
+      }
+
+      if (slides.length > 0) {
+        modules.push({
+          id: section.id || crypto.randomUUID(),
+          title: sectionTitle,
+          description: '',
+          order: si,
+          thumbnail: section.imageUrl?.en || '',
+          color: MODULE_COLORS[si % MODULE_COLORS.length],
+          lessons: [{
+            id: crypto.randomUUID(),
+            title: 'Lesson 1',
+            description: '',
+            order: 0,
+            slides,
+          }],
+        });
+      }
+    }
+
+    return {
+      id: '',
+      title: egData.title?.en || egData.title || 'EasyGenerator Import',
+      description: egData.description?.en || egData.description || '',
+      author: '',
+      version: '1.0',
+      language: 'en',
+      thumbnail: '',
+      tags: ['easygenerator-import'],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      settings: {},
+      modules,
+    };
+  };
+
+  /**
+   * Recursively extract text content from EasyGenerator learningContent nodes.
+   */
+  const extractTextFromLearningContent = (node: any): string => {
+    if (!node) return '';
+
+    // If node has direct text
+    if (typeof node === 'string') return node;
+
+    // If node has text property
+    if (node.text) return node.text;
+
+    // If node has children, recurse
+    if (node.children && Array.isArray(node.children)) {
+      return node.children.map((child: any) => extractTextFromLearningContent(child)).filter(Boolean).join('\n');
+    }
+
+    return '';
+  };
+
+  /**
+   * Try to parse a JavaScript response from EasyGenerator CDN into a JSON object.
+   * The data.js file may contain: window.courseData = {...}, a plain object, or a function wrapper.
+   */
+  const parseEasyGeneratorJS = (jsText: string): any => {
+    // Try 1: Extract JSON from assignment like "window.courseData = {...}" or "var x = {...}"
+    const assignmentMatch = jsText.match(/(?:window\.\w+|(?:var|const|let)\s+\w+)\s*=\s*(\{[\s\S]+\});?\s*$/);
+    if (assignmentMatch?.[1]) {
+      try { return JSON.parse(assignmentMatch[1]); } catch { /* continue */ }
+    }
+
+    // Try 2: Extract the largest JSON-like object
+    const objectMatch = jsText.match(/(\{[\s\S]+\})\s*[;)]*\s*$/);
+    if (objectMatch?.[1]) {
+      try { return JSON.parse(objectMatch[1]); } catch { /* continue */ }
+    }
+
+    // Try 3: The whole thing might be JSON
+    try { return JSON.parse(jsText); } catch { /* continue */ }
+
+    return null;
+  };
 
   const handleImportSCORM = () => {
     const input = document.createElement('input');
@@ -95,98 +347,196 @@ export function Dashboard() {
           });
         }
 
-        if (!courseDataFile) {
-          setImportError('This SCORM package was not exported from eLearning Studio. Only packages exported from this tool can be re-imported for editing.');
-          return;
-        }
+        if (courseDataFile) {
+          // --- Our native SCORM format ---
+          const jsContent = await courseDataFile.async('text');
 
-        const jsContent = await courseDataFile.async('text');
+          // Extract JSON from "var COURSE_DATA = {...};"
+          const match = jsContent.match(/(?:var|const|let)\s+COURSE_DATA\s*=\s*(\{[\s\S]*\});?\s*$/);
+          if (!match || !match[1]) {
+            setImportError('Could not parse course data from the SCORM package.');
+            return;
+          }
 
-        // Extract JSON from "var COURSE_DATA = {...};"
-        const match = jsContent.match(/(?:var|const|let)\s+COURSE_DATA\s*=\s*(\{[\s\S]*\});?\s*$/);
-        if (!match || !match[1]) {
-          setImportError('Could not parse course data from the SCORM package.');
-          return;
-        }
+          const courseData = JSON.parse(match[1]);
 
-        const courseData = JSON.parse(match[1]);
+          // Reconstruct a full Course object from the SCORM data
+          // The SCORM courseData has: title, description, author, version, language, settings, slides[], modules[]
+          const course = {
+            id: '',
+            title: courseData.title || 'Imported Course',
+            description: courseData.description || '',
+            author: courseData.author || '',
+            version: courseData.version || '1.0',
+            language: courseData.language || 'en',
+            thumbnail: '',
+            tags: [] as string[],
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            settings: courseData.settings || {},
+            modules: [] as any[],
+          };
 
-        // Reconstruct a full Course object from the SCORM data
-        // The SCORM courseData has: title, description, author, version, language, settings, slides[], modules[]
-        const course = {
-          id: '',
-          title: courseData.title || 'Imported Course',
-          description: courseData.description || '',
-          author: courseData.author || '',
-          version: courseData.version || '1.0',
-          language: courseData.language || 'en',
-          thumbnail: '',
-          tags: [] as string[],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          settings: courseData.settings || {},
-          modules: [] as any[],
-        };
+          // If the SCORM data has the full modules structure (our export includes it)
+          if (courseData.modules && courseData.slides) {
+            // Rebuild modules from flat slides + module metadata
+            let slideIdx = 0;
+            const modulesMeta = courseData.modules as any[];
+            const allSlides = courseData.slides as any[];
 
-        // If the SCORM data has the full modules structure (our export includes it)
-        if (courseData.modules && courseData.slides) {
-          // Rebuild modules from flat slides + module metadata
-          let slideIdx = 0;
-          const modulesMeta = courseData.modules as any[];
-          const allSlides = courseData.slides as any[];
-
-          for (const modMeta of modulesMeta) {
-            const mod: any = {
-              id: modMeta.id || crypto.randomUUID(),
-              title: modMeta.title || 'Module',
-              description: modMeta.description || '',
-              order: 0,
-              thumbnail: modMeta.thumbnail || '',
-              color: modMeta.color || '',
-              lessons: [{
-                id: crypto.randomUUID(),
-                title: 'Lesson 1',
-                description: '',
+            for (const modMeta of modulesMeta) {
+              const mod: any = {
+                id: modMeta.id || crypto.randomUUID(),
+                title: modMeta.title || 'Module',
+                description: modMeta.description || '',
                 order: 0,
-                slides: [],
-              }],
-            };
+                thumbnail: modMeta.thumbnail || '',
+                color: modMeta.color || '',
+                lessons: [{
+                  id: crypto.randomUUID(),
+                  title: 'Lesson 1',
+                  description: '',
+                  order: 0,
+                  slides: [],
+                }],
+              };
 
-            // Assign slides to this module based on slideCount
-            const modSlideCount = modMeta.slideCount || 0;
-            for (let i = 0; i < modSlideCount && slideIdx < allSlides.length; i++) {
-              const s = allSlides[slideIdx]!;
-              mod.lessons[0].slides.push({
-                id: crypto.randomUUID(),
-                title: s.title || `Slide ${i + 1}`,
-                layout: s.layout || 'content',
-                content: s.content || [],
-                questions: s.questions || [],
-                notes: '',
-                backgroundColor: s.backgroundColor || '#ffffff',
-                backgroundImage: s.backgroundImage || '',
-                duration: s.duration || 2,
-                transition: s.transition,
-                isCoverSlide: s.isCoverSlide,
-                coverSubtitle: s.coverSubtitle,
-                learningObjectives: s.learningObjectives,
-              });
-              slideIdx++;
+              // Assign slides to this module based on slideCount
+              const modSlideCount = modMeta.slideCount || 0;
+              for (let i = 0; i < modSlideCount && slideIdx < allSlides.length; i++) {
+                const s = allSlides[slideIdx]!;
+                mod.lessons[0].slides.push({
+                  id: crypto.randomUUID(),
+                  title: s.title || `Slide ${i + 1}`,
+                  layout: s.layout || 'content',
+                  content: s.content || [],
+                  questions: s.questions || [],
+                  notes: '',
+                  backgroundColor: s.backgroundColor || '#ffffff',
+                  backgroundImage: s.backgroundImage || '',
+                  duration: s.duration || 2,
+                  transition: s.transition,
+                  isCoverSlide: s.isCoverSlide,
+                  coverSubtitle: s.coverSubtitle,
+                  learningObjectives: s.learningObjectives,
+                });
+                slideIdx++;
+              }
+
+              course.modules.push(mod);
+            }
+          }
+
+          if (course.modules.length === 0) {
+            setImportError('No course content found in the SCORM package.');
+            return;
+          }
+
+          importCourse(course as any);
+          setImportError(null);
+        } else {
+          // --- Try EasyGenerator format ---
+          // Detect: look for index.html containing easygenerator.com
+          let indexHtmlFile = zip.file('index.html');
+          if (!indexHtmlFile) {
+            zip.forEach((path, entry) => {
+              if (path.endsWith('index.html') && !indexHtmlFile) {
+                indexHtmlFile = entry;
+              }
+            });
+          }
+
+          if (!indexHtmlFile) {
+            setImportError('This SCORM package was not exported from eLearning Studio or EasyGenerator. Only packages from these tools can be imported.');
+            return;
+          }
+
+          const htmlContent = await indexHtmlFile.async('text');
+          if (!htmlContent.includes('easygenerator.com')) {
+            setImportError('This SCORM package was not exported from eLearning Studio or EasyGenerator. Only packages from these tools can be imported.');
+            return;
+          }
+
+          // Extract baseUrl from the HTML
+          const baseUrlMatch = htmlContent.match(/const\s+baseUrl\s*=\s*'(https:\/\/elearning-package\.easygenerator\.com\/[^']+)'/);
+          if (!baseUrlMatch?.[1]) {
+            setImportError('Could not find EasyGenerator course URL in the package. The index.html may use an unsupported format.');
+            return;
+          }
+
+          const rawBaseUrl = baseUrlMatch[1];
+          // Strip query params to get the clean base path
+          const baseUrl = rawBaseUrl.split('?')[0]!.replace(/\/$/, '');
+
+          // Fetch course data from CDN
+          setImportingScorm(true);
+          try {
+            const dataResponse = await fetch(`${baseUrl}/content/data.js`);
+            if (!dataResponse.ok) {
+              throw new Error(`Failed to fetch course data from EasyGenerator CDN (HTTP ${dataResponse.status}). The course may no longer be available.`);
             }
 
-            course.modules.push(mod);
+            const dataJsText = await dataResponse.text();
+            const egCourseData = parseEasyGeneratorJS(dataJsText);
+
+            if (!egCourseData || !egCourseData.sections) {
+              setImportError('Could not parse EasyGenerator course data. The data format may have changed.');
+              return;
+            }
+
+            // Optionally fetch settings for branding
+            let egSettings: any = null;
+            try {
+              const settingsResponse = await fetch(`${baseUrl}/settings.js`);
+              if (settingsResponse.ok) {
+                const settingsJsText = await settingsResponse.text();
+                egSettings = parseEasyGeneratorJS(settingsJsText);
+              }
+            } catch {
+              // Settings are optional, continue without them
+            }
+
+            // Convert to our format
+            const course = convertEasyGeneratorCourse(egCourseData);
+
+            // Apply branding from settings if available
+            if (egSettings) {
+              if (!course.settings) course.settings = {};
+              if (egSettings.branding?.colors?.mainColor) {
+                course.settings.primaryColor = egSettings.branding.colors.mainColor;
+              }
+              if (egSettings.branding?.colors?.secondaryColor) {
+                course.settings.accentColor = egSettings.branding.colors.secondaryColor;
+              }
+              if (egSettings.branding?.logo?.url) {
+                course.settings.logoUrl = egSettings.branding.logo.url;
+              }
+            }
+
+            if (course.modules.length === 0) {
+              setImportError('No course content found in the EasyGenerator package.');
+              return;
+            }
+
+            importCourse(course as any);
+            setImportError(null);
+          } catch (fetchErr) {
+            const message = fetchErr instanceof Error ? fetchErr.message : 'Unknown error';
+            if (message.includes('Failed to fetch') || message.includes('NetworkError') || message.includes('CORS')) {
+              setImportError(
+                'Could not fetch course data from the EasyGenerator CDN. This may be due to CORS restrictions or the course being offline. ' +
+                'Try opening the course URL directly in your browser first, or check your network connection.'
+              );
+            } else {
+              setImportError(`Failed to import EasyGenerator package: ${message}`);
+            }
+          } finally {
+            setImportingScorm(false);
           }
         }
-
-        if (course.modules.length === 0) {
-          setImportError('No course content found in the SCORM package.');
-          return;
-        }
-
-        importCourse(course as any);
-        setImportError(null);
       } catch (err) {
         setImportError(`Failed to import: ${err instanceof Error ? err.message : 'Unknown error'}`);
+        setImportingScorm(false);
       }
     };
     input.click();
@@ -288,6 +638,20 @@ export function Dashboard() {
               </div>
             </div>
           </div>
+
+          {/* EasyGenerator import loading banner */}
+          {importingScorm && (
+            <div className="mb-4 flex items-center gap-3 p-4 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-800">
+              <svg className="w-5 h-5 text-blue-500 flex-shrink-0 animate-spin" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              <div className="flex-1">
+                <p className="font-medium">Importing from EasyGenerator...</p>
+                <p className="mt-0.5 text-blue-600">Fetching course data from CDN. This may take a moment.</p>
+              </div>
+            </div>
+          )}
 
           {/* Import error banner */}
           {importError && (
