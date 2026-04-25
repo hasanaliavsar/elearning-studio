@@ -2,6 +2,15 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Course, Module, Lesson, Slide, Question, ContentBlock, EditorState, ViewMode, SlideLayout, QuestionType, ContentBlockType } from './types';
 import { generateId, deepClone } from './utils/helpers';
+import moonfareEmergencyCourse from './data/moonfare-emergency-course.json';
+
+const SEED_FLAG_KEY = 'elearning-studio-seed-v1-applied';
+
+function buildSeedCourses(): Course[] {
+  return [
+    { ...(moonfareEmergencyCourse as unknown as Course), id: generateId() },
+  ];
+}
 
 function createDefaultSettings() {
   return {
@@ -1055,6 +1064,14 @@ export const useStore = create<AppState>()(
       partialize: (state) => ({
         courses: state.courses,
       }),
+      merge: (persistedState, currentState) => {
+        const merged = { ...currentState, ...(persistedState as object) } as AppState;
+        if (typeof window !== 'undefined' && !window.localStorage.getItem(SEED_FLAG_KEY)) {
+          merged.courses = [...buildSeedCourses(), ...(merged.courses || [])];
+          window.localStorage.setItem(SEED_FLAG_KEY, '1');
+        }
+        return merged;
+      },
     }
   )
 );

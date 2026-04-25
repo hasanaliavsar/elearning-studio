@@ -1,0 +1,2324 @@
+{
+  "id": "course_064bf24d28f8",
+  "title": "Product Emergency Process \u2014 Stakeholder Edition",
+  "description": "Moonfare's official Product Emergency Process for stakeholders. Learn to recognize, classify, and respond to emergencies \u2014 covering the severity matrix, response roles, communication channels, and the full incident lifecycle. Built with real source material from the Moonfare Emergency Playbook.",
+  "author": "Hasan Avsar \u2014 Product Ops",
+  "version": "1.0.0",
+  "language": "en",
+  "thumbnail": "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&q=80",
+  "modules": [
+    {
+      "id": "mod_47807f710d02",
+      "title": "Module 1: Introduction & Why It Matters",
+      "description": "Foundations: what counts as a Product Emergency at Moonfare and why your role as a stakeholder matters from minute one.",
+      "lessons": [
+        {
+          "id": "les_c6cdfb3b5405",
+          "title": "Foundations",
+          "description": "Understanding the basics",
+          "slides": [
+            {
+              "id": "s_5b88a2208aad",
+              "title": "Product Emergency Process",
+              "layout": "title",
+              "content": [
+                {
+                  "id": "b_0ff340f13eb3",
+                  "type": "image",
+                  "content": "/moonfare-logo-white.png",
+                  "alt": "Moonfare",
+                  "caption": "",
+                  "animation": "fade-in"
+                },
+                {
+                  "id": "b_cefd6ebd3847",
+                  "type": "text",
+                  "content": "<p style=\"color:#DCDAD6;font-size:1.05rem;line-height:1.6\">When something breaks at Moonfare, the response is fast, structured, and transparent. This course will teach you what to expect \u2014 and how you fit in.</p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#101321",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "zoom",
+              "isCoverSlide": true,
+              "coverSubtitle": "A Stakeholder's Guide to Crisis Response at Moonfare"
+            },
+            {
+              "id": "s_cb7608b532c3",
+              "title": "What You'll Learn",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_8e2e1868cc1c",
+                  "type": "heading",
+                  "content": "<h2>Learning Objectives</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_db118e6d6a05",
+                  "type": "text",
+                  "content": "<p>By the end of this 25-minute course, you will be confident participating in any Product Emergency at Moonfare \u2014 whether you are reporting one, receiving updates, or relaying information to partners.</p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                },
+                {
+                  "id": "b_d6121fb77787",
+                  "type": "callout",
+                  "content": "Stakeholders, Heads of Department, Partnerships, Investor Relations, Compliance, and anyone who receives <em>#emergency_stakeholders</em> notifications.",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "calloutStyle": "info",
+                    "calloutTitle": "Audience"
+                  },
+                  "animation": "zoom-in"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade",
+              "learningObjectives": [
+                {
+                  "id": "lo_d5bb07c94dc0",
+                  "text": "Recognize what qualifies as a Product Emergency at Moonfare"
+                },
+                {
+                  "id": "lo_939c5374df78",
+                  "text": "Read and apply the 5-level severity matrix"
+                },
+                {
+                  "id": "lo_debf741694ab",
+                  "text": "Identify who owns what during an active emergency"
+                },
+                {
+                  "id": "lo_a7425a2d3ca6",
+                  "text": "Know which Slack channels and updates to follow"
+                },
+                {
+                  "id": "lo_daeeb613850d",
+                  "text": "Understand the 5-stage emergency lifecycle"
+                },
+                {
+                  "id": "lo_cccbaac02096",
+                  "text": "Act correctly when an emergency notification reaches you"
+                }
+              ]
+            },
+            {
+              "id": "s_f0f8b78ef39d",
+              "title": "What Is a Product Emergency?",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_4f67b4ef08da",
+                  "type": "heading",
+                  "content": "<h2>Defining the Terms</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_0da4d53cec37",
+                  "type": "text",
+                  "content": "<p>Not every bug is an emergency. Moonfare uses <strong>strict, measurable thresholds</strong> to escalate.</p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                },
+                {
+                  "id": "b_5068606917cb",
+                  "type": "accordion",
+                  "content": "",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "accordionItems": [
+                      {
+                        "id": "a_ab3ec09c8fd0",
+                        "title": "Incident",
+                        "content": "<p>An <em>unexpected behavior</em> of a tool or flow that differs from its normal function. Most incidents are not emergencies.</p>"
+                      },
+                      {
+                        "id": "a_13de8b14039c",
+                        "title": "Emergency",
+                        "content": "<p>A specific, severe class of incident where Moonfare's existence, revenue, or reputation is at meaningful risk and the entire Product + Tech organization may need to drop everything.</p>"
+                      },
+                      {
+                        "id": "a_3513e14fe5c3",
+                        "title": "Post-mortem",
+                        "content": "<p>A blameless review held after every emergency to capture what happened, what we learned, and how to prevent recurrence. All documented in Confluence.</p>"
+                      }
+                    ]
+                  },
+                  "animation": "fade-in"
+                },
+                {
+                  "id": "b_f183d2ea9f29",
+                  "type": "callout",
+                  "content": "If you are unsure whether an issue is an emergency, <strong>do not guess</strong>. Contact the Product Ops team \u2014 they own the classification call.",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "calloutStyle": "warning",
+                    "calloutTitle": "Rule of Thumb"
+                  },
+                  "animation": "zoom-in"
+                }
+              ],
+              "questions": [],
+              "notes": "Source: Moonfare Confluence \u2014 Emergency Playbook (Product space).",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_741f26a0b70f",
+              "title": "Why Stakeholders Are Central to the Process",
+              "layout": "image-text",
+              "content": [
+                {
+                  "id": "b_82f74242eb22",
+                  "type": "image-right",
+                  "content": "",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "layoutText": "<h3 style='margin-top:0'>You are not a passive observer</h3><p>During an emergency, the Liaison/Incident Manager actively pulls stakeholders into the loop because:</p><ul><li>Partners often hear about issues <strong>before</strong> internal teams do</li><li>You may need to update <strong>Quintet, B2B partners</strong>, or major investors</li><li>Your visibility prevents miscommunication and reputational damage</li><li>Compliance and legal sign-offs may depend on your team</li></ul>",
+                    "layoutImages": [
+                      {
+                        "url": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&q=80",
+                        "caption": "Cross-functional emergency response team",
+                        "alt": "Team collaboration"
+                      }
+                    ]
+                  },
+                  "animation": "slide-up"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_091294631d9a",
+              "title": "Knowledge Check: The Basics",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_caccebc9bec9",
+                  "type": "heading",
+                  "content": "<h2>Quick Check</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_58453079a26c",
+                  "options": [
+                    {
+                      "id": "o_23cac94f0fad",
+                      "text": "Any bug reported by a customer",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_1d337236d7b1",
+                      "text": "An unexpected behaviour that affects a small number of cosmetic UI elements",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_f7fc57137d74",
+                      "text": "A severe issue where Moonfare's existence, revenue, or reputation is at meaningful risk",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_68391900941a",
+                      "text": "Any Jira ticket marked as a bug",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Correct. The Emergency classification is reserved for severe, measurable business impact \u2014 not every bug. The Emergency Playbook is explicit on this.",
+                  "points": 10,
+                  "type": "multiple-choice",
+                  "text": "Which statement best describes a Product Emergency at Moonfare?"
+                },
+                {
+                  "id": "q_8a480ee9a7c7",
+                  "options": [],
+                  "matchingPairs": [],
+                  "correctAnswer": "false",
+                  "correctOrder": [],
+                  "explanation": "False. The Emergency Playbook says the opposite \u2014 when unsure, contact Product Ops. They own the classification call. Over-escalating creates fatigue and dilutes future responses.",
+                  "points": 10,
+                  "type": "true-false",
+                  "text": "True or False: If you are unsure whether something is an emergency, you should escalate it as one to be safe."
+                }
+              ],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            }
+          ],
+          "order": 0
+        }
+      ],
+      "order": 0,
+      "thumbnail": "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&q=80",
+      "color": "#171D97"
+    },
+    {
+      "id": "mod_c0dbcd37ff69",
+      "title": "Module 2: The Severity Matrix",
+      "description": "How Moonfare classifies emergencies \u2014 the 5 tiers, SLAs, and how to recognize each.",
+      "lessons": [
+        {
+          "id": "les_d85e23c2d7d7",
+          "title": "Severity & Classification",
+          "description": "The 5-tier matrix in detail",
+          "slides": [
+            {
+              "id": "s_037d8f839ea2",
+              "title": "The Severity Matrix",
+              "layout": "title",
+              "content": [
+                {
+                  "id": "b_537b590337aa",
+                  "type": "text",
+                  "content": "<p style=\"color:#DCDAD6;font-size:1.1rem;line-height:1.6\">The matrix exists so anyone \u2014 engineer, PM, partner \u2014 can classify an issue the same way. This module walks you through each level.</p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#121648",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "slide-left",
+              "isCoverSlide": true,
+              "coverSubtitle": "5 Levels. Clear thresholds. No guesswork."
+            },
+            {
+              "id": "s_801c38f60ec8",
+              "title": "The 5 Severity Levels",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_7157fd124d5f",
+                  "type": "heading",
+                  "content": "<h2>Click each tab to compare severity tiers</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_f7c0f8b36a52",
+                  "type": "tabs",
+                  "content": "",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "tabItems": [
+                      {
+                        "id": "t_d51042dda077",
+                        "title": "\ud83d\udea8 EMERGENCY",
+                        "content": "<h3 style='color:#B91C1C'>SLA: Response &lt;20 min \u00b7 Resolution &lt;4 hours</h3><p><strong>Trigger:</strong> Moonfare's existence is at risk. The entire Product and Tech organization is alarmed.</p><ul><li>Production, investor-facing app only (app.moonfare.com)</li><li>Core functionality not working \u2014 investors cannot invest</li><li><strong>100%</strong> of active users affected</li><li>Potential financial impact <strong>&gt; \u20ac100,000</strong></li><li>High expected reputational damage to Moonfare or partner brand</li></ul>"
+                      },
+                      {
+                        "id": "t_6d76ef0f4518",
+                        "title": "\ud83d\udd34 HIGHEST",
+                        "content": "<h3 style='color:#DC2626'>SLA: Response ~20 min \u00b7 Resolution 1\u201372 hours</h3><p><strong>Trigger:</strong> Core functionality affecting internal stakeholders. Revenue impacted.</p><ul><li>Production issue that is not full emergency</li><li>e.g., 1 fund not showing, password reset broken, internal tool down (AP, Demo, Staging0)</li><li><strong>30\u201399%</strong> of active users affected</li><li>Potential financial impact <strong>\u2265 \u20ac10,000</strong></li></ul>"
+                      },
+                      {
+                        "id": "t_4e507688d3c8",
+                        "title": "\ud83d\udfe0 HIGH",
+                        "content": "<h3 style='color:#EA580C'>SLA: Response within 1 working day \u00b7 Resolution within a sprint</h3><p><strong>Trigger:</strong> Core functionality issues, but a workaround exists.</p><ul><li>e.g., investor cannot log in, tax report cannot be downloaded</li><li><strong>10\u201330%</strong> of active users affected</li><li>Requires urgent attention but is not existential</li></ul>"
+                      },
+                      {
+                        "id": "t_127b77a3704f",
+                        "title": "\ud83d\udfe1 MEDIUM",
+                        "content": "<h3 style='color:#CA8A04'>SLA: Response within 1 working day \u00b7 Resolution within 3+ sprints</h3><p><strong>Trigger:</strong> Cosmetic or adjacent functionality issues.</p><ul><li>e.g., a recurring error message despite functionality working</li><li>Data displayed with non-critical errors</li><li>UI issues</li></ul>"
+                      },
+                      {
+                        "id": "t_fa42f6422125",
+                        "title": "\ud83d\udfe2 LOW",
+                        "content": "<h3 style='color:#16A34A'>SLA: Response within 1 working day \u00b7 Resolution within 3+ sprints</h3><p><strong>Trigger:</strong> Minor cosmetic issues with no functional impact.</p><ul><li>A button moved to a different position by accident</li><li>Hard-coded copy contains a spelling mistake</li><li>Colours displayed wrong</li></ul>"
+                      }
+                    ]
+                  },
+                  "animation": "fade-in"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_1d04e6eaab0b",
+              "title": "SLA at a Glance",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_a01ae40d90be",
+                  "type": "heading",
+                  "content": "<h2>Response & Resolution Targets</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_689468a1f8ea",
+                  "type": "text",
+                  "content": "<p>The single most important reference table in this course.</p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                },
+                {
+                  "id": "b_4f0866c4bc00",
+                  "type": "table",
+                  "content": "",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "tableHeaders": [
+                      "Severity",
+                      "Response SLA",
+                      "Resolution SLA",
+                      "Users Affected",
+                      "Financial Impact"
+                    ],
+                    "tableRows": [
+                      [
+                        "\ud83d\udea8 Emergency",
+                        "<20 min",
+                        "<4 hours",
+                        "100%",
+                        "> \u20ac100,000"
+                      ],
+                      [
+                        "\ud83d\udd34 Highest",
+                        "~20 min",
+                        "1\u201372 hours",
+                        "30\u201399%",
+                        "\u2265 \u20ac10,000"
+                      ],
+                      [
+                        "\ud83d\udfe0 High",
+                        "1 working day",
+                        "Within sprint",
+                        "10\u201330%",
+                        "\u2014"
+                      ],
+                      [
+                        "\ud83d\udfe1 Medium",
+                        "1 working day",
+                        "3+ sprints",
+                        "<10%",
+                        "\u2014"
+                      ],
+                      [
+                        "\ud83d\udfe2 Low",
+                        "1 working day",
+                        "3+ sprints",
+                        "Cosmetic",
+                        "\u2014"
+                      ]
+                    ],
+                    "tableStriped": true
+                  },
+                  "animation": "fade-in"
+                },
+                {
+                  "id": "b_8afb9f1f14a4",
+                  "type": "callout",
+                  "content": "If you do not see an update on a Severity-1 (Emergency) within 30 minutes, something is wrong with the process \u2014 not just the bug. Escalate to Product Ops.",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "calloutStyle": "warning",
+                    "calloutTitle": "Stakeholder takeaway"
+                  },
+                  "animation": "zoom-in"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_6571c32747d3",
+              "title": "Real Scenarios \u2014 Flip the Cards",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_09b356b59014",
+                  "type": "heading",
+                  "content": "<h2>Tap each card to reveal the correct severity</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_c8e0ac4a5711",
+                  "type": "text",
+                  "content": "<p>These are <strong>real categories</strong> taken from the Moonfare Emergency Playbook.</p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                },
+                {
+                  "id": "b_150f915f1861",
+                  "type": "flip-card",
+                  "content": "",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "flipCards": [
+                      {
+                        "id": "f_128a0583d4d0",
+                        "frontImage": "",
+                        "backImage": "",
+                        "front": "A data breach exposing investor PII",
+                        "back": "\ud83d\udea8 EMERGENCY \u2014 Compliance ticket required, Security team paged immediately."
+                      },
+                      {
+                        "id": "f_64198359be4c",
+                        "frontImage": "",
+                        "backImage": "",
+                        "front": "Phishing email circulating to 3 investors",
+                        "back": "\ud83d\udfe1 Not an emergency \u2014 handled by Security as standard incident."
+                      },
+                      {
+                        "id": "f_598880e3c142",
+                        "frontImage": "",
+                        "backImage": "",
+                        "front": "Functional issue affecting all investors at fund close",
+                        "back": "\ud83d\udea8 EMERGENCY \u2014 revenue at stake, full Product + Tech mobilized."
+                      },
+                      {
+                        "id": "f_f9b7e9f315dd",
+                        "frontImage": "",
+                        "backImage": "",
+                        "front": "An investor has requested GDPR deletion",
+                        "back": "\ud83d\udfe0 HIGH \u2014 must be actioned within a working day."
+                      },
+                      {
+                        "id": "f_5908ddff933f",
+                        "frontImage": "",
+                        "backImage": "",
+                        "front": "A button has moved by accident in the UI",
+                        "back": "\ud83d\udfe2 LOW \u2014 handled in normal sprint cadence."
+                      },
+                      {
+                        "id": "f_88998d998cd5",
+                        "frontImage": "",
+                        "backImage": "",
+                        "front": "Critical IT security vulnerability discovered",
+                        "back": "\ud83d\udea8 EMERGENCY \u2014 Security L2 paged, Compliance ticket opened."
+                      }
+                    ]
+                  },
+                  "animation": "zoom-in"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_84588c480e9a",
+              "title": "Order by Severity",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_c3f08e041f95",
+                  "type": "heading",
+                  "content": "<h2>Apply the Matrix</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_ac5944b9c9ac",
+                  "options": [
+                    {
+                      "id": "o_e0f9d2a87883",
+                      "text": "Data breach exposing investor data",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_6aae7647abb6",
+                      "text": "Investor cannot log in (workaround unavailable)",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_ec87b38b2525",
+                      "text": "Tax report download fails for one investor",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_49f3170f13d6",
+                      "text": "Recurring non-blocking error message",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_f1cd74c9571f",
+                      "text": "Spelling mistake in static copy",
+                      "isCorrect": true
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [
+                    "o_e0f9d2a87883",
+                    "o_6aae7647abb6",
+                    "o_ec87b38b2525",
+                    "o_49f3170f13d6",
+                    "o_f1cd74c9571f"
+                  ],
+                  "explanation": "Correct! Severity is determined by user impact, financial exposure, and reputational risk \u2014 in that order. A data breach is automatically Emergency tier; cosmetic issues sit at Low.",
+                  "points": 20,
+                  "type": "drag-sort",
+                  "text": "Drag the following scenarios from MOST severe (top) to LEAST severe (bottom) according to Moonfare's matrix:"
+                }
+              ],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_9758de0bacf8",
+              "title": "Sort the Tickets",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_4517a3363c36",
+                  "type": "heading",
+                  "content": "<h2>Drag each scenario into the correct severity bucket</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_3cd76feee8c2",
+                  "type": "text",
+                  "content": "<p>This is exactly the kind of triage Product Ops does dozens of times per week.</p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                },
+                {
+                  "id": "b_9ead38725e5c",
+                  "type": "card-sorting",
+                  "content": "",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "cardSortCategories": [
+                      "Emergency",
+                      "Highest",
+                      "High",
+                      "Medium/Low"
+                    ],
+                    "cardSortCards": [
+                      {
+                        "id": "cs_5889331345eb",
+                        "text": "All investors cannot complete KYC",
+                        "correctCategory": "Emergency"
+                      },
+                      {
+                        "id": "cs_03319fad1706",
+                        "text": "App.moonfare.com fully down",
+                        "correctCategory": "Emergency"
+                      },
+                      {
+                        "id": "cs_975cd6b2bef0",
+                        "text": "Internal Admin Panel is down",
+                        "correctCategory": "Highest"
+                      },
+                      {
+                        "id": "cs_387831faa40e",
+                        "text": "1 fund not displaying for 200 investors",
+                        "correctCategory": "Highest"
+                      },
+                      {
+                        "id": "cs_4b185d0dcfb7",
+                        "text": "Login fails for ~15% of users",
+                        "correctCategory": "High"
+                      },
+                      {
+                        "id": "cs_9bb26f006326",
+                        "text": "Tax document download error for 1 user",
+                        "correctCategory": "High"
+                      },
+                      {
+                        "id": "cs_7aae0ab240a2",
+                        "text": "Recurring non-blocking error toast",
+                        "correctCategory": "Medium/Low"
+                      },
+                      {
+                        "id": "cs_9c3ec18b32d3",
+                        "text": "Misaligned button in footer",
+                        "correctCategory": "Medium/Low"
+                      }
+                    ]
+                  },
+                  "animation": "slide-up"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_5b0388bcb043",
+              "title": "Severity Mastery Check",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_1704405a7451",
+                  "type": "heading",
+                  "content": "<h2>Test Your Calibration</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_9d3997957e6e",
+                  "options": [
+                    {
+                      "id": "o_51ec4f48e3f8",
+                      "text": "A spelling mistake in a marketing email",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_df5904be9390",
+                      "text": "A data breach exposing investor information",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_994e283ff598",
+                      "text": "One investor unable to log in",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_4f5fac67bf1d",
+                      "text": "A misaligned button on the dashboard",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "A data breach is one of the named EMERGENCY categories in the Playbook, alongside total platform outages and critical security vulnerabilities.",
+                  "points": 10,
+                  "type": "multiple-choice",
+                  "text": "Which of the following automatically qualifies as an EMERGENCY?"
+                },
+                {
+                  "id": "q_cf8f06cc8810",
+                  "options": [
+                    {
+                      "id": "o_10b1085b5e38",
+                      "text": "Emergency",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_a7f07847a27e",
+                      "text": "Highest",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_3ec8445f7db8",
+                      "text": "High",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_c3d922d1e8c7",
+                      "text": "Medium",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_1a914a74932e",
+                      "text": "Low",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Correct. The HIGH tier covers 10\u201330% of users impacted on critical functions. EMERGENCY requires 100%; HIGHEST is 30\u201399%.",
+                  "points": 10,
+                  "type": "dropdown",
+                  "text": "If 25% of active users cannot complete a critical action, this is most likely:",
+                  "dropdownPlaceholder": "Select severity"
+                },
+                {
+                  "id": "q_b0f2436e4999",
+                  "options": [],
+                  "matchingPairs": [],
+                  "correctAnswer": "true",
+                  "correctOrder": [],
+                  "explanation": "True. That is the explicit trigger language in the Emergency Playbook \u2014 Moonfare's existence is at risk.",
+                  "points": 10,
+                  "type": "true-false",
+                  "text": "EMERGENCY tier requires the entire Product and Tech organization to drop their work and respond."
+                }
+              ],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            }
+          ],
+          "order": 0
+        }
+      ],
+      "order": 1,
+      "thumbnail": "https://images.unsplash.com/photo-1614064548237-096d7d3a4c5e?w=1200&q=80",
+      "color": "#121648"
+    },
+    {
+      "id": "mod_edc35716e031",
+      "title": "Module 3: Roles & Responsibilities",
+      "description": "Who owns what during an active emergency \u2014 and where stakeholders fit (and don't fit).",
+      "lessons": [
+        {
+          "id": "les_34e5a9880763",
+          "title": "The Response Org",
+          "description": "Roles, owners, escalation paths",
+          "slides": [
+            {
+              "id": "s_c2eae7109430",
+              "title": "Roles & Responsibilities",
+              "layout": "title",
+              "content": [
+                {
+                  "id": "b_92d04296eee7",
+                  "type": "text",
+                  "content": "<p style=\"color:#DCDAD6;font-size:1.1rem;line-height:1.6\">Five distinct roles activate during a Moonfare emergency. Knowing them prevents duplicated effort and missed handoffs.</p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#101321",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "slide-left",
+              "isCoverSlide": true,
+              "coverSubtitle": "Who does what when the alert fires"
+            },
+            {
+              "id": "s_4be0b97acf5f",
+              "title": "The Five Emergency Roles",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_4e53fdb364ab",
+                  "type": "heading",
+                  "content": "<h2>Click to expand each role</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_18f465a2da96",
+                  "type": "accordion",
+                  "content": "",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "accordionItems": [
+                      {
+                        "id": "a_00b92b3f7e59",
+                        "title": "\ud83c\udfaf L1 \u2014 Liaison / Incident Manager (Prod Ops)",
+                        "content": "<p><strong>Owners:</strong> Lily + Hasan + rotational PMs</p><ul><li>Quickly identify incident status</li><li>Pull in appropriate departments</li><li>Provide internal & external updates</li><li>Decide communication channels</li><li>Send Emergency Update email to Stakeholders</li><li>Create Compliance ticket and link to Product ticket</li><li>Manage flow from creation to post-mortem</li></ul>"
+                      },
+                      {
+                        "id": "a_c48310d5869c",
+                        "title": "\ud83d\udee0\ufe0f L2 \u2014 Engineering Subject Matter Experts",
+                        "content": "<p><strong>Owners:</strong> EMs per domain during work hours; 1 on-call engineer outside</p><ul><li>Establish next steps for resolution</li><li>Investigate and assess impact</li><li>Execute fixes</li><li>Support post-mortem</li></ul>"
+                      },
+                      {
+                        "id": "a_0118cede2cb4",
+                        "title": "\ud83e\udde0 L3 \u2014 Senior SMEs (Engineering)",
+                        "content": "<p><strong>Owner:</strong> Elena</p><ul><li>Assess severity together with Prod Ops</li><li>Brought in when escalated by engineers</li><li>Confirms action points and fixes</li><li>Attends post-mortem (optional)</li></ul>"
+                      },
+                      {
+                        "id": "a_2a1cea2e0daf",
+                        "title": "\ud83d\udd12 Security Team (L1/L2)",
+                        "content": "<p><strong>Lead:</strong> Hassan</p><ul><li>Quickly identifies if Security needs to be involved</li><li>Initiates security assessment</li><li>Fills compliance incident form</li><li>Updates and follows through on the security ticket</li></ul>"
+                      },
+                      {
+                        "id": "a_06f617b55e81",
+                        "title": "\ud83d\udc51 Command Staff (Leadership)",
+                        "content": "<p><strong>Members:</strong> Andrew \u00b7 Elena \u00b7 Hassan</p><ul><li>Visibility on every emergency</li><li>Make major business decisions (e.g., partner comms, public statement)</li><li>All information flows up to them</li></ul>"
+                      }
+                    ]
+                  },
+                  "animation": "fade-in"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_ac2d15fed8a3",
+              "title": "Where YOU Fit In",
+              "layout": "image-text",
+              "content": [
+                {
+                  "id": "b_d4802edfe6c5",
+                  "type": "image-left",
+                  "content": "",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "layoutText": "<h3 style='margin-top:0'>The Stakeholder Role</h3><p>Stakeholders are <strong>not</strong> in the operational response chain \u2014 but you are critical to:</p><ul><li><strong>Receiving</strong> status via #emergency_stakeholders</li><li><strong>Relaying</strong> information to partners (Quintet, B2B) \u2014 coordinated by Max & Nicolai</li><li><strong>Coordinating</strong> with Investor Relations, Compliance, Legal</li><li><strong>NOT</strong> joining the active war-room unless invited</li></ul><p style='margin-top:1rem'><em>Discipline matters: jumping into the response uninvited slows it down.</em></p>",
+                    "layoutImages": [
+                      {
+                        "url": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&q=80",
+                        "caption": "Stakeholder coordination during incident",
+                        "alt": "Meeting"
+                      }
+                    ]
+                  },
+                  "animation": "slide-up"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_d1e9b23d79ec",
+              "title": "Match the Role",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_f0aa3229aefa",
+                  "type": "heading",
+                  "content": "<h2>Role Recall</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_63e654b95663",
+                  "options": [],
+                  "matchingPairs": [
+                    {
+                      "id": "m_34f941ee582a",
+                      "left": "Sends Emergency Update email to Stakeholders",
+                      "right": "L1 \u2014 Prod Ops"
+                    },
+                    {
+                      "id": "m_b823336b8d98",
+                      "left": "Investigates and executes the technical fix",
+                      "right": "L2 \u2014 Engineering"
+                    },
+                    {
+                      "id": "m_2d1d5915b67e",
+                      "left": "Assesses severity together with Prod Ops on escalation",
+                      "right": "L3 \u2014 Senior Engineering"
+                    },
+                    {
+                      "id": "m_d91d45035be1",
+                      "left": "Creates Compliance Incident Form for data breaches",
+                      "right": "Security Team"
+                    },
+                    {
+                      "id": "m_79f4ea118c4b",
+                      "left": "Makes major business decisions during the incident",
+                      "right": "Command Staff (Leadership)"
+                    }
+                  ],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Each role has clear, non-overlapping ownership. The L1 / Prod Ops Liaison is the spine of the entire process.",
+                  "points": 20,
+                  "type": "matching",
+                  "text": "Match each responsibility to the role that owns it:"
+                }
+              ],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_85c8a8191400",
+              "title": "Your Stakeholder Checklist",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_559d59c6ee07",
+                  "type": "heading",
+                  "content": "<h2>Do these. Don't do the rest.</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_d0c4b1d4ee10",
+                  "type": "checklist",
+                  "content": "",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "checklistTitle": "When an emergency fires",
+                    "checklistItems": [
+                      {
+                        "id": "c_8306ecc20c32",
+                        "title": "Acknowledge the #emergency_stakeholders Slack ping",
+                        "description": "A simple \u2705 or 'received' reaction is enough \u2014 confirms the loop is closed."
+                      },
+                      {
+                        "id": "c_eccd2c586fb7",
+                        "title": "Read the linked Jira ticket BEFORE asking questions",
+                        "description": "All updates are posted there every 30 minutes. Most questions are already answered."
+                      },
+                      {
+                        "id": "c_3879a0dae3e9",
+                        "title": "Hold partner communication until cleared by Prod Ops",
+                        "description": "Premature messaging to Quintet or B2B partners can amplify reputational damage."
+                      },
+                      {
+                        "id": "c_30e7f50b64a8",
+                        "title": "Forward stakeholder concerns through the L1 Liaison",
+                        "description": "Do not approach engineering directly \u2014 it pulls them off the fix."
+                      },
+                      {
+                        "id": "c_59aaad095d6c",
+                        "title": "Attend the post-mortem if invited",
+                        "description": "Stakeholder perspective is critical for capturing reputational and partnership impact."
+                      }
+                    ]
+                  },
+                  "animation": "slide-up"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            }
+          ],
+          "order": 0
+        }
+      ],
+      "order": 2,
+      "thumbnail": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&q=80",
+      "color": "#101321"
+    },
+    {
+      "id": "mod_55a18f89d5c3",
+      "title": "Module 4: Communication & Updates",
+      "description": "Channels, cadence, and the standard templates Moonfare uses to maintain transparency under pressure.",
+      "lessons": [
+        {
+          "id": "les_a523ec92a72b",
+          "title": "Comms Discipline",
+          "description": "Channels, templates, cadence",
+          "slides": [
+            {
+              "id": "s_a34bd433e9ef",
+              "title": "Communication & Updates",
+              "layout": "title",
+              "content": [
+                {
+                  "id": "b_35c1fc52d673",
+                  "type": "text",
+                  "content": "<p style=\"color:#DCDAD6;font-size:1.1rem;line-height:1.6\">Clear, consistent communication is what separates a controlled emergency from a panic. Here is the exact infrastructure Moonfare uses.</p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#121648",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "slide-left",
+              "isCoverSlide": true,
+              "coverSubtitle": "The channels, the cadence, the templates"
+            },
+            {
+              "id": "s_dfb2301eae58",
+              "title": "The Five Communication Channels",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_3929c7bbeba9",
+                  "type": "heading",
+                  "content": "<h2>Where information flows</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_37c3ae8357e0",
+                  "type": "text",
+                  "content": "<p>Each channel has a precise audience and purpose. Sending the wrong message to the wrong channel is itself a process violation.</p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                },
+                {
+                  "id": "b_1dc0421894cb",
+                  "type": "table",
+                  "content": "",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "tableHeaders": [
+                      "Channel",
+                      "When",
+                      "Audience"
+                    ],
+                    "tableRows": [
+                      [
+                        "Jira Ticket",
+                        "Always \u2014 primary record",
+                        "All Moonfare employees"
+                      ],
+                      [
+                        "#emergency_product (Slack)",
+                        "Always \u2014 auto-alert",
+                        "Heads of Dept, Product, Eng, Prod Ops"
+                      ],
+                      [
+                        "#emergency_stakeholders (Slack)",
+                        "Always \u2014 for visibility",
+                        "Stakeholders ONLY"
+                      ],
+                      [
+                        "#mf-oncall (Slack)",
+                        "Always \u2014 auto-alert",
+                        "All Eng, Product, Prod Ops, Security"
+                      ],
+                      [
+                        "Dedicated Emergency Channel",
+                        "Auto-created per incident",
+                        "Active responders only"
+                      ],
+                      [
+                        "PagerDuty",
+                        "Production-related incidents",
+                        "L1 / L2 oncall"
+                      ]
+                    ],
+                    "tableStriped": true
+                  },
+                  "animation": "fade-in"
+                },
+                {
+                  "id": "b_a64dbd493bc0",
+                  "type": "callout",
+                  "content": "<strong>#emergency_stakeholders</strong> is the one to watch. Everything else is operational noise that will distract from your job.",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "calloutStyle": "tip",
+                    "calloutTitle": "Stakeholder-only channel"
+                  },
+                  "animation": "zoom-in"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_269d18ea2e0e",
+              "title": "The Update Cadence",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_f2f226127d7a",
+                  "type": "heading",
+                  "content": "<h2>Every 30 minutes \u2014 non-negotiable</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_58242c60f7ad",
+                  "type": "timeline",
+                  "content": "",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "timelineEvents": [
+                      {
+                        "id": "tl_823e5bdfb93c",
+                        "date": "T+0",
+                        "title": "Alert Triggered",
+                        "description": "PagerDuty fires. Auto-message in #emergency_product.",
+                        "icon": "\ud83d\udea8"
+                      },
+                      {
+                        "id": "tl_5b47b70df9bb",
+                        "date": "T+5 min",
+                        "title": "Acknowledgement",
+                        "description": "L1 Liaison comments: 'Product/Engineering is aware of the emergency and investigating.'",
+                        "icon": "\u2705"
+                      },
+                      {
+                        "id": "tl_42a34811f11a",
+                        "date": "T+20 min",
+                        "title": "First Investigation Update",
+                        "description": "First Jira comment with initial findings; #emergency_stakeholders pinged.",
+                        "icon": "\ud83d\udd0d"
+                      },
+                      {
+                        "id": "tl_374879a9663d",
+                        "date": "Every 30 min",
+                        "title": "Status Updates",
+                        "description": "Jira ticket gets a fresh comment. Even 'no change' is communicated explicitly.",
+                        "icon": "\ud83d\udd04"
+                      },
+                      {
+                        "id": "tl_629603b6a80b",
+                        "date": "On Resolution",
+                        "title": "Resolution Comment",
+                        "description": "Each action item marked Resolved with POC. Ticket closed, follow-ups linked.",
+                        "icon": "\u2714\ufe0f"
+                      },
+                      {
+                        "id": "tl_1ced78ec73c1",
+                        "date": "T + 30 min \u2013 2 hr after close",
+                        "title": "Stakeholder Email",
+                        "description": "Moderate emergency: 1 summary email. Severe: hourly emails throughout.",
+                        "icon": "\ud83d\udce7"
+                      }
+                    ]
+                  },
+                  "animation": "slide-up"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_0bbe31d81b12",
+              "title": "Stage-by-Stage Communication Templates",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_147f2e501cdf",
+                  "type": "heading",
+                  "content": "<h2>The exact language used at each stage</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_39f6f4d20afa",
+                  "type": "text",
+                  "content": "<p>Consistency is intentional. The same words show up every time so receivers learn to read them at a glance.</p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                },
+                {
+                  "id": "b_6a4aa8120a39",
+                  "type": "tabs",
+                  "content": "",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "tabItems": [
+                      {
+                        "id": "t_3fcbdbea7e61",
+                        "title": "\ud83d\udfe5 Triggered",
+                        "content": "<blockquote style='border-left:4px solid #DC2626;padding-left:1rem;margin-left:0;font-style:italic'>\"Product has acknowledged this request. We will come back soon on next steps.\"</blockquote>"
+                      },
+                      {
+                        "id": "t_44a5cc54e184",
+                        "title": "\ud83d\udd0d Investigating",
+                        "content": "<blockquote style='border-left:4px solid #F59E0B;padding-left:1rem;margin-left:0;font-style:italic'>\"Product/Engineering is aware of the emergency and investigating this. Please follow Jira ticket for all updates (every 30 mins).\"</blockquote>"
+                      },
+                      {
+                        "id": "t_dccd538595ae",
+                        "title": "\ud83d\udfe8 Identified",
+                        "content": "<blockquote style='border-left:4px solid #EAB308;padding-left:1rem;margin-left:0;font-style:italic'>\"Product/Engineering have identified the cause of this emergency. XYZ resulted in XYZ.<br>They have outlined the following action points to resolve this:<br>\u2022 XYZ : POC<br>\u2022 XYZ : POC<br>\u2022 XYZ : POC<br>We will update you in 30 mins.\"</blockquote>"
+                      },
+                      {
+                        "id": "t_9ca205fc473f",
+                        "title": "\ud83d\udfe6 Monitoring",
+                        "content": "<blockquote style='border-left:4px solid #3B82F6;padding-left:1rem;margin-left:0;font-style:italic'>\"There are no new updates regarding the action points. We will update when there is, within the next 30 mins.\"</blockquote>"
+                      },
+                      {
+                        "id": "t_4a7620616d0b",
+                        "title": "\ud83d\udfe9 Resolved",
+                        "content": "<blockquote style='border-left:4px solid #10B981;padding-left:1rem;margin-left:0;font-style:italic'>\"Update:<br>\u2022 XYZ : POC \u2013 Resolved<br>\u2022 XYZ : POC \u2013 Resolved<br>We will go ahead and close this ticket. For further investigation please follow linked ticket.\"</blockquote>"
+                      }
+                    ]
+                  },
+                  "animation": "fade-in"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_f17b77f66fc9",
+              "title": "Communication Quick Check",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_109fccc37c05",
+                  "type": "heading",
+                  "content": "<h2>Channels & Cadence</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_c559d48a7f4a",
+                  "options": [
+                    {
+                      "id": "o_16211c5feacf",
+                      "text": "#mf-oncall",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_4253a1e4a34c",
+                      "text": "#emergency_product",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_7f256e2da7cd",
+                      "text": "#emergency_stakeholders",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_c939ce21e27b",
+                      "text": "The auto-created emergency channel",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Correct. #emergency_stakeholders exists specifically so stakeholders get the right level of detail without being overwhelmed by operational chatter.",
+                  "points": 10,
+                  "type": "multiple-choice",
+                  "text": "As a stakeholder, which Slack channel is your PRIMARY source of truth?"
+                },
+                {
+                  "id": "q_ef507f1e24e5",
+                  "options": [
+                    {
+                      "id": "o_4e108ccec37e",
+                      "text": "Whenever there is news",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_fc810800487f",
+                      "text": "At least every hour",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_082eadaed4a3",
+                      "text": "Every 30 minutes \u2014 even if there's no change",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_98007edeaa94",
+                      "text": "Only at start and resolution",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Every 30 minutes is the explicit cadence. 'No new updates' is itself a valid update \u2014 silence is not allowed.",
+                  "points": 10,
+                  "type": "multiple-choice",
+                  "text": "How often must Jira ticket updates be posted during an active emergency?"
+                },
+                {
+                  "id": "q_dc88d9bdb64d",
+                  "options": [],
+                  "matchingPairs": [],
+                  "correctAnswer": "hour",
+                  "correctOrder": [],
+                  "explanation": "Correct. Severe emergencies = email every hour. Moderate emergencies = 1 summary email within 2 hours of resolution.",
+                  "points": 15,
+                  "type": "fill-in-blank",
+                  "text": "Severe emergencies trigger a stakeholder email every _____."
+                }
+              ],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            }
+          ],
+          "order": 0
+        }
+      ],
+      "order": 3,
+      "thumbnail": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&q=80",
+      "color": "#968F83"
+    },
+    {
+      "id": "mod_9e7a23c15c1e",
+      "title": "Module 5: The Lifecycle of a Response",
+      "description": "Detect \u00b7 Respond \u00b7 Identify \u00b7 Resolve \u00b7 Improve \u2014 the five values, walked through with a realistic Friday-evening scenario.",
+      "lessons": [
+        {
+          "id": "les_bdf21c5ab756",
+          "title": "Lifecycle in Practice",
+          "description": "Five values + branching scenario",
+          "slides": [
+            {
+              "id": "s_b8e50b11b06d",
+              "title": "The Emergency Lifecycle",
+              "layout": "title",
+              "content": [
+                {
+                  "id": "b_692cd12ecc36",
+                  "type": "text",
+                  "content": "<p style=\"color:#DCDAD6;font-size:1.1rem;line-height:1.6\">Five values frame the entire process. Internalize these and you will always know what stage you are in.</p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#101321",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "zoom",
+              "isCoverSlide": true,
+              "coverSubtitle": "Detect \u00b7 Respond \u00b7 Identify \u00b7 Resolve \u00b7 Improve"
+            },
+            {
+              "id": "s_d0010e5cfcb5",
+              "title": "The Five Values",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_3fa98558e060",
+                  "type": "heading",
+                  "content": "<h2>These are the principles, not just steps</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_cdfa3b6f3504",
+                  "type": "timeline",
+                  "content": "",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "timelineEvents": [
+                      {
+                        "id": "tl_0a6aae01c3d3",
+                        "date": "1",
+                        "title": "Detect",
+                        "description": "We should know there is a problem (via monitoring) BEFORE stakeholders do. Synthetic monitoring + PagerDuty + alerts in #mf-oncall.",
+                        "icon": "\ud83d\udce1"
+                      },
+                      {
+                        "id": "tl_607d2d813180",
+                        "date": "2",
+                        "title": "Respond",
+                        "description": "Always acknowledge an emergency \u2014 let stakeholders know where to find updates. The 'response' SLA stops the moment the ticket is acknowledged.",
+                        "icon": "\ud83d\udea8"
+                      },
+                      {
+                        "id": "tl_ad963d00923d",
+                        "date": "3",
+                        "title": "Identify",
+                        "description": "Identify who needs to be involved and what the next steps are. L1 pulls in L2 / L3 / Security / Infra as needed.",
+                        "icon": "\ud83d\udd0d"
+                      },
+                      {
+                        "id": "tl_b1b32fe1e5d9",
+                        "date": "4",
+                        "title": "Resolve",
+                        "description": "Resolve as fast as possible. Action points are tracked publicly with a POC against each one.",
+                        "icon": "\ud83d\udee0\ufe0f"
+                      },
+                      {
+                        "id": "tl_a0cacd241319",
+                        "date": "5",
+                        "title": "Improve",
+                        "description": "Always review and learn. Every emergency triggers a post-mortem in Confluence \u2014 blameless, and shared with Command Staff.",
+                        "icon": "\ud83d\udcc8"
+                      }
+                    ]
+                  },
+                  "animation": "slide-up"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_aa365ad70ca7",
+              "title": "Detection: How Alerts Find You",
+              "layout": "image-text",
+              "content": [
+                {
+                  "id": "b_d8a89b4837dc",
+                  "type": "image-right",
+                  "content": "",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "layoutText": "<h3 style='margin-top:0'>Two ways an emergency is detected</h3><p><strong>1. Automated</strong> \u2014 synthetic monitoring + New Relic + PagerDuty fire automatically. The Liaison sees it before any human reports it. This is the goal.</p><p><strong>2. Reported</strong> \u2014 an employee or partner files a ticket via the helpdesk. Prod Ops then validates whether it qualifies as an emergency.</p><p>If you, as a stakeholder, see an issue <strong>before</strong> the alert fires \u2014 that itself is signal. Report it to Product Ops with timestamps and screenshots.</p>",
+                    "layoutImages": [
+                      {
+                        "url": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80",
+                        "caption": "Real-time monitoring dashboard",
+                        "alt": "Dashboard"
+                      }
+                    ]
+                  },
+                  "animation": "slide-up"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_7e233005815d",
+              "title": "Scenario: A Friday at 18:30",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_6d97ba959d5d",
+                  "type": "heading",
+                  "content": "<h2>Make the right call</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_b230ab4ad555",
+                  "type": "text",
+                  "content": "<p>You are a stakeholder. You receive a partner WhatsApp message at 18:30 on a Friday: <em>\"Three of my investors say they cannot complete their KYC.\"</em> Walk through the decision tree.</p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                },
+                {
+                  "id": "b_57043d0b6693",
+                  "type": "scenario",
+                  "content": "",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "scenarioTitle": "Friday Evening Stakeholder Decision",
+                    "scenarioDescription": "A scenario that tests every key principle from this course.",
+                    "scenarioImage": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&q=80",
+                    "scenarioSteps": [
+                      {
+                        "id": "s1",
+                        "text": "It's 18:30 Friday. A partner reports 3 investors cannot complete KYC. Your first move?",
+                        "choices": [
+                          {
+                            "id": "c1",
+                            "text": "Open a Jira ticket via the helpdesk and tag Product Ops + on-call",
+                            "nextStepId": "s2",
+                            "feedback": "Correct first move \u2014 formal capture before anything else."
+                          },
+                          {
+                            "id": "c2",
+                            "text": "Message the engineering EM directly on Slack",
+                            "nextStepId": "s_wrong1",
+                            "feedback": "Skipping the helpdesk breaks the audit trail and SLA tracking."
+                          },
+                          {
+                            "id": "c3",
+                            "text": "Wait until Monday to gather more data",
+                            "nextStepId": "s_wrong2",
+                            "feedback": "Delay on a potential KYC blocker is unacceptable."
+                          }
+                        ]
+                      },
+                      {
+                        "id": "s_wrong1",
+                        "text": "The EM helps, but no Jira ticket exists. Two hours later more reports come in. What now?",
+                        "choices": [
+                          {
+                            "id": "c4",
+                            "text": "Open the ticket retroactively and document everything",
+                            "nextStepId": "s2",
+                            "feedback": "Recovered \u2014 but you lost the response-SLA timer. Always start with the ticket."
+                          }
+                        ]
+                      },
+                      {
+                        "id": "s_wrong2",
+                        "text": "By Monday morning 40+ investors are blocked and Quintet calls Andrew directly.",
+                        "isEnd": true,
+                        "endType": "failure",
+                        "endMessage": "\u274c This is exactly the scenario the Emergency Process exists to prevent. Stakeholders are critical to early detection \u2014 never sit on partner reports.",
+                        "choices": []
+                      },
+                      {
+                        "id": "s2",
+                        "text": "Ticket opened. Prod Ops L1 acknowledges within 15 min. Partner asks you for an ETA. Your reply?",
+                        "choices": [
+                          {
+                            "id": "c5",
+                            "text": "\"Engineering is investigating. I'll share confirmed updates as they come \u2014 please don't act on rumors.\"",
+                            "nextStepId": "s3",
+                            "feedback": "Excellent \u2014 you set expectations without overcommitting."
+                          },
+                          {
+                            "id": "c6",
+                            "text": "\"Should be fixed in an hour, don't worry.\"",
+                            "nextStepId": "s_wrong3",
+                            "feedback": "Never commit on behalf of engineering \u2014 that's a reputational time-bomb."
+                          },
+                          {
+                            "id": "c7",
+                            "text": "Forward the partner the link to the live #emergency_product channel",
+                            "nextStepId": "s_wrong4",
+                            "feedback": "Stakeholders never share internal operational channels with partners."
+                          }
+                        ]
+                      },
+                      {
+                        "id": "s_wrong3",
+                        "text": "An hour passes; the issue isn't fixed. The partner is angrier than before.",
+                        "isEnd": true,
+                        "endType": "failure",
+                        "endMessage": "\u274c Over-promising during an emergency is one of the most damaging stakeholder mistakes. Always defer to the Liaison's confirmed timing.",
+                        "choices": []
+                      },
+                      {
+                        "id": "s_wrong4",
+                        "text": "Internal Slack messages are now being screenshotted by an external party.",
+                        "isEnd": true,
+                        "endType": "failure",
+                        "endMessage": "\u274c #emergency_product is internal-only. Stakeholder-to-partner comms must be sanitized and time-delayed.",
+                        "choices": []
+                      },
+                      {
+                        "id": "s3",
+                        "text": "Ticket is in the Identified stage. L1 says it'll be 90 minutes to resolution. What's your next stakeholder action?",
+                        "choices": [
+                          {
+                            "id": "c8",
+                            "text": "Notify Max + Nicolai per process so they can pre-brief Quintet",
+                            "nextStepId": "s_end_good",
+                            "feedback": "Perfect \u2014 partner comms route via the partnerships team, not directly."
+                          },
+                          {
+                            "id": "c9",
+                            "text": "Personally call the affected investors to apologize",
+                            "nextStepId": "s_wrong5",
+                            "feedback": "Investor outreach during an active incident is reserved for IR \u2014 coordinated, not freelanced."
+                          }
+                        ]
+                      },
+                      {
+                        "id": "s_wrong5",
+                        "text": "IR is now mid-call with two of the same investors. Messaging conflicts emerge.",
+                        "isEnd": true,
+                        "endType": "failure",
+                        "endMessage": "\u274c Coordination is everything. IR owns investor outreach during incidents.",
+                        "choices": []
+                      },
+                      {
+                        "id": "s_end_good",
+                        "text": "The fix ships at 20:15. L1 sends the resolution email at 20:45. You forward an internal-only note to your team and attend the post-mortem on Monday.",
+                        "isEnd": true,
+                        "endType": "success",
+                        "endMessage": "\u2705 Textbook stakeholder response. You captured the issue early, deferred to the process, protected partner relationships, and contributed to learning.",
+                        "choices": []
+                      }
+                    ]
+                  },
+                  "animation": "fade-in"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_0fc62ef4282d",
+              "title": "Lifecycle Reflection",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_d05b0c56a387",
+                  "type": "heading",
+                  "content": "<h2>Lifecycle Mastery</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_cf575c885d3f",
+                  "options": [],
+                  "matchingPairs": [],
+                  "correctAnswer": "true",
+                  "correctOrder": [],
+                  "explanation": "True. The first principle is Detect \u2014 monitoring should catch issues before stakeholders do. Stakeholder-first detection is signal that monitoring needs improvement.",
+                  "points": 10,
+                  "type": "true-false",
+                  "text": "If a stakeholder spots an issue before monitoring catches it, that is a process failure."
+                },
+                {
+                  "id": "q_7361942d1811",
+                  "options": [],
+                  "matchingPairs": [],
+                  "correctAnswer": "false",
+                  "correctOrder": [],
+                  "explanation": "False. The fifth value \u2014 Improve \u2014 requires a blameless post-mortem in Confluence after every emergency. Resolution is not the finish line.",
+                  "points": 10,
+                  "type": "true-false",
+                  "text": "Once an emergency is resolved, the process is complete."
+                },
+                {
+                  "id": "q_5759fb39ff41",
+                  "options": [
+                    {
+                      "id": "o_e51610214394",
+                      "text": "Only resolution time",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_a5821bbfe585",
+                      "text": "Root cause + outlined action points + POCs + 30-min update commitment",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_20cb30ff9cd1",
+                      "text": "Just the Jira ticket link",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_f32008934aea",
+                      "text": "A meeting invitation",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Identified-stage updates explicitly include cause, action points with POCs, and a commitment to update in 30 minutes.",
+                  "points": 10,
+                  "type": "multiple-choice",
+                  "text": "During the 'Identified' stage, what should stakeholders expect to see?"
+                }
+              ],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            }
+          ],
+          "order": 0
+        }
+      ],
+      "order": 4,
+      "thumbnail": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&q=80",
+      "color": "#171D97"
+    },
+    {
+      "id": "mod_dc2e9dc6926e",
+      "title": "Module 6: Final Assessment",
+      "description": "Bring it all together. 10 mixed-format questions covering severity, roles, communication, and lifecycle.",
+      "lessons": [
+        {
+          "id": "les_567442b47940",
+          "title": "Final Assessment",
+          "description": "Test your full mastery",
+          "slides": [
+            {
+              "id": "s_bbb46ffe4147",
+              "title": "Final Assessment",
+              "layout": "title",
+              "content": [
+                {
+                  "id": "b_bffafddc3436",
+                  "type": "text",
+                  "content": "<p style=\"color:#DCDAD6;font-size:1.1rem;line-height:1.6\">Bring everything together. You may retry \u2014 but each attempt counts.</p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                },
+                {
+                  "id": "b_953969e79487",
+                  "type": "image",
+                  "content": "/moonfare-logo-white.png",
+                  "alt": "Moonfare",
+                  "caption": "",
+                  "animation": "fade-in"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#121648",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "slide-up",
+              "isCoverSlide": true,
+              "coverSubtitle": "10 questions \u2014 80% to pass, certificate awarded on success"
+            },
+            {
+              "id": "s_7a81d9113476",
+              "title": "Final Assessment \u2014 Part 1",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_5f5346d93901",
+                  "type": "heading",
+                  "content": "<h2>Part 1 of 2</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_32cac256b6b0",
+                  "options": [
+                    {
+                      "id": "o_d603671a9b0e",
+                      "text": "Emergency",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_1a510afa4812",
+                      "text": "Highest",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_41b87e023f55",
+                      "text": "High",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_0a18fd232507",
+                      "text": "Low",
+                      "isCorrect": true
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Cosmetic with no functional impact = Low. Will be addressed in standard sprint cadence.",
+                  "points": 10,
+                  "type": "multiple-choice",
+                  "text": "A misaligned button on the investor dashboard is reported. What severity?"
+                },
+                {
+                  "id": "q_d3a09787eac6",
+                  "options": [
+                    {
+                      "id": "o_0a1e1f7ef6d3",
+                      "text": "Page L2 Engineering only",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_0c8a7421b495",
+                      "text": "Open Jira + Compliance ticket + page Security + alert Command Staff",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_2d5b6b02888c",
+                      "text": "Email stakeholders before investigation",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_8afd8aa1fe91",
+                      "text": "Wait for confirmation before paging anyone",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Data breaches are EMERGENCY tier. Compliance ticket is mandatory, Security is paged, Command Staff has visibility.",
+                  "points": 10,
+                  "type": "multiple-choice",
+                  "text": "A potential data breach is identified. Which actions MUST happen?"
+                },
+                {
+                  "id": "q_9a7c9d5268d1",
+                  "options": [],
+                  "matchingPairs": [
+                    {
+                      "id": "m_74c89a340b1e",
+                      "left": "Triggered",
+                      "right": "\"Product has acknowledged this request. We will come back soon on next steps.\""
+                    },
+                    {
+                      "id": "m_d460b05f4aab",
+                      "left": "Investigating",
+                      "right": "\"Product/Engineering is aware of the emergency and investigating this.\""
+                    },
+                    {
+                      "id": "m_e86ec645cc40",
+                      "left": "Identified",
+                      "right": "\"They have outlined the following action points to resolve this emergency.\""
+                    },
+                    {
+                      "id": "m_5e6453882d3d",
+                      "left": "Resolved",
+                      "right": "\"We will go ahead and close this ticket.\""
+                    }
+                  ],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Templates are deliberately consistent \u2014 readers learn to scan them at a glance.",
+                  "points": 15,
+                  "type": "matching",
+                  "text": "Match each emergency stage with its template language:"
+                },
+                {
+                  "id": "q_0a3592e6ea0e",
+                  "options": [
+                    {
+                      "id": "o_68bb9be9a0f7",
+                      "text": "As needed",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_adb1b0607c11",
+                      "text": "Hourly",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_b26dfe0afbc4",
+                      "text": "Every 30 minutes \u2014 even with no change",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_64b0a83fbc7b",
+                      "text": "Only at major milestones",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "30 minutes minimum, even if the message is 'no change'.",
+                  "points": 10,
+                  "type": "dropdown",
+                  "text": "Update cadence on a live emergency Jira ticket:",
+                  "dropdownPlaceholder": "Pick one"
+                },
+                {
+                  "id": "q_71120932de6a",
+                  "options": [],
+                  "matchingPairs": [],
+                  "correctAnswer": "false",
+                  "correctOrder": [],
+                  "explanation": "False. The dedicated channel is for active responders only. Stakeholders use #emergency_stakeholders.",
+                  "points": 10,
+                  "type": "true-false",
+                  "text": "Stakeholders should join the dedicated emergency channel automatically created by PagerDuty."
+                }
+              ],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_8aaf32cb620d",
+              "title": "Final Assessment \u2014 Part 2",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_95e92ee818fe",
+                  "type": "heading",
+                  "content": "<h2>Part 2 of 2</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "slide-up"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_9ca86e46d169",
+                  "options": [
+                    {
+                      "id": "o_c02c2afc660c",
+                      "text": "Call the partner directly with what you know",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_099be6f62cbb",
+                      "text": "Wait \u2014 partner comms route via Max & Nicolai (Partnerships team)",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_86953251a22b",
+                      "text": "Forward the Jira ticket to the partner",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_b5336f52def8",
+                      "text": "Post in #emergency_stakeholders asking for an ETA",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Max & Nicolai own the partner relay. Direct stakeholder-to-partner messages bypass coordination and risk inconsistent messaging.",
+                  "points": 10,
+                  "type": "multiple-choice",
+                  "text": "Your responsibility as a stakeholder when partner-facing comms are needed:"
+                },
+                {
+                  "id": "q_36724bd1aa07",
+                  "options": [
+                    {
+                      "id": "o_fecbffbb9e06",
+                      "text": "Acknowledge the alert in PagerDuty",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_128bc4d0f7e4",
+                      "text": "Respond to the emergency ticket (stops first-response SLA)",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_84e2d7b329d0",
+                      "text": "Confirm the emergency classification",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_ba5aa5b20bfe",
+                      "text": "Create dedicated Slack channel",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_a501960e9f4e",
+                      "text": "Run play to trigger L2 Engineers",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_36a7068ddaa5",
+                      "text": "Update every 30 mins until resolved",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_fe51765c4abe",
+                      "text": "Send stakeholder email after resolution",
+                      "isCorrect": true
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [
+                    "o_fecbffbb9e06",
+                    "o_128bc4d0f7e4",
+                    "o_84e2d7b329d0",
+                    "o_ba5aa5b20bfe",
+                    "o_a501960e9f4e",
+                    "o_36a7068ddaa5",
+                    "o_fe51765c4abe"
+                  ],
+                  "explanation": "This is the L1 Liaison's actual checklist, in the prescribed order. Acknowledgement always comes first to start the clock.",
+                  "points": 15,
+                  "type": "ranking",
+                  "text": "Rank these emergency response activities in the correct chronological order:"
+                },
+                {
+                  "id": "q_55951ff98351",
+                  "options": [
+                    {
+                      "id": "o_756b08f79145",
+                      "text": "> \u20ac1,000",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_8700ebde083f",
+                      "text": "> \u20ac10,000",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_9a981790f4ac",
+                      "text": "> \u20ac100,000",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_963bd2d7527a",
+                      "text": "Any amount",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "EMERGENCY = > \u20ac100,000 potential impact. HIGHEST = \u2265 \u20ac10,000.",
+                  "points": 10,
+                  "type": "multiple-choice",
+                  "text": "EMERGENCY tier financial impact threshold:"
+                },
+                {
+                  "id": "q_3eb2e0183d1c",
+                  "options": [],
+                  "matchingPairs": [],
+                  "correctAnswer": "false",
+                  "correctOrder": [],
+                  "explanation": "False. All status comes through the L1 Liaison or via Jira/Slack. Direct pinging pulls engineers off the fix.",
+                  "points": 10,
+                  "type": "true-false",
+                  "text": "It is acceptable for a stakeholder to ping engineers directly during an emergency for status."
+                },
+                {
+                  "id": "q_5e1974015e17",
+                  "options": [
+                    {
+                      "id": "o_8abfa802beed",
+                      "text": "Nothing \u2014 close the ticket",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_5014cceb5b9a",
+                      "text": "A post-mortem in Confluence",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_ac360586342a",
+                      "text": "An apology email to all customers",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_fbdc0c68ef2f",
+                      "text": "A press release",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Every emergency triggers a blameless post-mortem in Confluence. This is the 5th value: Improve.",
+                  "points": 10,
+                  "type": "multiple-choice",
+                  "text": "After resolution, what is required for every emergency?"
+                }
+              ],
+              "notes": "",
+              "backgroundColor": "#F3F3F1",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_0d386df594af",
+              "title": "Congratulations \ud83c\udf89",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_d15ddecf35f3",
+                  "type": "text",
+                  "content": "<h2 style=\"color:#F3F3F1;text-align:center\">You've completed the Product Emergency Process course</h2>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                },
+                {
+                  "id": "b_77ddea5282d7",
+                  "type": "text",
+                  "content": "<p style=\"color:#DCDAD6;text-align:center;font-size:1.05rem\">You now understand how Moonfare classifies, escalates, communicates, resolves, and learns from emergencies \u2014 and exactly where stakeholders fit in that flow.</p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                },
+                {
+                  "id": "b_69878f348e8d",
+                  "type": "callout",
+                  "content": "Review the source documentation when in doubt:<br>\u2022 <strong>Emergency Playbook</strong> (Confluence, Product space)<br>\u2022 <strong>24/7 Emergency Threshold Decision Framework</strong><br>\u2022 <strong>L2 Replatforming Product Runbook</strong>",
+                  "alt": "",
+                  "caption": "",
+                  "data": {
+                    "calloutStyle": "success",
+                    "calloutTitle": "What's next"
+                  },
+                  "animation": "zoom-in"
+                },
+                {
+                  "id": "b_7465418d5335",
+                  "type": "text",
+                  "content": "<p style=\"color:#DCDAD6;text-align:center;margin-top:2rem\"><em>If you scored \u226580%, your certificate has been generated.</em></p>",
+                  "alt": "",
+                  "caption": "",
+                  "animation": "fade-in",
+                  "animationDelay": 100
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#121648",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            }
+          ],
+          "order": 0
+        }
+      ],
+      "order": 5,
+      "thumbnail": "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1200&q=80",
+      "color": "#121648"
+    }
+  ],
+  "settings": {
+    "passingScore": 80,
+    "showFeedback": true,
+    "allowRetry": true,
+    "maxAttempts": 3,
+    "shuffleQuestions": false,
+    "showProgress": true,
+    "completionCriteria": "both",
+    "primaryColor": "#171D97",
+    "accentColor": "#101321",
+    "fontFamily": "Inter, system-ui, sans-serif",
+    "logoUrl": "/moonfare-logo-blue.png",
+    "theme": "moonfare",
+    "defaultTransition": "fade",
+    "defaultAnimation": "fade-in",
+    "showCertificate": true,
+    "certificateTitle": "Product Emergency Process \u2014 Stakeholder Certification",
+    "certificateOrg": "Moonfare",
+    "enableScrollReveal": true,
+    "enableKeyboardNav": true,
+    "enableGamification": true,
+    "landingPage": {
+      "enabled": true,
+      "backgroundColor": "#101321",
+      "backgroundGradient": "linear-gradient(135deg, #101321 0%, #121648 50%, #171D97 100%)",
+      "textColor": "#F3F3F1",
+      "showModuleList": true,
+      "showProgress": true,
+      "showCompanyLogo": true,
+      "companyLogoUrl": "/moonfare-logo-white.png",
+      "companyName": "Moonfare",
+      "tagline": "When seconds matter \u2014 know your role.",
+      "heroImageUrl": "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&q=80"
+    }
+  },
+  "createdAt": "2026-04-25T23:36:39.278772Z",
+  "updatedAt": "2026-04-25T23:36:39.278772Z",
+  "tags": [
+    "moonfare",
+    "emergency",
+    "incident-response",
+    "stakeholder",
+    "product-ops",
+    "training"
+  ]
+}
