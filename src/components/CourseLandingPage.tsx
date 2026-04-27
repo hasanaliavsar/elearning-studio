@@ -45,7 +45,7 @@ export function CourseLandingPage({ course, onStartCourse, onJumpToModule }: Pro
       >
         {/* Watermark monogram */}
         <img
-          src="/moonfare-monogram-white.png"
+          src={`${import.meta.env.BASE_URL}moonfare-monogram-white.png`}
           alt=""
           aria-hidden
           className="absolute pointer-events-none"

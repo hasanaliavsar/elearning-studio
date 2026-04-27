@@ -233,7 +233,7 @@ export function Dashboard() {
       <header className="bg-white border-b border-ivory-200 px-10 py-5">
         <div className="max-w-[1180px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3.5">
-            <img src="/moonfare-wordmark-blue.png" alt="Moonfare" className="h-[22px]" />
+            <img src={`${import.meta.env.BASE_URL}moonfare-wordmark-blue.png`} alt="Moonfare" className="h-[22px]" />
             <div className="w-px h-5 bg-ivory-200" />
             <span className="text-sm text-ink-muted tracking-wide">Learning Studio</span>
           </div>
@@ -364,7 +364,7 @@ export function Dashboard() {
                     >
                       {/* Watermark monogram */}
                       <img
-                        src="/moonfare-monogram-white.png"
+                        src={`${import.meta.env.BASE_URL}moonfare-monogram-white.png`}
                         alt=""
                         className="absolute -right-5 -bottom-5 h-40 opacity-[0.08] pointer-events-none"
                       />
