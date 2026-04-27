@@ -899,14 +899,14 @@ function generatePlayer(): string {
       return;
     }
 
-    // Title
-    if (slide.title) {
-      html += '<h1 style="color:' + textColor + ';font-size:2rem;font-weight:700;margin-bottom:1.5rem;">' + slide.title + '</h1>';
+    // Title + breadcrumb (skip on full-bleed slides — the content block fills the slide edge-to-edge)
+    if (!slide.fullBleed) {
+      if (slide.title) {
+        html += '<h1 style="color:' + textColor + ';font-size:2rem;font-weight:700;margin-bottom:1.5rem;">' + slide.title + '</h1>';
+      }
+      html += '<p style="color:' + (isDark ? '#94a3b8' : '#64748b') + ';font-size:0.75rem;margin-bottom:1rem;">' +
+        escapeHtml(slide.moduleTitle) + ' &rsaquo; ' + escapeHtml(slide.lessonTitle) + '</p>';
     }
-
-    // Module/Lesson breadcrumb
-    html += '<p style="color:' + (isDark ? '#94a3b8' : '#64748b') + ';font-size:0.75rem;margin-bottom:1rem;">' +
-      escapeHtml(slide.moduleTitle) + ' &rsaquo; ' + escapeHtml(slide.lessonTitle) + '</p>';
 
     // Learning objectives
     if (slide.learningObjectives && slide.learningObjectives.length > 0) {
