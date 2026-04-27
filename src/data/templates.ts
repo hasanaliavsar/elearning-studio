@@ -137,23 +137,24 @@ export const SLIDE_TEMPLATES: SlideTemplate[] = [
     key: 'module-cover',
     name: 'Module cover',
     category: 'Foundations',
-    summary: 'Navy hero with eyebrow, large display title, subtitle, and module label. Use to open a module or chapter.',
+    summary: 'Full-bleed navy hero with eyebrow, large display title, subtitle, and module label. Use to open a module or chapter.',
     build: () => ({
-      id: generateId(), title: 'Module cover', layout: 'content',
+      id: generateId(), title: 'Product Emergency Process', layout: 'content',
+      fullBleed: true,
       content: [
-        text(`<div style="position:relative;overflow:hidden;border-radius:12px;background:linear-gradient(135deg,#171D97 0%,#0A0C3F 100%);padding:96px 72px 88px;color:#FAF8F4;min-height:540px;display:flex;flex-direction:column;justify-content:center;">
+        text(`<div style="position:absolute;inset:0;background:linear-gradient(135deg,#171D97 0%,#0A0C3F 100%);color:#FAF8F4;display:flex;flex-direction:column;justify-content:center;padding:clamp(48px,8%,120px) clamp(40px,7%,96px);box-sizing:border-box;overflow:hidden;">
           <div style="position:absolute;inset:0;background-image:radial-gradient(circle at 85% 15%, rgba(91,102,207,0.45), transparent 55%), radial-gradient(circle at 15% 90%, rgba(212,165,116,0.18), transparent 50%);pointer-events:none;"></div>
-          <div style="position:relative;max-width:780px;">
-            <p style="font-size:13px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#DDE0FA;margin:0 0 32px;">Internal training</p>
-            <h1 style="font-family:Fraunces,serif;font-size:96px;line-height:1.0;font-weight:400;color:#FAF8F4;letter-spacing:-0.02em;margin:0 0 28px;">Product<br/>Emergency Process</h1>
-            <p style="font-family:-apple-system,system-ui,sans-serif;font-size:24px;line-height:1.35;font-weight:400;color:#FAF8F4;margin:0 0 28px;">A Stakeholder&rsquo;s Guide to Crisis Response at Moonfare</p>
-            <div style="width:340px;height:1px;background:rgba(250,248,244,0.35);margin:0 0 24px;"></div>
-            <p style="font-size:13px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#DDE0FA;margin:0;">Module 1: Introduction &amp; Why It Matters</p>
+          <div style="position:relative;max-width:min(820px,90%);">
+            <p style="font-size:clamp(11px,1vw,14px);font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#DDE0FA;margin:0 0 clamp(20px,3vw,36px);">Internal training</p>
+            <h1 style="font-family:Fraunces,serif;font-size:clamp(56px,8vw,108px);line-height:1.0;font-weight:400;color:#FAF8F4;letter-spacing:-0.02em;margin:0 0 clamp(20px,2.5vw,32px);">Product<br/>Emergency Process</h1>
+            <p style="font-family:-apple-system,system-ui,sans-serif;font-size:clamp(16px,1.8vw,26px);line-height:1.35;font-weight:400;color:#FAF8F4;margin:0 0 clamp(20px,2.5vw,32px);">A Stakeholder&rsquo;s Guide to Crisis Response at Moonfare</p>
+            <div style="width:min(340px,55%);height:1px;background:rgba(250,248,244,0.35);margin:0 0 clamp(16px,2vw,28px);"></div>
+            <p style="font-size:clamp(11px,1vw,14px);font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#DDE0FA;margin:0;">Module 1: Introduction &amp; Why It Matters</p>
           </div>
         </div>`),
       ],
       questions: [], notes: '',
-      backgroundColor: '#FAF8F4', backgroundImage: '', duration: 3,
+      backgroundColor: '#171D97', backgroundImage: '', duration: 3,
     }),
   },
   {

@@ -337,11 +337,11 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
 
           {/* Slide content area */}
           <div
-            className="card p-8 min-h-[500px] relative"
+            className={`card min-h-[500px] relative ${slide.fullBleed ? 'p-0 overflow-hidden' : 'p-8'}`}
             style={{ backgroundColor: slide.backgroundColor }}
             onClick={e => e.stopPropagation()}
           >
-            <div className={`space-y-4 ${slide.layout === 'two-column' ? 'grid grid-cols-2 gap-6 space-y-0' : ''}`}>
+            <div className={slide.fullBleed ? '' : `space-y-4 ${slide.layout === 'two-column' ? 'grid grid-cols-2 gap-6 space-y-0' : ''}`}>
               {slide.content.map((block, idx) => renderBlock(block, idx))}
             </div>
 

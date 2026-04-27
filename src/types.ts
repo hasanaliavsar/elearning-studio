@@ -289,6 +289,7 @@ export interface Slide {
   isCoverSlide?: boolean;
   coverSubtitle?: string;
   learningObjectives?: LearningObjective[];
+  fullBleed?: boolean;
 }
 
 export interface Lesson {

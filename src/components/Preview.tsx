@@ -968,13 +968,14 @@ export function CoursePreview() {
             </div>
           ) : (
           <div
-            className="p-10"
+            className={currentSlide.fullBleed ? 'p-0 overflow-hidden relative' : 'p-10'}
             style={{
               backgroundColor: currentSlide.backgroundColor,
               backgroundImage: currentSlide.backgroundImage ? `url(${currentSlide.backgroundImage})` : undefined,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               fontFamily: course.settings.fontFamily || 'Inter',
+              minHeight: currentSlide.fullBleed ? '70vh' : undefined,
             }}
           >
             {/* Learning objectives */}
