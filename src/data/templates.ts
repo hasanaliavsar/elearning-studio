@@ -134,6 +134,29 @@ export interface SlideTemplate {
 // ─── Templates ──────────────────────────────────────────────────────
 export const SLIDE_TEMPLATES: SlideTemplate[] = [
   {
+    key: 'module-cover',
+    name: 'Module cover',
+    category: 'Foundations',
+    summary: 'Navy hero with eyebrow, large display title, subtitle, and module label. Use to open a module or chapter.',
+    build: () => ({
+      id: generateId(), title: 'Module cover', layout: 'content',
+      content: [
+        text(`<div style="position:relative;overflow:hidden;border-radius:12px;background:linear-gradient(135deg,#171D97 0%,#0A0C3F 100%);padding:96px 72px 88px;color:#FAF8F4;min-height:540px;display:flex;flex-direction:column;justify-content:center;">
+          <div style="position:absolute;inset:0;background-image:radial-gradient(circle at 85% 15%, rgba(91,102,207,0.45), transparent 55%), radial-gradient(circle at 15% 90%, rgba(212,165,116,0.18), transparent 50%);pointer-events:none;"></div>
+          <div style="position:relative;max-width:780px;">
+            <p style="font-size:13px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#DDE0FA;margin:0 0 32px;">Internal training</p>
+            <h1 style="font-family:Fraunces,serif;font-size:96px;line-height:1.0;font-weight:400;color:#FAF8F4;letter-spacing:-0.02em;margin:0 0 28px;">Product<br/>Emergency Process</h1>
+            <p style="font-family:-apple-system,system-ui,sans-serif;font-size:24px;line-height:1.35;font-weight:400;color:#FAF8F4;margin:0 0 28px;">A Stakeholder&rsquo;s Guide to Crisis Response at Moonfare</p>
+            <div style="width:340px;height:1px;background:rgba(250,248,244,0.35);margin:0 0 24px;"></div>
+            <p style="font-size:13px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#DDE0FA;margin:0;">Module 1: Introduction &amp; Why It Matters</p>
+          </div>
+        </div>`),
+      ],
+      questions: [], notes: '',
+      backgroundColor: '#FAF8F4', backgroundImage: '', duration: 3,
+    }),
+  },
+  {
     key: 'blank',
     name: 'Blank slide',
     category: 'Foundations',

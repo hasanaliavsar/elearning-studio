@@ -35,6 +35,35 @@ const Eyebrow = ({ x, y, text, color = NAVY }: { x: number; y: number; text: str
   </text>
 );
 
+// 0. Module cover
+export const ThumbModuleCover = (p: ThumbProps) => wrap(
+  <>
+    <defs>
+      <linearGradient id="mc-bg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor={NAVY} />
+        <stop offset="100%" stopColor={NAVY_DEEP} />
+      </linearGradient>
+      <radialGradient id="mc-glow" cx="85%" cy="15%" r="55%">
+        <stop offset="0%" stopColor="#5B66CF" stopOpacity="0.55" />
+        <stop offset="100%" stopColor="#5B66CF" stopOpacity="0" />
+      </radialGradient>
+      <radialGradient id="mc-warm" cx="15%" cy="90%" r="50%">
+        <stop offset="0%" stopColor={SAND} stopOpacity="0.25" />
+        <stop offset="100%" stopColor={SAND} stopOpacity="0" />
+      </radialGradient>
+    </defs>
+    <rect x="12" y="12" width="296" height="176" rx="6" fill="url(#mc-bg)" />
+    <rect x="12" y="12" width="296" height="176" rx="6" fill="url(#mc-glow)" />
+    <rect x="12" y="12" width="296" height="176" rx="6" fill="url(#mc-warm)" />
+    <text x="32" y="48" fontFamily={SANS} fontSize="6" fontWeight="700" letterSpacing="1.2" fill="#DDE0FA">INTERNAL TRAINING</text>
+    <text x="32" y="86" fontFamily={FRAUNCES} fontSize="26" fontWeight="500" fill={PAPER}>Product</text>
+    <text x="32" y="114" fontFamily={FRAUNCES} fontSize="26" fontWeight="500" fill={PAPER}>Emergency Process</text>
+    <text x="32" y="136" fontFamily={SANS} fontSize="9" fill={PAPER}>A Stakeholder&rsquo;s Guide to Crisis Response</text>
+    <line x1="32" y1="150" x2="170" y2="150" stroke={PAPER} strokeOpacity="0.35" />
+    <text x="32" y="166" fontFamily={SANS} fontSize="6" fontWeight="700" letterSpacing="1.2" fill="#DDE0FA">MODULE 1: INTRODUCTION</text>
+  </>, WHITE, p
+);
+
 // 1. Blank
 export const ThumbBlank = (p: ThumbProps) => wrap(
   <>
@@ -299,6 +328,7 @@ export const ThumbCompare = (p: ThumbProps) => {
 
 // Lookup by template key
 export const THUMBNAILS: Record<string, React.FC<ThumbProps>> = {
+  'module-cover': ThumbModuleCover,
   'blank': ThumbBlank,
   'number-lead': ThumbNumberLead,
   'editorial-split': ThumbEditorialSplit,
