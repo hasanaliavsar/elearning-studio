@@ -6,7 +6,11 @@
   "version": "2.0.0",
   "language": "en",
   "thumbnail": "",
-  "tags": ["emergency", "stakeholder", "premium"],
+  "tags": [
+    "emergency",
+    "stakeholder",
+    "premium"
+  ],
   "createdAt": "2026-04-27T00:00:00.000Z",
   "updatedAt": "2026-04-27T00:00:00.000Z",
   "settings": {
@@ -160,10 +164,26 @@
                         "title": "Emergency",
                         "subtitle": "All-hands · 30-min cadence",
                         "bullets": [
-                          { "id": "b_em_1", "text": "100% users affected", "included": true },
-                          { "id": "b_em_2", "text": "€100k+ financial impact", "included": true },
-                          { "id": "b_em_3", "text": "Data breach confirmed", "included": true },
-                          { "id": "b_em_4", "text": "Command Staff activated", "included": true }
+                          {
+                            "id": "b_em_1",
+                            "text": "100% users affected",
+                            "included": true
+                          },
+                          {
+                            "id": "b_em_2",
+                            "text": "€100k+ financial impact",
+                            "included": true
+                          },
+                          {
+                            "id": "b_em_3",
+                            "text": "Data breach confirmed",
+                            "included": true
+                          },
+                          {
+                            "id": "b_em_4",
+                            "text": "Command Staff activated",
+                            "included": true
+                          }
                         ],
                         "featured": true,
                         "ribbonLabel": "Highest priority"
@@ -174,10 +194,26 @@
                         "title": "Highest",
                         "subtitle": "Major-segment outage",
                         "bullets": [
-                          { "id": "b_hi_1", "text": "Large user segment broken", "included": true },
-                          { "id": "b_hi_2", "text": "Revenue-critical flow down", "included": true },
-                          { "id": "b_hi_3", "text": "Hourly updates", "included": true },
-                          { "id": "b_hi_4", "text": "Command Staff activated", "included": false }
+                          {
+                            "id": "b_hi_1",
+                            "text": "Large user segment broken",
+                            "included": true
+                          },
+                          {
+                            "id": "b_hi_2",
+                            "text": "Revenue-critical flow down",
+                            "included": true
+                          },
+                          {
+                            "id": "b_hi_3",
+                            "text": "Hourly updates",
+                            "included": true
+                          },
+                          {
+                            "id": "b_hi_4",
+                            "text": "Command Staff activated",
+                            "included": false
+                          }
                         ],
                         "featured": false,
                         "ribbonLabel": ""
@@ -188,10 +224,26 @@
                         "title": "High · Medium · Low",
                         "subtitle": "Standard incident process",
                         "bullets": [
-                          { "id": "b_mh_1", "text": "Localised impact", "included": true },
-                          { "id": "b_mh_2", "text": "Workaround available", "included": true },
-                          { "id": "b_mh_3", "text": "Daily updates", "included": true },
-                          { "id": "b_mh_4", "text": "Stakeholder Slack alert", "included": false }
+                          {
+                            "id": "b_mh_1",
+                            "text": "Localised impact",
+                            "included": true
+                          },
+                          {
+                            "id": "b_mh_2",
+                            "text": "Workaround available",
+                            "included": true
+                          },
+                          {
+                            "id": "b_mh_3",
+                            "text": "Daily updates",
+                            "included": true
+                          },
+                          {
+                            "id": "b_mh_4",
+                            "text": "Stakeholder Slack alert",
+                            "included": false
+                          }
                         ],
                         "featured": false,
                         "ribbonLabel": ""
@@ -226,10 +278,26 @@
                   "type": "multiple-choice",
                   "text": "A bug affects 5% of users and has €30,000 of impact. What tier is this?",
                   "options": [
-                    { "id": "o_q1_1", "text": "Emergency — escalate immediately", "isCorrect": false },
-                    { "id": "o_q1_2", "text": "Highest — large-segment outage", "isCorrect": false },
-                    { "id": "o_q1_3", "text": "High / Medium / Low — standard incident process", "isCorrect": true },
-                    { "id": "o_q1_4", "text": "Not an incident", "isCorrect": false }
+                    {
+                      "id": "o_q1_1",
+                      "text": "Emergency — escalate immediately",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_q1_2",
+                      "text": "Highest — large-segment outage",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_q1_3",
+                      "text": "High / Medium / Low — standard incident process",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_q1_4",
+                      "text": "Not an incident",
+                      "isCorrect": false
+                    }
                   ],
                   "matchingPairs": [],
                   "correctAnswer": "",
@@ -242,8 +310,16 @@
                   "type": "true-false",
                   "text": "A confirmed data breach is always classified as an Emergency, regardless of how many users are affected.",
                   "options": [
-                    { "id": "o_q2_1", "text": "True", "isCorrect": true },
-                    { "id": "o_q2_2", "text": "False", "isCorrect": false }
+                    {
+                      "id": "o_q2_1",
+                      "text": "True",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_q2_2",
+                      "text": "False",
+                      "isCorrect": false
+                    }
                   ],
                   "matchingPairs": [],
                   "correctAnswer": "",
@@ -333,10 +409,26 @@
                         "title": "L1 Liaison",
                         "subtitle": "Lily · Hasan · rotational PMs",
                         "bullets": [
-                          { "id": "b_l1_1", "text": "First point of contact for stakeholders", "included": true },
-                          { "id": "b_l1_2", "text": "Triages and classifies the issue", "included": true },
-                          { "id": "b_l1_3", "text": "Posts the 30-min update", "included": true },
-                          { "id": "b_l1_4", "text": "Escalates to Senior SMEs", "included": true }
+                          {
+                            "id": "b_l1_1",
+                            "text": "First point of contact for stakeholders",
+                            "included": true
+                          },
+                          {
+                            "id": "b_l1_2",
+                            "text": "Triages and classifies the issue",
+                            "included": true
+                          },
+                          {
+                            "id": "b_l1_3",
+                            "text": "Posts the 30-min update",
+                            "included": true
+                          },
+                          {
+                            "id": "b_l1_4",
+                            "text": "Escalates to Senior SMEs",
+                            "included": true
+                          }
                         ],
                         "featured": false,
                         "ribbonLabel": ""
@@ -347,10 +439,26 @@
                         "title": "Senior SME",
                         "subtitle": "Elena (Eng) · Hassan (Security)",
                         "bullets": [
-                          { "id": "b_sme_1", "text": "Domain authority for the fix", "included": true },
-                          { "id": "b_sme_2", "text": "Approves the response plan", "included": true },
-                          { "id": "b_sme_3", "text": "Owns the resolution timeline", "included": true },
-                          { "id": "b_sme_4", "text": "Pulls in Command Staff if scope grows", "included": true }
+                          {
+                            "id": "b_sme_1",
+                            "text": "Domain authority for the fix",
+                            "included": true
+                          },
+                          {
+                            "id": "b_sme_2",
+                            "text": "Approves the response plan",
+                            "included": true
+                          },
+                          {
+                            "id": "b_sme_3",
+                            "text": "Owns the resolution timeline",
+                            "included": true
+                          },
+                          {
+                            "id": "b_sme_4",
+                            "text": "Pulls in Command Staff if scope grows",
+                            "included": true
+                          }
                         ],
                         "featured": false,
                         "ribbonLabel": ""
@@ -361,10 +469,26 @@
                         "title": "Command Staff",
                         "subtitle": "Andrew · Elena · Hassan",
                         "bullets": [
-                          { "id": "b_cmd_1", "text": "Activated for Tier-1 Emergency only", "included": true },
-                          { "id": "b_cmd_2", "text": "External & regulator comms", "included": true },
-                          { "id": "b_cmd_3", "text": "Public statement sign-off", "included": true },
-                          { "id": "b_cmd_4", "text": "Post-incident accountability", "included": true }
+                          {
+                            "id": "b_cmd_1",
+                            "text": "Activated for Tier-1 Emergency only",
+                            "included": true
+                          },
+                          {
+                            "id": "b_cmd_2",
+                            "text": "External & regulator comms",
+                            "included": true
+                          },
+                          {
+                            "id": "b_cmd_3",
+                            "text": "Public statement sign-off",
+                            "included": true
+                          },
+                          {
+                            "id": "b_cmd_4",
+                            "text": "Post-incident accountability",
+                            "included": true
+                          }
                         ],
                         "featured": true,
                         "ribbonLabel": "Highest authority"
@@ -448,10 +572,26 @@
                   "type": "multiple-choice",
                   "text": "Who is responsible for posting the 30-minute Jira update during a live emergency?",
                   "options": [
-                    { "id": "o_q3_1", "text": "Command Staff", "isCorrect": false },
-                    { "id": "o_q3_2", "text": "Senior SME", "isCorrect": false },
-                    { "id": "o_q3_3", "text": "L1 Liaison", "isCorrect": true },
-                    { "id": "o_q3_4", "text": "The Partnerships team", "isCorrect": false }
+                    {
+                      "id": "o_q3_1",
+                      "text": "Command Staff",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_q3_2",
+                      "text": "Senior SME",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_q3_3",
+                      "text": "L1 Liaison",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_q3_4",
+                      "text": "The Partnerships team",
+                      "isCorrect": false
+                    }
                   ],
                   "matchingPairs": [],
                   "correctAnswer": "",
@@ -464,10 +604,26 @@
                   "type": "multiple-choice",
                   "text": "When are the Command Staff (Andrew, Elena, Hassan) activated?",
                   "options": [
-                    { "id": "o_q4_1", "text": "For every incident, regardless of tier", "isCorrect": false },
-                    { "id": "o_q4_2", "text": "Only for Tier-1 Emergency", "isCorrect": true },
-                    { "id": "o_q4_3", "text": "Only when external regulators are involved", "isCorrect": false },
-                    { "id": "o_q4_4", "text": "Only after resolution, for the post-mortem", "isCorrect": false }
+                    {
+                      "id": "o_q4_1",
+                      "text": "For every incident, regardless of tier",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_q4_2",
+                      "text": "Only for Tier-1 Emergency",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_q4_3",
+                      "text": "Only when external regulators are involved",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_q4_4",
+                      "text": "Only after resolution, for the post-mortem",
+                      "isCorrect": false
+                    }
                   ],
                   "matchingPairs": [],
                   "correctAnswer": "",
@@ -565,9 +721,21 @@
                         "title": "#mf-oncall",
                         "subtitle": "Engineering response only",
                         "bullets": [
-                          { "id": "b_o_1", "text": "Pages & alerts land here first", "included": true },
-                          { "id": "b_o_2", "text": "Engineering-only audience", "included": true },
-                          { "id": "b_o_3", "text": "Stakeholders should not post here", "included": false }
+                          {
+                            "id": "b_o_1",
+                            "text": "Pages & alerts land here first",
+                            "included": true
+                          },
+                          {
+                            "id": "b_o_2",
+                            "text": "Engineering-only audience",
+                            "included": true
+                          },
+                          {
+                            "id": "b_o_3",
+                            "text": "Stakeholders should not post here",
+                            "included": false
+                          }
                         ],
                         "featured": false,
                         "ribbonLabel": ""
@@ -578,9 +746,21 @@
                         "title": "#emergency_product",
                         "subtitle": "Cross-functional coordination",
                         "bullets": [
-                          { "id": "b_pr_1", "text": "L1 Liaison + Senior SME + Command Staff", "included": true },
-                          { "id": "b_pr_2", "text": "Working channel for the response", "included": true },
-                          { "id": "b_pr_3", "text": "Decision log lives here", "included": true }
+                          {
+                            "id": "b_pr_1",
+                            "text": "L1 Liaison + Senior SME + Command Staff",
+                            "included": true
+                          },
+                          {
+                            "id": "b_pr_2",
+                            "text": "Working channel for the response",
+                            "included": true
+                          },
+                          {
+                            "id": "b_pr_3",
+                            "text": "Decision log lives here",
+                            "included": true
+                          }
                         ],
                         "featured": false,
                         "ribbonLabel": ""
@@ -591,9 +771,21 @@
                         "title": "#emergency_stakeholders",
                         "subtitle": "Where you live",
                         "bullets": [
-                          { "id": "b_st_1", "text": "Status updates from L1 Liaison", "included": true },
-                          { "id": "b_st_2", "text": "30-min cadence during Tier-1", "included": true },
-                          { "id": "b_st_3", "text": "Post questions here, not in DMs", "included": true }
+                          {
+                            "id": "b_st_1",
+                            "text": "Status updates from L1 Liaison",
+                            "included": true
+                          },
+                          {
+                            "id": "b_st_2",
+                            "text": "30-min cadence during Tier-1",
+                            "included": true
+                          },
+                          {
+                            "id": "b_st_3",
+                            "text": "Post questions here, not in DMs",
+                            "included": true
+                          }
                         ],
                         "featured": true,
                         "ribbonLabel": "Stakeholder home"
@@ -675,10 +867,26 @@
                   "type": "multiple-choice",
                   "text": "A trusted partner contact pings you directly during an active Tier-1 Emergency. What do you do?",
                   "options": [
-                    { "id": "o_q5_1", "text": "Reply with what you know — they need information fast", "isCorrect": false },
-                    { "id": "o_q5_2", "text": "Forward to Max and Nicolai and let them respond", "isCorrect": true },
-                    { "id": "o_q5_3", "text": "Forward to the Command Staff", "isCorrect": false },
-                    { "id": "o_q5_4", "text": "Wait for the next 30-minute update, then forward that", "isCorrect": false }
+                    {
+                      "id": "o_q5_1",
+                      "text": "Reply with what you know — they need information fast",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_q5_2",
+                      "text": "Forward to Max and Nicolai and let them respond",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_q5_3",
+                      "text": "Forward to the Command Staff",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_q5_4",
+                      "text": "Wait for the next 30-minute update, then forward that",
+                      "isCorrect": false
+                    }
                   ],
                   "matchingPairs": [],
                   "correctAnswer": "",
@@ -691,8 +899,16 @@
                   "type": "true-false",
                   "text": "If there's nothing new to report, the L1 Liaison can skip the 30-minute update.",
                   "options": [
-                    { "id": "o_q6_1", "text": "True", "isCorrect": false },
-                    { "id": "o_q6_2", "text": "False", "isCorrect": true }
+                    {
+                      "id": "o_q6_1",
+                      "text": "True",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_q6_2",
+                      "text": "False",
+                      "isCorrect": true
+                    }
                   ],
                   "matchingPairs": [],
                   "correctAnswer": "",
@@ -830,11 +1046,31 @@
                   "content": "",
                   "data": {
                     "checklistItems": [
-                      { "id": "ch_1", "text": "100% users · €100k impact · data breach → Tier-1 Emergency", "checked": true },
-                      { "id": "ch_2", "text": "L1 Liaison → Senior SME → Command Staff is the escalation ladder", "checked": true },
-                      { "id": "ch_3", "text": "Updates land in #emergency_stakeholders every 30 minutes during Tier-1", "checked": true },
-                      { "id": "ch_4", "text": "Partner contact only via Max + Nicolai — never direct", "checked": true },
-                      { "id": "ch_5", "text": "Post-mortems are blameless and published within 10 working days", "checked": true }
+                      {
+                        "id": "ch_1",
+                        "title": "100% users · €100k impact · data breach → Tier-1 Emergency",
+                        "description": ""
+                      },
+                      {
+                        "id": "ch_2",
+                        "title": "L1 Liaison → Senior SME → Command Staff is the escalation ladder",
+                        "description": ""
+                      },
+                      {
+                        "id": "ch_3",
+                        "title": "Updates land in #emergency_stakeholders every 30 minutes during Tier-1",
+                        "description": ""
+                      },
+                      {
+                        "id": "ch_4",
+                        "title": "Partner contact only via Max + Nicolai — never direct",
+                        "description": ""
+                      },
+                      {
+                        "id": "ch_5",
+                        "title": "Post-mortems are blameless and published within 10 working days",
+                        "description": ""
+                      }
                     ]
                   },
                   "animation": "fade-in",
@@ -865,10 +1101,26 @@
                   "type": "multiple-choice",
                   "text": "Within how long should the L1 Liaison acknowledge a new signal?",
                   "options": [
-                    { "id": "o_q7_1", "text": "Within 1 minute", "isCorrect": false },
-                    { "id": "o_q7_2", "text": "Within 5 minutes", "isCorrect": true },
-                    { "id": "o_q7_3", "text": "Within 30 minutes", "isCorrect": false },
-                    { "id": "o_q7_4", "text": "Whenever possible", "isCorrect": false }
+                    {
+                      "id": "o_q7_1",
+                      "text": "Within 1 minute",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_q7_2",
+                      "text": "Within 5 minutes",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_q7_3",
+                      "text": "Within 30 minutes",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_q7_4",
+                      "text": "Whenever possible",
+                      "isCorrect": false
+                    }
                   ],
                   "matchingPairs": [],
                   "correctAnswer": "",
@@ -881,10 +1133,26 @@
                   "type": "multiple-choice",
                   "text": "What is the standard target for publishing a written post-mortem?",
                   "options": [
-                    { "id": "o_q8_1", "text": "Within 24 hours", "isCorrect": false },
-                    { "id": "o_q8_2", "text": "Within 5 working days", "isCorrect": false },
-                    { "id": "o_q8_3", "text": "Within 10 working days", "isCorrect": true },
-                    { "id": "o_q8_4", "text": "Within the next quarter", "isCorrect": false }
+                    {
+                      "id": "o_q8_1",
+                      "text": "Within 24 hours",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_q8_2",
+                      "text": "Within 5 working days",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_q8_3",
+                      "text": "Within 10 working days",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_q8_4",
+                      "text": "Within the next quarter",
+                      "isCorrect": false
+                    }
                   ],
                   "matchingPairs": [],
                   "correctAnswer": "",
@@ -897,8 +1165,16 @@
                   "type": "true-false",
                   "text": "Moonfare uses blameless post-mortems because hiding mistakes makes the next emergency harder to catch.",
                   "options": [
-                    { "id": "o_q9_1", "text": "True", "isCorrect": true },
-                    { "id": "o_q9_2", "text": "False", "isCorrect": false }
+                    {
+                      "id": "o_q9_1",
+                      "text": "True",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_q9_2",
+                      "text": "False",
+                      "isCorrect": false
+                    }
                   ],
                   "matchingPairs": [],
                   "correctAnswer": "",

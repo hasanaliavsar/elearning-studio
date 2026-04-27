@@ -5,6 +5,7 @@ import { QuizBuilder } from './QuizBuilder';
 import { BlockEditor } from './BlockEditors';
 import { AIQuizGeneratorButton } from './AIGenerator';
 import { VideoRecorderModal } from './VideoRecorder';
+import { LivePreviewPane } from './LivePreviewPane';
 import type { Course, Slide, SlideLayout, ContentBlock, EntranceAnimation, SlideTransition, LearningObjective } from '../types';
 import {
   Type, Image, Video, FileText, List, Minus, Code, Plus, Trash2,
@@ -13,7 +14,7 @@ import {
   RotateCw, MousePointerClick, ChevronsUpDown, LayoutPanelTop, Clock, AlertCircle,
   Table2, MousePointer, Music, Code2, Images, MapPin, Sparkles, BookOpen, Play,
   ArrowUpFromLine, ArrowDownFromLine, PanelLeft, PanelRight, Columns2, Grid3x3,
-  GitBranch, ListChecks, Layers, Quote, Columns3
+  GitBranch, ListChecks, Layers, Quote, Columns3, Eye, EyeOff
 } from 'lucide-react';
 
 interface Props {
@@ -88,6 +89,7 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
 
   const [showAddBlock, setShowAddBlock] = useState(false);
   const [activeBlockId, setActiveBlockId] = useState<string | null>(null);
+  const [livePreviewOpen, setLivePreviewOpen] = useState(true);
   const [showVideoRecorder, setShowVideoRecorder] = useState(false);
 
   const handleUpdateSlide = (updates: Partial<Slide>) => {
@@ -325,14 +327,23 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
       <div className="flex-1 overflow-auto p-6" onClick={() => setActiveBlockId(null)}>
         <div className="max-w-4xl mx-auto">
           {/* Slide title */}
-          <div className="mb-4">
+          <div className="mb-4 flex items-center gap-3">
             <input
               type="text"
               value={slide.title}
               onChange={e => handleUpdateSlide({ title: e.target.value })}
-              className="text-2xl font-bold bg-transparent border-none focus:outline-none focus:ring-0 w-full text-gray-900 placeholder-gray-300"
+              className="text-2xl font-bold bg-transparent border-none focus:outline-none focus:ring-0 flex-1 text-gray-900 placeholder-gray-300"
               placeholder="Slide title..."
             />
+            <button
+              type="button"
+              onClick={e => { e.stopPropagation(); setLivePreviewOpen(v => !v); }}
+              className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition flex-shrink-0"
+              title={livePreviewOpen ? 'Hide live preview' : 'Show live preview'}
+            >
+              {livePreviewOpen ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              {livePreviewOpen ? 'Hide preview' : 'Live preview'}
+            </button>
           </div>
 
           {/* Slide content area */}
@@ -432,6 +443,9 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Live preview pane */}
+      {livePreviewOpen && <LivePreviewPane course={course} slide={slide} />}
 
       {/* Right panel */}
       <aside className="w-72 bg-white border-l flex flex-col flex-shrink-0">
