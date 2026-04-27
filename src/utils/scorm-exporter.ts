@@ -365,6 +365,7 @@ function generateCourseData(course: Course): string {
       isCoverSlide: s.slide.isCoverSlide,
       coverSubtitle: s.slide.coverSubtitle,
       learningObjectives: s.slide.learningObjectives,
+      fullBleed: s.slide.fullBleed,
     })),
   };
   return `var COURSE_DATA = ${JSON.stringify(sanitized, null, 2)};`;
@@ -865,6 +866,17 @@ function generatePlayer(): string {
       container.style.backgroundImage = '';
     }
 
+    // Full-bleed: drop padding so the inner block can fill the slide edge-to-edge
+    if (slide.fullBleed) {
+      container.style.padding = '0';
+      container.style.overflow = 'hidden';
+      container.style.position = 'relative';
+    } else {
+      container.style.padding = '';
+      container.style.overflow = '';
+      container.style.position = '';
+    }
+
     var isDark = slide.backgroundColor === '#0f172a' || slide.backgroundColor === '#1e293b';
     var textColor = isDark ? '#f8fafc' : '#1e293b';
 
@@ -1218,6 +1230,76 @@ function generatePlayer(): string {
         html += '<button class="card-sort-reset-btn" data-block-id="' + block.id + '">Reset</button>';
         html += '</div>';
         html += '</div>';
+      } else if (block.type === 'pull-quote') {
+        var pq = d || {};
+        var pqMode = pq.pqAvatarMode || 'auto';
+        var pqName = pq.pqName || '';
+        var pqInitials = (function(n) {
+          if (!n) return '?';
+          var parts = n.trim().split(/\\s+/).filter(Boolean);
+          if (parts.length === 0) return '?';
+          if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+          return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        })(pqMode === 'initials' && pq.pqInitialsOverride ? pq.pqInitialsOverride : pqName);
+        var pqUseImage = pqMode === 'image' && pq.pqPortraitUrl;
+        html += '<div style="position:relative;border-radius:8px;padding:2.5rem 3rem;background:#FAF8F4;margin:1.5rem 0;">';
+        html += '<div style="position:absolute;left:0;top:2rem;bottom:2rem;width:3px;background:#171D97;"></div>';
+        html += '<div style="display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:start;padding-left:1rem;">';
+        if (pqUseImage) {
+          html += '<img src="' + escapeHtml(pq.pqPortraitUrl) + '" alt="' + escapeHtml(pqName) + '" style="width:96px;height:96px;border-radius:50%;object-fit:cover;box-shadow:0 6px 18px rgba(10,12,63,0.18);" />';
+        } else {
+          html += '<div style="width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,#171D97 0%,#0A0C3F 100%);color:#D4A574;display:flex;align-items:center;justify-content:center;font-family:Fraunces,Georgia,serif;font-size:34px;font-weight:500;letter-spacing:-0.02em;box-shadow:0 6px 18px rgba(10,12,63,0.18);">' + escapeHtml(pqInitials) + '</div>';
+        }
+        html += '<div>';
+        html += '<div style="font-family:Fraunces,Georgia,serif;font-size:64px;line-height:0.5;color:#D4A574;margin-bottom:6px;">&ldquo;</div>';
+        html += '<p style="font-family:Fraunces,Georgia,serif;font-size:22px;line-height:1.4;color:#0A0C3F;font-weight:300;letter-spacing:-0.005em;margin:0 0 22px 0;">' + escapeHtml(pq.pqQuote || '') + '</p>';
+        html += '<div style="font-size:14px;font-weight:600;color:#0A0C3F;">' + escapeHtml(pqName || 'Name') + '</div>';
+        if (pq.pqRole || pq.pqOrg) {
+          html += '<div style="font-size:12px;color:#5C5A57;margin-top:2px;">';
+          if (pq.pqRole) html += escapeHtml(pq.pqRole);
+          if (pq.pqRole && pq.pqOrg) html += ' &middot; ';
+          if (pq.pqOrg) html += '<b style="color:#171D97;font-weight:600;">' + escapeHtml(pq.pqOrg) + '</b>';
+          html += '</div>';
+        }
+        html += '</div></div></div>';
+      } else if (block.type === 'comparison' && d.cmpColumns && d.cmpColumns.length > 0) {
+        var cols = d.cmpColumns;
+        html += '<div style="margin:1.5rem 0;">';
+        if (d.cmpEyebrow) {
+          html += '<p style="font-size:12px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#171D97;margin:0 0 0.5rem;">' + escapeHtml(d.cmpEyebrow) + '</p>';
+        }
+        if (d.cmpTitle) {
+          html += '<h3 style="font-family:Fraunces,Georgia,serif;font-size:24px;font-weight:400;color:#0A0C3F;margin:0 0 1.25rem;">' + escapeHtml(d.cmpTitle) + '</h3>';
+        }
+        html += '<div style="display:grid;gap:1rem;grid-template-columns:repeat(' + Math.min(cols.length, 4) + ',minmax(0,1fr));">';
+        cols.forEach(function(c) {
+          var border = c.featured ? '2px solid #D4A574' : '1px solid #E8E5DE';
+          html += '<div style="position:relative;border-radius:10px;padding:1.25rem;background:#FFFFFF;border:' + border + ';">';
+          if (c.featured && c.ribbonLabel) {
+            html += '<span style="position:absolute;top:-10px;left:14px;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:2px 10px;border-radius:4px;background:#D4A574;color:#FFFFFF;">' + escapeHtml(c.ribbonLabel) + '</span>';
+          }
+          if (c.eyebrow) {
+            html += '<p style="font-size:11px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:#171D97;margin:0 0 4px;">' + escapeHtml(c.eyebrow) + '</p>';
+          }
+          html += '<p style="font-family:Fraunces,Georgia,serif;font-size:18px;font-weight:500;color:#0A0C3F;line-height:1.15;margin:0;">' + escapeHtml(c.title || '') + '</p>';
+          if (c.subtitle) {
+            html += '<p style="font-size:12px;font-family:monospace;color:#5C5A57;margin:4px 0 0;">' + escapeHtml(c.subtitle) + '</p>';
+          }
+          if (c.bullets && c.bullets.length) {
+            html += '<ul style="list-style:none;padding:0;margin:0.75rem 0 0;">';
+            c.bullets.forEach(function(b) {
+              var color = b.included ? '#0A0C3F' : '#9CA3AF';
+              var marker = b.included ? '#171D97' : '#D1D5DB';
+              var glyph = b.included ? '✓' : '–';
+              html += '<li style="font-size:13px;display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;color:' + color + ';">';
+              html += '<span style="color:' + marker + ';">' + glyph + '</span><span>' + escapeHtml(b.text) + '</span>';
+              html += '</li>';
+            });
+            html += '</ul>';
+          }
+          html += '</div>';
+        });
+        html += '</div></div>';
       }
       // Close animation wrapper if needed
       if (anim && anim !== 'none') {
