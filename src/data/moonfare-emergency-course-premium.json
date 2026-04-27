@@ -1,15 +1,16 @@
 {
   "id": "course_emergency_premium_2026",
   "title": "Product Emergency Process — Premium Stakeholder Edition",
-  "description": "A 20-minute, premium walkthrough of how Moonfare handles product emergencies. Built for stakeholders who need to know what to expect, who does what, and how to respond — without becoming an incident responder.",
+  "description": "A comprehensive, image-rich walkthrough of how Moonfare handles product emergencies. Built for stakeholders who need to know what qualifies, who runs the response, what to do (and not do), and how the lifecycle closes with a blameless post-mortem. Sourced directly from the Moonfare Emergency Playbook on Confluence.",
   "author": "Moonfare Product Operations",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "language": "en",
-  "thumbnail": "",
+  "thumbnail": "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1600&q=80",
   "tags": [
     "emergency",
     "stakeholder",
-    "premium"
+    "premium",
+    "playbook"
   ],
   "createdAt": "2026-04-27T00:00:00.000Z",
   "updatedAt": "2026-04-27T00:00:00.000Z",
@@ -29,7 +30,7 @@
     "defaultTransition": "fade",
     "defaultAnimation": "fade-in",
     "showCertificate": true,
-    "certificateTitle": "Certificate of Completion",
+    "certificateTitle": "Product Emergency Process — Stakeholder Certification",
     "certificateOrg": "Moonfare Stakeholder",
     "enableScrollReveal": true,
     "enableKeyboardNav": true,
@@ -44,174 +45,184 @@
       "showCompanyLogo": true,
       "companyLogoUrl": "",
       "companyName": "Moonfare",
-      "tagline": "When something breaks, this is what happens next.",
-      "heroImageUrl": ""
+      "tagline": "Recognize. Escalate. Coordinate. Recover.",
+      "heroImageUrl": "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1600&q=80"
     }
   },
   "modules": [
     {
-      "id": "mod_premium_1",
-      "title": "Module 1 — What Counts as an Emergency",
-      "description": "The threshold framework: when a product issue becomes a Moonfare emergency.",
-      "thumbnail": "",
+      "id": "mod_ae7be26cdaa7",
+      "title": "Module 1 — What Is a Product Emergency?",
+      "description": "Threshold criteria, common categories, and the calibration mindset.",
+      "thumbnail": "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1200&q=80",
       "color": "#171D97",
       "lessons": [
         {
-          "id": "les_premium_1_1",
+          "id": "les_0b37b351ec85",
           "title": "Recognise the signal",
-          "description": "Severity classification, threshold criteria, and what the highest tier looks like.",
+          "description": "Definition, criteria, examples.",
           "order": 0,
           "slides": [
             {
-              "id": "s_p_1_cover",
-              "title": "When something breaks",
-              "layout": "title",
+              "id": "s_69fd9797579f",
+              "title": "Product Emergency Process",
+              "layout": "content",
               "content": [
                 {
-                  "id": "b_p_1_cover_h",
-                  "type": "heading",
-                  "content": "<h1 style=\"font-family:'Fraunces',serif;font-weight:400;font-size:3.4rem;line-height:1.05;color:#FFFFFF;letter-spacing:-0.02em\">When something breaks at Moonfare,<br/>the response is fast,<br/>structured, and transparent.</h1>",
-                  "animation": "slide-up"
-                },
-                {
-                  "id": "b_p_1_cover_t",
+                  "id": "b_a9491a2610c1",
                   "type": "text",
-                  "content": "<p style=\"color:rgba(255,255,255,0.72);font-size:1.05rem;line-height:1.6;max-width:520px\">This 20-minute course teaches you what an emergency looks like, who owns the response, and exactly where you fit in.</p>",
-                  "animation": "fade-in",
-                  "animationDelay": 200
+                  "content": "<div style=\"position:absolute;inset:0;background:linear-gradient(135deg,#171D97 0%,#0A0C3F 100%);color:#FAF8F4;display:flex;flex-direction:column;justify-content:center;padding:clamp(48px,8%,120px) clamp(40px,7%,96px);box-sizing:border-box;overflow:hidden;\">\n          <div style=\"position:absolute;inset:0;background-image:radial-gradient(circle at 85% 15%, rgba(91,102,207,0.45), transparent 55%), radial-gradient(circle at 15% 90%, rgba(212,165,116,0.18), transparent 50%);pointer-events:none;\"></div>\n          <div style=\"position:relative;max-width:min(820px,90%);\">\n            <p style=\"font-size:clamp(11px,1vw,14px);font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#DDE0FA;margin:0 0 clamp(20px,3vw,36px);\">Stakeholder training · v3.0</p>\n            <h1 style=\"font-family:Fraunces,serif;font-size:clamp(56px,8vw,108px);line-height:1.0;font-weight:400;color:#FAF8F4;letter-spacing:-0.02em;margin:0 0 clamp(20px,2.5vw,32px);\">Product<br/>Emergency Process</h1>\n            <p style=\"font-size:clamp(16px,1.8vw,26px);line-height:1.35;font-weight:400;color:#FAF8F4;margin:0 0 clamp(20px,2.5vw,32px);\">Recognize the signal. Escalate fast. Coordinate cleanly. Recover with discipline.</p>\n            <div style=\"width:min(340px,55%);height:1px;background:rgba(250,248,244,0.35);margin:0 0 clamp(16px,2vw,28px);\"></div>\n            <p style=\"font-size:clamp(11px,1vw,14px);font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#DDE0FA;margin:0;\">A Stakeholder's Guide to Crisis Response at Moonfare</p>\n          </div>\n        </div>",
+                  "animation": "fade-in"
                 }
               ],
               "questions": [],
-              "notes": "Cover slide — sets the tone. Premium navy hero.",
+              "notes": "Full-bleed cover hero. Sets tone.",
               "backgroundColor": "#0A0C3F",
               "backgroundImage": "",
               "duration": 60,
               "transition": "fade",
-              "isCoverSlide": true,
-              "coverSubtitle": "A premium stakeholder briefing"
+              "fullBleed": true
             },
             {
-              "id": "s_p_1_threshold",
-              "title": "The Emergency threshold",
+              "id": "s_6e0a8dbd93a3",
+              "title": "What you'll learn",
               "layout": "content",
               "content": [
                 {
-                  "id": "b_p_1_th_eyebrow",
-                  "type": "text",
-                  "content": "<p style=\"text-transform:uppercase;letter-spacing:0.18em;font-size:0.7rem;color:#171D97;font-weight:600;margin-bottom:0.5rem\">The threshold</p>",
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">By the end of this training</h2>",
                   "animation": "fade-in"
                 },
                 {
-                  "id": "b_p_1_th_h",
-                  "type": "heading",
-                  "content": "<h1 style=\"font-family:'Fraunces',serif;font-weight:400;font-size:5.5rem;line-height:0.95;color:#171D97;letter-spacing:-0.03em;margin:0\">100<span style=\"font-size:2.5rem;color:#D4A574;vertical-align:super\">%</span></h1>",
-                  "animation": "slide-up"
-                },
-                {
-                  "id": "b_p_1_th_sub",
-                  "type": "text",
-                  "content": "<p style=\"font-size:1.05rem;color:#0A0C3F;line-height:1.6;max-width:560px;margin-top:1rem\">An issue becomes an <strong>Emergency</strong> when 100% of users are affected, financial impact exceeds <strong>€100,000</strong>, or there is a confirmed <strong>data breach</strong>. Anything below those triggers is a different tier.</p>",
-                  "animation": "fade-in",
-                  "animationDelay": 200
-                },
-                {
-                  "id": "b_p_1_th_callout",
-                  "type": "callout",
-                  "content": "If you spot one of these signals, escalate to <strong>#emergency_stakeholders</strong> immediately. False positives are fine — silence isn't.",
+                  "id": "b_04dc3050d0ce",
+                  "type": "checklist",
+                  "content": "",
                   "data": {
-                    "calloutStyle": "warning",
-                    "calloutTitle": "Stakeholder action"
+                    "checklistTitle": "Stakeholder objectives",
+                    "checklistItems": [
+                      {
+                        "id": "ch_24f682f76999",
+                        "title": "Recognize when an issue may be a product emergency",
+                        "description": "Apply the threshold criteria with confidence."
+                      },
+                      {
+                        "id": "ch_fedce951c5a3",
+                        "title": "Escalate through the correct channels",
+                        "description": "PagerDuty, Jira, #emergency_stakeholders — never DMs."
+                      },
+                      {
+                        "id": "ch_28ed2ea313ce",
+                        "title": "Understand the L1/L2/L3 response structure",
+                        "description": "Know who's driving, supporting, and watching."
+                      },
+                      {
+                        "id": "ch_f8bf8558a8a9",
+                        "title": "Follow updates in the right places",
+                        "description": "Single source of truth in Jira; status in Slack."
+                      },
+                      {
+                        "id": "ch_6c7169e4667d",
+                        "title": "Support handling without disrupting resolution",
+                        "description": "Provide impact context; don't open parallel threads."
+                      },
+                      {
+                        "id": "ch_5f2dea777998",
+                        "title": "Understand the post-mortem",
+                        "description": "Blameless review — learning, not blame."
+                      }
+                    ]
                   },
                   "animation": "fade-in",
-                  "animationDelay": 400
+                  "animationDelay": 200
                 }
               ],
               "questions": [],
-              "notes": "Number-lead style slide. Anchors the 100% / €100k / data-breach triggers.",
-              "backgroundColor": "#FAF8F4",
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 70,
+              "transition": "fade"
+            },
+            {
+              "id": "s_f3cf75b5680f",
+              "title": "What is a Product Emergency?",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">When the playbook activates</h2>"
+                },
+                {
+                  "id": "b_4bebbb7af34f",
+                  "type": "text",
+                  "content": "<p style=\"color:#5C5A57;font-size:1.05rem;line-height:1.6;max-width:640px\">A product emergency is triggered when <strong>core functionality is broken</strong>, a <strong>large share of users is affected</strong>, <strong>revenue-impacting journeys are blocked</strong>, or <strong>critical product/data behavior is failing</strong>. The label changes the response — different cadence, different roles, different stakes.</p>"
+                },
+                {
+                  "id": "b_0f68b8512bd9",
+                  "type": "pull-quote",
+                  "content": "",
+                  "data": {
+                    "pqQuote": "If the issue affects core customer experience, critical operations, or revenue-generating workflows — assume it may be an emergency and escalate quickly. Speed beats certainty.",
+                    "pqName": "Lily",
+                    "pqRole": "L1 Incident Manager · Product Operations",
+                    "pqOrg": "Moonfare",
+                    "pqAvatarMode": "auto"
+                  },
+                  "animation": "fade-in",
+                  "animationDelay": 300
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
               "backgroundImage": "",
               "duration": 80,
               "transition": "fade"
             },
             {
-              "id": "s_p_1_severity",
-              "title": "Five tiers, one ladder",
+              "id": "s_b9e4a9d902b9",
+              "title": "The threshold criteria",
               "layout": "content",
               "content": [
                 {
-                  "id": "b_p_1_sev_h",
-                  "type": "heading",
-                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Severity classification</h2>",
-                  "animation": "fade-in"
-                },
-                {
-                  "id": "b_p_1_sev_p",
+                  "id": "b_c70fb9ca5496",
                   "type": "text",
-                  "content": "<p style=\"color:#5C5A57\">Every issue is classified at intake. The tier sets the response cadence and the people who get pulled in.</p>",
-                  "animation": "fade-in"
+                  "content": "<p style=\"text-transform:uppercase;letter-spacing:0.18em;font-size:0.7rem;color:#171D97;font-weight:600;margin-bottom:0.5rem\">When does it qualify</p>"
                 },
                 {
-                  "id": "b_p_1_sev_cmp",
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Any one of these flips the switch</h2>"
+                },
+                {
+                  "id": "b_37f467d14eab",
                   "type": "comparison",
                   "content": "",
                   "data": {
-                    "cmpEyebrow": "Severity Matrix",
-                    "cmpTitle": "From all-hands to log-and-monitor",
+                    "cmpEyebrow": "Trigger criteria",
+                    "cmpTitle": "An issue becomes an Emergency when…",
                     "cmpColumns": [
                       {
-                        "id": "c_em",
-                        "eyebrow": "TIER 1",
-                        "title": "Emergency",
-                        "subtitle": "All-hands · 30-min cadence",
+                        "id": "cmp_9bc65c2abec1",
+                        "eyebrow": "USER REACH",
+                        "title": "≥ 50% affected",
+                        "subtitle": "or ≤ 20% can access a critical function",
                         "bullets": [
                           {
-                            "id": "b_em_1",
-                            "text": "100% users affected",
+                            "id": "b_e4774cdda079",
+                            "text": "App-wide outage",
                             "included": true
                           },
                           {
-                            "id": "b_em_2",
-                            "text": "€100k+ financial impact",
+                            "id": "b_270c1b084f3f",
+                            "text": "Critical flow blocked",
                             "included": true
                           },
                           {
-                            "id": "b_em_3",
-                            "text": "Data breach confirmed",
-                            "included": true
-                          },
-                          {
-                            "id": "b_em_4",
-                            "text": "Command Staff activated",
-                            "included": true
-                          }
-                        ],
-                        "featured": true,
-                        "ribbonLabel": "Highest priority"
-                      },
-                      {
-                        "id": "c_hi",
-                        "eyebrow": "TIER 2",
-                        "title": "Highest",
-                        "subtitle": "Major-segment outage",
-                        "bullets": [
-                          {
-                            "id": "b_hi_1",
-                            "text": "Large user segment broken",
-                            "included": true
-                          },
-                          {
-                            "id": "b_hi_2",
-                            "text": "Revenue-critical flow down",
-                            "included": true
-                          },
-                          {
-                            "id": "b_hi_3",
-                            "text": "Hourly updates",
-                            "included": true
-                          },
-                          {
-                            "id": "b_hi_4",
-                            "text": "Command Staff activated",
+                            "id": "b_532a7b8e0328",
+                            "text": "Localised to small segment",
                             "included": false
                           }
                         ],
@@ -219,29 +230,449 @@
                         "ribbonLabel": ""
                       },
                       {
-                        "id": "c_mh",
-                        "eyebrow": "TIER 3 / 4 / 5",
-                        "title": "High · Medium · Low",
-                        "subtitle": "Standard incident process",
+                        "id": "cmp_48cd7517d211",
+                        "eyebrow": "REVENUE",
+                        "title": "Revenue blocked",
+                        "subtitle": "Critical investor journey broken",
                         "bullets": [
                           {
-                            "id": "b_mh_1",
-                            "text": "Localised impact",
+                            "id": "b_7c92cf1eee8d",
+                            "text": "Investor cannot invest",
                             "included": true
                           },
                           {
-                            "id": "b_mh_2",
+                            "id": "b_d279186428a7",
+                            "text": "Allocation flow down",
+                            "included": true
+                          },
+                          {
+                            "id": "b_9d3e622df914",
                             "text": "Workaround available",
+                            "included": false
+                          }
+                        ],
+                        "featured": true,
+                        "ribbonLabel": "Most common"
+                      },
+                      {
+                        "id": "cmp_8d777f385d3d",
+                        "eyebrow": "DATA",
+                        "title": "Breach or storage failure",
+                        "subtitle": "Confirmed or suspected",
+                        "bullets": [
+                          {
+                            "id": "b_9948c645c094",
+                            "text": "Data not stored correctly",
                             "included": true
                           },
                           {
-                            "id": "b_mh_3",
-                            "text": "Daily updates",
+                            "id": "b_b25b0651e4b6",
+                            "text": "Confirmed breach",
                             "included": true
                           },
                           {
-                            "id": "b_mh_4",
-                            "text": "Stakeholder Slack alert",
+                            "id": "b_e53125275854",
+                            "text": "Notify Compliance + Product",
+                            "included": true
+                          }
+                        ],
+                        "featured": false,
+                        "ribbonLabel": ""
+                      }
+                    ]
+                  },
+                  "animation": "slide-up",
+                  "animationDelay": 200
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 90,
+              "transition": "fade"
+            },
+            {
+              "id": "s_8854bc4840bb",
+              "title": "Common emergency categories",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Six patterns to recognise</h2>"
+                },
+                {
+                  "id": "b_211353fa3f6d",
+                  "type": "text",
+                  "content": "<p style=\"color:#5C5A57\">Tap a card to see what it looks like in practice.</p>"
+                },
+                {
+                  "id": "b_b5b2ef5d2260",
+                  "type": "flip-card",
+                  "content": "",
+                  "data": {
+                    "flipCards": [
+                      {
+                        "id": "fc_dcaa9fd4f23a",
+                        "front": "App crash or visible error",
+                        "back": "Investor sees a 500 error trying to view an allocation. The app errors out, no graceful fallback. Affects every user on that page.",
+                        "frontImage": "",
+                        "backImage": ""
+                      },
+                      {
+                        "id": "fc_54ddc3c7d064",
+                        "front": "App not functional for a key flow",
+                        "back": "The 'Sign agreement' button does nothing. Investors can browse but cannot complete commitments. Revenue path blocked.",
+                        "frontImage": "",
+                        "backImage": ""
+                      },
+                      {
+                        "id": "fc_b43fdd98b1fd",
+                        "front": "Backend service failure",
+                        "back": "Payments service returns 503 across all environments. Frontend keeps trying. Users see endless loading spinners.",
+                        "frontImage": "",
+                        "backImage": ""
+                      },
+                      {
+                        "id": "fc_5d103215c550",
+                        "front": "Third-party outage affecting product",
+                        "back": "The KYC provider goes down. New investors cannot complete verification. Pipeline stalls until provider recovers.",
+                        "frontImage": "",
+                        "backImage": ""
+                      },
+                      {
+                        "id": "fc_d77d5e503ad1",
+                        "front": "Database outage",
+                        "back": "Primary DB cluster is unreachable. Reads fail, writes queue up. Every product surface degrades simultaneously.",
+                        "frontImage": "",
+                        "backImage": ""
+                      },
+                      {
+                        "id": "fc_734a228ef2d1",
+                        "front": "Data breach or suspected breach",
+                        "back": "An investor sees another investor's documents in their portal. Even one occurrence is treated as an emergency until contained.",
+                        "frontImage": "",
+                        "backImage": ""
+                      }
+                    ]
+                  },
+                  "animation": "fade-in",
+                  "animationDelay": 200
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 100,
+              "transition": "fade"
+            },
+            {
+              "id": "s_a54e45a62d1f",
+              "title": "Emergency vs. not-an-emergency",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Calibration</h2>"
+                },
+                {
+                  "id": "b_f34bff6c70cc",
+                  "type": "image-left",
+                  "content": "",
+                  "data": {
+                    "layoutText": "<p style=\"font-size:0.95rem;line-height:1.6;color:#0A0C3F\">Most product issues are <strong>not</strong> emergencies. They're bugs, papercuts, or feature requests. Emergencies are a small subset.</p><p style=\"font-size:0.95rem;line-height:1.6;color:#0A0C3F;margin-top:1rem\">When in doubt: <strong>escalate</strong>. False positives are recoverable. Silence on a real emergency is not.</p>",
+                    "layoutImages": [
+                      {
+                        "url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80",
+                        "caption": "Live monitoring",
+                        "alt": "Dashboards showing real-time service health"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "b_08d7314cec19",
+                  "type": "callout",
+                  "content": "When you can't tell — escalate. The L1 will downgrade to a normal incident if it doesn't qualify. Far better than missing a real one.",
+                  "data": {
+                    "calloutStyle": "info",
+                    "calloutTitle": "Stakeholder rule of thumb"
+                  }
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 90,
+              "transition": "fade"
+            },
+            {
+              "id": "s_da8dc184e75a",
+              "title": "Knowledge check",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Module 1 check</h2>"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_37d11efdf3e0",
+                  "type": "multiple-choice",
+                  "text": "Which of the following is most likely to qualify as a product emergency?",
+                  "options": [
+                    {
+                      "id": "o_a615163e6113",
+                      "text": "A typo on a non-critical page",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_ca3b86159a54",
+                      "text": "A critical investor journey is broken",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_786e317ed7bf",
+                      "text": "One internal report is delayed by five minutes",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_7fded9ac0a74",
+                      "text": "A feature request is blocked",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "A broken critical investor journey blocks revenue and core customer experience — primary Emergency criteria.",
+                  "points": 1
+                },
+                {
+                  "id": "q_c1c1f9d7d4b3",
+                  "type": "true-false",
+                  "text": "An issue affecting 10% of users with a known workaround is automatically a Product Emergency.",
+                  "options": [
+                    {
+                      "id": "o_9125e504f37b",
+                      "text": "True",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_656d375be7d3",
+                      "text": "False",
+                      "isCorrect": true
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "It's likely a normal incident, not an Emergency. Threshold is ~50% impact OR ≤20% can access a critical function — and a known workaround typically means it's not blocking revenue.",
+                  "points": 1
+                },
+                {
+                  "id": "q_2ff2b2d48c98",
+                  "type": "dropdown",
+                  "text": "When in doubt about whether an issue is an emergency, you should…",
+                  "options": [
+                    {
+                      "id": "o_d5eadbf04ee8",
+                      "text": "Wait and see if it gets worse",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_61f1ae2c46bf",
+                      "text": "Ask a colleague casually in DM",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_51ee3dd15e1c",
+                      "text": "Escalate — the L1 will reclassify if needed",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_3e034c683664",
+                      "text": "Open a Jira bug ticket and assign to engineering",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Speed beats certainty. False positives downgrade easily; missed emergencies don't.",
+                  "points": 1
+                }
+              ],
+              "notes": "",
+              "backgroundColor": "#FAF8F4",
+              "backgroundImage": "",
+              "duration": 120,
+              "transition": "fade"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mod_aaf2f8999237",
+      "title": "Module 2 — Who Does What?",
+      "description": "L1, L2, L3 escalation tiers and stakeholder responsibilities.",
+      "thumbnail": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&q=80",
+      "color": "#101258",
+      "lessons": [
+        {
+          "id": "les_6664b31b9a63",
+          "title": "The response structure",
+          "description": "",
+          "order": 0,
+          "slides": [
+            {
+              "id": "s_df1c2da0f055",
+              "title": "Who does what?",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_a9491a2610c1",
+                  "type": "text",
+                  "content": "<div style=\"position:absolute;inset:0;background:linear-gradient(135deg,#171D97 0%,#101258 100%);color:#FAF8F4;display:flex;flex-direction:column;justify-content:center;padding:clamp(48px,8%,120px) clamp(40px,7%,96px);overflow:hidden;\">\n          <div style=\"position:relative;max-width:min(820px,90%);\">\n            <p style=\"font-size:clamp(11px,1vw,14px);font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#DDE0FA;margin:0 0 clamp(20px,3vw,36px);\">Module 2</p>\n            <h1 style=\"font-family:Fraunces,serif;font-size:clamp(48px,7vw,92px);line-height:1.0;font-weight:400;color:#FAF8F4;letter-spacing:-0.02em;margin:0 0 clamp(20px,2.5vw,32px);\">Who runs<br/>the response</h1>\n            <p style=\"font-size:clamp(16px,1.8vw,24px);line-height:1.35;color:rgba(255,255,255,0.85);margin:0;\">L1 · L2 · L3 · Stakeholders. Four roles. Four jobs. Zero ambiguity.</p>\n          </div>\n        </div>"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#101258",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade",
+              "fullBleed": true
+            },
+            {
+              "id": "s_f2a233b18c97",
+              "title": "L1, L2, L3 — three escalation tiers",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Three tiers, three jobs</h2>"
+                },
+                {
+                  "id": "b_a24f8a939a08",
+                  "type": "text",
+                  "content": "<p style=\"color:#5C5A57\">Every emergency is staffed by these three role types working in parallel.</p>"
+                },
+                {
+                  "id": "b_a42f60776aa7",
+                  "type": "comparison",
+                  "content": "",
+                  "data": {
+                    "cmpEyebrow": "Response tiers",
+                    "cmpTitle": "From front-line intake to senior decision-making",
+                    "cmpColumns": [
+                      {
+                        "id": "cmp_377fd569971e",
+                        "eyebrow": "L1",
+                        "title": "Incident Manager",
+                        "subtitle": "Product Operations · Lily · Hasan · rotational PMs",
+                        "bullets": [
+                          {
+                            "id": "b_89bbbd8a2521",
+                            "text": "Assess severity",
+                            "included": true
+                          },
+                          {
+                            "id": "b_24d0242204b9",
+                            "text": "Escalate to L2",
+                            "included": true
+                          },
+                          {
+                            "id": "b_7719cf32b57a",
+                            "text": "Coordinate communication",
+                            "included": true
+                          },
+                          {
+                            "id": "b_1ae47ce71cbe",
+                            "text": "Track decisions and actions",
+                            "included": true
+                          },
+                          {
+                            "id": "b_f5a580804421",
+                            "text": "Send 30-min stakeholder updates",
+                            "included": true
+                          },
+                          {
+                            "id": "b_48b1743257b2",
+                            "text": "Drive ticket → post-mortem",
+                            "included": true
+                          }
+                        ],
+                        "featured": true,
+                        "ribbonLabel": "Process owner"
+                      },
+                      {
+                        "id": "cmp_bec25675775e",
+                        "eyebrow": "L2",
+                        "title": "Subject Matter Experts",
+                        "subtitle": "Engineering · domain leads",
+                        "bullets": [
+                          {
+                            "id": "b_222dc9493dab",
+                            "text": "Investigate the issue",
+                            "included": true
+                          },
+                          {
+                            "id": "b_c8338388064f",
+                            "text": "Assess scope and impact",
+                            "included": true
+                          },
+                          {
+                            "id": "b_5941a1502cb6",
+                            "text": "Establish next steps",
+                            "included": true
+                          },
+                          {
+                            "id": "b_9cc9e7dfff77",
+                            "text": "Execute mitigation/fix",
+                            "included": true
+                          },
+                          {
+                            "id": "b_3c09824f1734",
+                            "text": "Support post-mortem",
+                            "included": true
+                          }
+                        ],
+                        "featured": false,
+                        "ribbonLabel": ""
+                      },
+                      {
+                        "id": "cmp_745e9cdc76ff",
+                        "eyebrow": "L3",
+                        "title": "Senior Escalation",
+                        "subtitle": "VP Eng · Security · CTO",
+                        "bullets": [
+                          {
+                            "id": "b_71d4a02b0da5",
+                            "text": "Activated when L2 needs senior decisions",
+                            "included": true
+                          },
+                          {
+                            "id": "b_f760d716667b",
+                            "text": "Critical emergencies not resolving",
+                            "included": true
+                          },
+                          {
+                            "id": "b_9fb21ca24797",
+                            "text": "External regulator engagement",
+                            "included": true
+                          },
+                          {
+                            "id": "b_a82e69ebabc3",
+                            "text": "Day-to-day incident handling",
                             "included": false
                           }
                         ],
@@ -255,387 +686,262 @@
                 }
               ],
               "questions": [],
-              "notes": "3-column comparison covering 5 tiers (collapsing High/Medium/Low into one column for clarity).",
+              "notes": "",
               "backgroundColor": "#FFFFFF",
               "backgroundImage": "",
               "duration": 110,
               "transition": "fade"
             },
             {
-              "id": "s_p_1_quiz",
-              "title": "Knowledge check — Threshold",
-              "layout": "quiz",
-              "content": [
-                {
-                  "id": "b_p_1_qz_h",
-                  "type": "heading",
-                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Quick check</h2>"
-                }
-              ],
-              "questions": [
-                {
-                  "id": "q_p_1_1",
-                  "type": "multiple-choice",
-                  "text": "A bug affects 5% of users and has €30,000 of impact. What tier is this?",
-                  "options": [
-                    {
-                      "id": "o_q1_1",
-                      "text": "Emergency — escalate immediately",
-                      "isCorrect": false
-                    },
-                    {
-                      "id": "o_q1_2",
-                      "text": "Highest — large-segment outage",
-                      "isCorrect": false
-                    },
-                    {
-                      "id": "o_q1_3",
-                      "text": "High / Medium / Low — standard incident process",
-                      "isCorrect": true
-                    },
-                    {
-                      "id": "o_q1_4",
-                      "text": "Not an incident",
-                      "isCorrect": false
-                    }
-                  ],
-                  "matchingPairs": [],
-                  "correctAnswer": "",
-                  "correctOrder": [],
-                  "explanation": "Both triggers (% users and €) are below the Emergency threshold and the segment is small. This is a standard incident, not an Emergency.",
-                  "points": 1
-                },
-                {
-                  "id": "q_p_1_2",
-                  "type": "true-false",
-                  "text": "A confirmed data breach is always classified as an Emergency, regardless of how many users are affected.",
-                  "options": [
-                    {
-                      "id": "o_q2_1",
-                      "text": "True",
-                      "isCorrect": true
-                    },
-                    {
-                      "id": "o_q2_2",
-                      "text": "False",
-                      "isCorrect": false
-                    }
-                  ],
-                  "matchingPairs": [],
-                  "correctAnswer": "",
-                  "correctOrder": [],
-                  "explanation": "Data breach is one of three independent Emergency triggers. User-count is irrelevant once a breach is confirmed.",
-                  "points": 1
-                }
-              ],
-              "notes": "Module 1 knowledge check — 2 questions on threshold and classification.",
-              "backgroundColor": "#FAF8F4",
-              "backgroundImage": "",
-              "duration": 80,
-              "transition": "fade"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "mod_premium_2",
-      "title": "Module 2 — Who Owns the Response",
-      "description": "Three response roles: L1 Liaison, Senior SMEs, Command Staff. What each one does.",
-      "thumbnail": "",
-      "color": "#101258",
-      "lessons": [
-        {
-          "id": "les_premium_2_1",
-          "title": "The response structure",
-          "description": "How responsibility flows from intake to executive sign-off.",
-          "order": 0,
-          "slides": [
-            {
-              "id": "s_p_2_pq",
-              "title": "Why structure matters",
+              "id": "s_8657eb772e0c",
+              "title": "Inside each role",
               "layout": "content",
               "content": [
                 {
-                  "id": "b_p_2_pq_block",
-                  "type": "pull-quote",
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Drill into responsibilities</h2>"
+                },
+                {
+                  "id": "b_0e1e4b0f2445",
+                  "type": "tabs",
                   "content": "",
                   "data": {
-                    "pqQuote": "In an emergency, ambiguity is the enemy. Everyone needs to know — within sixty seconds — whether they're driving, supporting, or watching.",
-                    "pqName": "Elena",
-                    "pqRole": "VP Engineering · Senior SME",
-                    "pqOrg": "Moonfare",
-                    "pqAvatarMode": "auto",
-                    "pqPortraitUrl": "",
-                    "pqInitialsOverride": ""
+                    "tabItems": [
+                      {
+                        "id": "tab_1ae47ce71cbe",
+                        "title": "L1 — Incident Manager",
+                        "content": "<p><strong>Lily, Hasan + rotational PMs from Product Ops.</strong></p><p>L1 is the conductor — they don't fix the bug, they make sure the right people are fixing it and that everyone else knows what's going on. They're live for the duration: classifying, escalating, posting the 30-min Jira update, and shepherding the ticket through to a written post-mortem 10 working days later.</p>"
+                      },
+                      {
+                        "id": "tab_9cc9e7dfff77",
+                        "title": "L2 — SMEs",
+                        "content": "<p><strong>Engineering domain owners.</strong></p><p>L2 is the muscle. They look at the metrics, read the code, and decide what to do. They have authority to ship a fix, disable a feature, or roll back a deploy without asking permission — but they'll loop in L3 the moment the scope or stakes grow beyond their authority.</p>"
+                      },
+                      {
+                        "id": "tab_a82e69ebabc3",
+                        "title": "L3 — Senior Escalation",
+                        "content": "<p><strong>VP Engineering, Security, occasionally the CTO.</strong></p><p>L3 only joins when something needs to escalate beyond the team handling it. That might be a regulator notification, a public communication, an architectural decision under pressure, or simply that an L2 team is stuck. They are the deciders of last resort.</p>"
+                      },
+                      {
+                        "id": "tab_b33e06cf3ba7",
+                        "title": "Stakeholders",
+                        "content": "<p><strong>You.</strong></p><p>Your job is to <strong>report fast, follow updates, and stay out of the way</strong>. The clearest contribution you can make is a precise impact statement: who is affected, what is broken, when it started. After that, monitor the Jira ticket and the stakeholder Slack channel — don't open parallel threads.</p>"
+                      }
+                    ]
                   },
-                  "animation": "fade-in"
+                  "animation": "fade-in",
+                  "animationDelay": 200
                 }
               ],
               "questions": [],
-              "notes": "Pull-quote opening for Module 2 — frames the importance of role clarity.",
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 110,
+              "transition": "fade"
+            },
+            {
+              "id": "s_e1c37ec892d3",
+              "title": "Why role clarity matters",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_a2b063997889",
+                  "type": "pull-quote",
+                  "content": "",
+                  "data": {
+                    "pqQuote": "In an emergency, ambiguity is the enemy. Everyone needs to know — within sixty seconds — whether they're driving, supporting, or watching. Get that wrong and the response slows to a crawl.",
+                    "pqName": "Elena",
+                    "pqRole": "VP Engineering · L2 SME",
+                    "pqOrg": "Moonfare",
+                    "pqAvatarMode": "auto"
+                  }
+                }
+              ],
+              "questions": [],
+              "notes": "",
               "backgroundColor": "#FFFFFF",
               "backgroundImage": "",
               "duration": 60,
               "transition": "fade"
             },
             {
-              "id": "s_p_2_roles",
-              "title": "Three roles, three jobs",
+              "id": "s_679502284fe7",
+              "title": "Match the responsibility",
               "layout": "content",
               "content": [
                 {
-                  "id": "b_p_2_r_h",
+                  "id": "b_1e04d5cc7a83",
                   "type": "heading",
-                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">The response trio</h2>",
-                  "animation": "fade-in"
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Drag each item to the role that owns it</h2>"
                 },
                 {
-                  "id": "b_p_2_r_p",
-                  "type": "text",
-                  "content": "<p style=\"color:#5C5A57;max-width:560px\">Every Moonfare emergency is staffed by three role types working in parallel. None of them is optional.</p>"
-                },
-                {
-                  "id": "b_p_2_r_cmp",
-                  "type": "comparison",
+                  "id": "b_4c121b6652bb",
+                  "type": "card-sorting",
                   "content": "",
                   "data": {
-                    "cmpEyebrow": "Response Roles",
-                    "cmpTitle": "From front-line intake to executive ownership",
-                    "cmpColumns": [
+                    "cardSortCategories": [
+                      "L1",
+                      "L2",
+                      "L3",
+                      "Stakeholder"
+                    ],
+                    "cardSortCards": [
                       {
-                        "id": "c_l1",
-                        "eyebrow": "ROLE 1",
-                        "title": "L1 Liaison",
-                        "subtitle": "Lily · Hasan · rotational PMs",
-                        "bullets": [
-                          {
-                            "id": "b_l1_1",
-                            "text": "First point of contact for stakeholders",
-                            "included": true
-                          },
-                          {
-                            "id": "b_l1_2",
-                            "text": "Triages and classifies the issue",
-                            "included": true
-                          },
-                          {
-                            "id": "b_l1_3",
-                            "text": "Posts the 30-min update",
-                            "included": true
-                          },
-                          {
-                            "id": "b_l1_4",
-                            "text": "Escalates to Senior SMEs",
-                            "included": true
-                          }
-                        ],
-                        "featured": false,
-                        "ribbonLabel": ""
+                        "id": "cs_c4ca4238a0b9",
+                        "text": "Posts the 30-min Jira update",
+                        "correctCategory": "L1"
                       },
                       {
-                        "id": "c_sme",
-                        "eyebrow": "ROLE 2",
-                        "title": "Senior SME",
-                        "subtitle": "Elena (Eng) · Hassan (Security)",
-                        "bullets": [
-                          {
-                            "id": "b_sme_1",
-                            "text": "Domain authority for the fix",
-                            "included": true
-                          },
-                          {
-                            "id": "b_sme_2",
-                            "text": "Approves the response plan",
-                            "included": true
-                          },
-                          {
-                            "id": "b_sme_3",
-                            "text": "Owns the resolution timeline",
-                            "included": true
-                          },
-                          {
-                            "id": "b_sme_4",
-                            "text": "Pulls in Command Staff if scope grows",
-                            "included": true
-                          }
-                        ],
-                        "featured": false,
-                        "ribbonLabel": ""
+                        "id": "cs_c81e728d9d4c",
+                        "text": "Reads the code, applies the fix",
+                        "correctCategory": "L2"
                       },
                       {
-                        "id": "c_cmd",
-                        "eyebrow": "ROLE 3",
-                        "title": "Command Staff",
-                        "subtitle": "Andrew · Elena · Hassan",
-                        "bullets": [
-                          {
-                            "id": "b_cmd_1",
-                            "text": "Activated for Tier-1 Emergency only",
-                            "included": true
-                          },
-                          {
-                            "id": "b_cmd_2",
-                            "text": "External & regulator comms",
-                            "included": true
-                          },
-                          {
-                            "id": "b_cmd_3",
-                            "text": "Public statement sign-off",
-                            "included": true
-                          },
-                          {
-                            "id": "b_cmd_4",
-                            "text": "Post-incident accountability",
-                            "included": true
-                          }
-                        ],
-                        "featured": true,
-                        "ribbonLabel": "Highest authority"
+                        "id": "cs_eccbc87e4b5c",
+                        "text": "Reports the issue from the field",
+                        "correctCategory": "Stakeholder"
+                      },
+                      {
+                        "id": "cs_a87ff679a2f3",
+                        "text": "Approves regulator notification",
+                        "correctCategory": "L3"
+                      },
+                      {
+                        "id": "cs_e4da3b7fbbce",
+                        "text": "Provides business impact context",
+                        "correctCategory": "Stakeholder"
+                      },
+                      {
+                        "id": "cs_1679091c5a88",
+                        "text": "Decides to disable a feature flag",
+                        "correctCategory": "L2"
+                      },
+                      {
+                        "id": "cs_8f14e45fceea",
+                        "text": "Tracks decisions and action items",
+                        "correctCategory": "L1"
+                      },
+                      {
+                        "id": "cs_c9f0f895fb98",
+                        "text": "Final sign-off on public statement",
+                        "correctCategory": "L3"
                       }
                     ]
-                  },
-                  "animation": "slide-up",
-                  "animationDelay": 200
+                  }
                 }
               ],
               "questions": [],
-              "notes": "3-column role comparison, Command Staff featured.",
-              "backgroundColor": "#FAF8F4",
-              "backgroundImage": "",
-              "duration": 110,
-              "transition": "fade"
-            },
-            {
-              "id": "s_p_2_glossary",
-              "title": "Role definitions",
-              "layout": "content",
-              "content": [
-                {
-                  "id": "b_p_2_g_h",
-                  "type": "heading",
-                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Glossary of response terms</h2>"
-                },
-                {
-                  "id": "b_p_2_g_acc",
-                  "type": "accordion",
-                  "content": "",
-                  "data": {
-                    "accordionItems": [
-                      {
-                        "id": "a_1",
-                        "title": "L1 Liaison",
-                        "content": "<p>The 24/7 front line for stakeholder-reported issues. Owns triage, classification, and the public-facing cadence. Sits in <strong>Product Operations</strong>. Lily and Hasan are permanent members; PMs rotate weekly.</p>"
-                      },
-                      {
-                        "id": "a_2",
-                        "title": "Senior SME (Subject Matter Expert)",
-                        "content": "<p>The domain owner for the affected system. Elena owns Engineering. Hassan owns Security. They have authority to approve a fix without further escalation — but must pull in Command Staff if scope or impact grows.</p>"
-                      },
-                      {
-                        "id": "a_3",
-                        "title": "Command Staff",
-                        "content": "<p>Activated only for <strong>Tier-1 Emergency</strong>. Andrew (CEO), Elena, and Hassan. Owns external communication, regulator notification where applicable, and post-incident accountability. They sign off on every public statement.</p>"
-                      },
-                      {
-                        "id": "a_4",
-                        "title": "Partner Relay",
-                        "content": "<p>Max and Nicolai (Partnerships). When an emergency touches our distribution partners, all communication flows through them — never direct from response team to partner. This protects the relationship and prevents conflicting messages.</p>"
-                      }
-                    ]
-                  },
-                  "animation": "fade-in",
-                  "animationDelay": 200
-                }
-              ],
-              "questions": [],
-              "notes": "Glossary accordion — drill-down for each role.",
+              "notes": "",
               "backgroundColor": "#FFFFFF",
               "backgroundImage": "",
-              "duration": 80,
+              "duration": 120,
               "transition": "fade"
             },
             {
-              "id": "s_p_2_quiz",
-              "title": "Knowledge check — Roles",
+              "id": "s_f051e3b20ad3",
+              "title": "Knowledge check",
               "layout": "quiz",
               "content": [
                 {
-                  "id": "b_p_2_qz_h",
+                  "id": "b_1e04d5cc7a83",
                   "type": "heading",
-                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Who owns what?</h2>"
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Module 2 check</h2>"
                 }
               ],
               "questions": [
                 {
-                  "id": "q_p_2_1",
+                  "id": "q_681c659ccbc2",
                   "type": "multiple-choice",
-                  "text": "Who is responsible for posting the 30-minute Jira update during a live emergency?",
+                  "text": "Who is primarily responsible for coordinating communication and managing the emergency process?",
                   "options": [
                     {
-                      "id": "o_q3_1",
-                      "text": "Command Staff",
+                      "id": "o_b34a2775619c",
+                      "text": "Any stakeholder",
                       "isCorrect": false
                     },
                     {
-                      "id": "o_q3_2",
-                      "text": "Senior SME",
-                      "isCorrect": false
-                    },
-                    {
-                      "id": "o_q3_3",
-                      "text": "L1 Liaison",
+                      "id": "o_5c0eb0c419d8",
+                      "text": "L1 / Incident Manager / Product Ops",
                       "isCorrect": true
                     },
                     {
-                      "id": "o_q3_4",
-                      "text": "The Partnerships team",
+                      "id": "o_b058b7f7f102",
+                      "text": "Finance",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_f68103a249d3",
+                      "text": "Compliance only",
                       "isCorrect": false
                     }
                   ],
                   "matchingPairs": [],
                   "correctAnswer": "",
                   "correctOrder": [],
-                  "explanation": "L1 Liaison owns the public cadence — including the 30-min Jira update — for the duration of the live response.",
+                  "explanation": "L1 owns the process from intake through post-mortem. Per the Emergency Playbook.",
                   "points": 1
                 },
                 {
-                  "id": "q_p_2_2",
-                  "type": "multiple-choice",
-                  "text": "When are the Command Staff (Andrew, Elena, Hassan) activated?",
+                  "id": "q_8b9684362b42",
+                  "type": "matching",
+                  "text": "Match each role to its primary job",
+                  "options": [],
+                  "matchingPairs": [
+                    {
+                      "id": "mp_e976d93c2481",
+                      "left": "L1",
+                      "right": "Coordinate the response and own communication"
+                    },
+                    {
+                      "id": "mp_9135ec1a53ad",
+                      "left": "L2",
+                      "right": "Investigate, scope, and apply the technical fix"
+                    },
+                    {
+                      "id": "mp_826ac1aad6f5",
+                      "left": "L3",
+                      "right": "Senior decisions and external/regulator escalation"
+                    },
+                    {
+                      "id": "mp_0c48e282a7b2",
+                      "left": "Stakeholder",
+                      "right": "Report impact and follow updates without disrupting"
+                    }
+                  ],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Each role is mutually exclusive — overlap creates ambiguity.",
+                  "points": 2
+                },
+                {
+                  "id": "q_e3821fcc2001",
+                  "type": "true-false",
+                  "text": "Stakeholders should attempt ad-hoc fixes if they have access and the issue looks contained.",
                   "options": [
                     {
-                      "id": "o_q4_1",
-                      "text": "For every incident, regardless of tier",
+                      "id": "o_684f186e5f9f",
+                      "text": "True",
                       "isCorrect": false
                     },
                     {
-                      "id": "o_q4_2",
-                      "text": "Only for Tier-1 Emergency",
+                      "id": "o_c23b74049d30",
+                      "text": "False",
                       "isCorrect": true
-                    },
-                    {
-                      "id": "o_q4_3",
-                      "text": "Only when external regulators are involved",
-                      "isCorrect": false
-                    },
-                    {
-                      "id": "o_q4_4",
-                      "text": "Only after resolution, for the post-mortem",
-                      "isCorrect": false
                     }
                   ],
                   "matchingPairs": [],
                   "correctAnswer": "",
                   "correctOrder": [],
-                  "explanation": "Command Staff activate only at Tier-1. Lower tiers are handled by L1 Liaison plus the relevant Senior SME.",
+                  "explanation": "Never. Even a 'small' independent action can mask the root cause or duplicate work the response team is already doing.",
                   "points": 1
                 }
               ],
-              "notes": "Module 2 quiz — 2 questions on response roles.",
+              "notes": "",
               "backgroundColor": "#FAF8F4",
               "backgroundImage": "",
-              "duration": 70,
+              "duration": 120,
               "transition": "fade"
             }
           ]
@@ -643,96 +949,542 @@
       ]
     },
     {
-      "id": "mod_premium_3",
-      "title": "Module 3 — Communication Channels",
-      "description": "Where updates land, how often, and the one rule about partners.",
-      "thumbnail": "",
+      "id": "mod_9678f7a7939f",
+      "title": "Module 3 — End-to-End Emergency Process",
+      "description": "Six steps from alert to post-mortem.",
+      "thumbnail": "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1200&q=80",
       "color": "#2B3AB8",
       "lessons": [
         {
-          "id": "les_premium_3_1",
-          "title": "Channels & cadence",
-          "description": "The three Slack channels, the 30-minute rule, and the partner relay.",
+          "id": "les_cdd972a7dae9",
+          "title": "Lifecycle in practice",
+          "description": "",
           "order": 0,
           "slides": [
             {
-              "id": "s_p_3_cadence",
-              "title": "The 30-minute rule",
+              "id": "s_36e27dcecebe",
+              "title": "End-to-end process",
               "layout": "content",
               "content": [
                 {
-                  "id": "b_p_3_c_eb",
+                  "id": "b_a9491a2610c1",
                   "type": "text",
-                  "content": "<p style=\"text-transform:uppercase;letter-spacing:0.18em;font-size:0.7rem;color:#171D97;font-weight:600;margin-bottom:0.5rem\">Cadence</p>"
-                },
-                {
-                  "id": "b_p_3_c_h",
-                  "type": "heading",
-                  "content": "<h1 style=\"font-family:'Fraunces',serif;font-weight:400;font-size:5.5rem;line-height:0.95;color:#171D97;letter-spacing:-0.03em;margin:0\">30 <span style=\"font-size:2rem;color:#D4A574\">min</span></h1>",
-                  "animation": "slide-up"
-                },
-                {
-                  "id": "b_p_3_c_p",
-                  "type": "text",
-                  "content": "<p style=\"font-size:1.05rem;color:#0A0C3F;line-height:1.6;max-width:560px;margin-top:1rem\">For the duration of a live Tier-1 Emergency, the L1 Liaison posts an update on the Jira ticket every <strong>30 minutes</strong>. Even when there's no progress — silence is interpreted as the response stalling.</p>",
-                  "animation": "fade-in",
-                  "animationDelay": 200
-                },
-                {
-                  "id": "b_p_3_c_callout",
-                  "type": "callout",
-                  "content": "&ldquo;No update&rdquo; is itself an update. A blank 30-minute window is read by stakeholders as <em>something has gone wrong with the response</em> — so we always post.",
-                  "data": {
-                    "calloutStyle": "info",
-                    "calloutTitle": "Why we post even with nothing new"
-                  },
-                  "animation": "fade-in",
-                  "animationDelay": 400
+                  "content": "<div style=\"position:absolute;inset:0;background:linear-gradient(135deg,#2B3AB8 0%,#171D97 100%);color:#FAF8F4;display:flex;flex-direction:column;justify-content:center;padding:clamp(48px,8%,120px) clamp(40px,7%,96px);overflow:hidden;\">\n          <div style=\"position:relative;max-width:min(820px,90%);\">\n            <p style=\"font-size:clamp(11px,1vw,14px);font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#DDE0FA;margin:0 0 clamp(20px,3vw,36px);\">Module 3</p>\n            <h1 style=\"font-family:Fraunces,serif;font-size:clamp(48px,7vw,92px);line-height:1.0;font-weight:400;color:#FAF8F4;letter-spacing:-0.02em;margin:0 0 clamp(20px,2.5vw,32px);\">From signal<br/>to post-mortem</h1>\n            <p style=\"font-size:clamp(16px,1.8vw,24px);line-height:1.35;color:rgba(255,255,255,0.85);margin:0;\">Six steps. Same arc, every time.</p>\n          </div>\n        </div>"
                 }
               ],
-              "notes": "Number-lead style: anchors the 30-min cadence rule.",
               "questions": [],
-              "backgroundColor": "#FAF8F4",
+              "notes": "",
+              "backgroundColor": "#171D97",
               "backgroundImage": "",
-              "duration": 80,
+              "duration": 60,
+              "transition": "fade",
+              "fullBleed": true
+            },
+            {
+              "id": "s_d6b394291a96",
+              "title": "The six-step lifecycle",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Every emergency runs the same arc</h2>"
+                },
+                {
+                  "id": "b_ff1072be77aa",
+                  "type": "timeline",
+                  "content": "",
+                  "data": {
+                    "timelineEvents": [
+                      {
+                        "id": "tl_c4ca4238a0b9",
+                        "title": "Alert or Report Raised",
+                        "date": "T+0",
+                        "description": "PagerDuty page, internal stakeholder escalation, Product Ops observation, or pattern across multiple tickets.",
+                        "icon": ""
+                      },
+                      {
+                        "id": "tl_c81e728d9d4c",
+                        "title": "Acknowledge & Confirm",
+                        "date": "T+5 min",
+                        "description": "Acknowledge in PagerDuty, respond to ticket, confirm whether the issue qualifies as an emergency.",
+                        "icon": ""
+                      },
+                      {
+                        "id": "tl_eccbc87e4b5c",
+                        "title": "Create Coordination Space",
+                        "date": "T+10 min",
+                        "description": "Use the emergency workflow to spin up the Slack coordination channel. Add L2 responders. Start the meeting.",
+                        "icon": ""
+                      },
+                      {
+                        "id": "tl_a87ff679a2f3",
+                        "title": "Investigate & Stabilise",
+                        "date": "Ongoing",
+                        "description": "Assess impact. Define next actions. Document in Jira/PagerDuty. Apply mitigations: feature flags, banners, infra/security as needed.",
+                        "icon": ""
+                      },
+                      {
+                        "id": "tl_e4da3b7fbbce",
+                        "title": "Communicate · Every 30 min",
+                        "date": "Ongoing",
+                        "description": "Stakeholder-facing updates on the ticket every 30 minutes until resolution. Standard templates.",
+                        "icon": ""
+                      },
+                      {
+                        "id": "tl_1679091c5a88",
+                        "title": "Resolve & Close",
+                        "date": "T+resolution",
+                        "description": "Communicate completed actions. Close Jira ticket. Send stakeholder email. Create post-mortem doc. Hold the review.",
+                        "icon": ""
+                      }
+                    ]
+                  },
+                  "animation": "fade-in",
+                  "animationDelay": 200
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 130,
               "transition": "fade"
             },
             {
-              "id": "s_p_3_channels",
-              "title": "Three channels, three audiences",
+              "id": "s_8b52096706f4",
+              "title": "Inside a live response",
               "layout": "content",
               "content": [
                 {
-                  "id": "b_p_3_ch_h",
+                  "id": "b_1e04d5cc7a83",
                   "type": "heading",
-                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Where to look — and where to post</h2>"
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">A typical war-room dashboard</h2>"
                 },
                 {
-                  "id": "b_p_3_ch_cmp",
+                  "id": "b_0025db2efb70",
+                  "type": "text",
+                  "content": "<p style=\"color:#5C5A57\">Click any pin to see what the response team is monitoring during a live emergency.</p>"
+                },
+                {
+                  "id": "b_ca7a889a30df",
+                  "type": "hotspot",
+                  "content": "",
+                  "data": {
+                    "hotspotImage": "https://images.unsplash.com/photo-1581090700227-1e37b190418e?w=1200&q=80",
+                    "hotspotMarkers": [
+                      {
+                        "id": "hs_c4ca4238a0b9",
+                        "x": 22,
+                        "y": 30,
+                        "label": "Service health",
+                        "description": "Live charts for the affected service. P50/P99 latency, error rate, throughput."
+                      },
+                      {
+                        "id": "hs_c81e728d9d4c",
+                        "x": 60,
+                        "y": 25,
+                        "label": "Jira ticket",
+                        "description": "Single source of truth. Every update, every action, every decision lands here."
+                      },
+                      {
+                        "id": "hs_eccbc87e4b5c",
+                        "x": 78,
+                        "y": 65,
+                        "label": "Slack coordination",
+                        "description": "Real-time backchannel for the response team. Stakeholders watch the read-only stakeholder channel."
+                      },
+                      {
+                        "id": "hs_a87ff679a2f3",
+                        "x": 38,
+                        "y": 75,
+                        "label": "Action timer",
+                        "description": "30-minute update cadence. L1 posts on the ticket regardless of whether there's news."
+                      }
+                    ]
+                  },
+                  "animation": "fade-in"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 110,
+              "transition": "fade"
+            },
+            {
+              "id": "s_da94ed01cece",
+              "title": "Scenario: 18:30 on a Friday",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Make the call</h2>"
+                },
+                {
+                  "id": "b_384228251e96",
+                  "type": "scenario",
+                  "content": "",
+                  "data": {
+                    "scenarioTitle": "It's 18:30 on a Friday. An investor at a partner bank tells you the 'Sign agreement' button does nothing. They've tried twice. Three of their colleagues report the same. What do you do?",
+                    "scenarioDescription": "Use the playbook. No ad-hoc fixes.",
+                    "scenarioImage": "",
+                    "scenarioSteps": [
+                      {
+                        "id": "step1",
+                        "text": "First action?",
+                        "choices": [
+                          {
+                            "id": "c1a",
+                            "text": "Try it yourself first to confirm",
+                            "nextStepId": "step2",
+                            "feedback": "Reasonable to verify, but quick — don't burn 10 minutes."
+                          },
+                          {
+                            "id": "c1b",
+                            "text": "Post immediately to #emergency_stakeholders",
+                            "nextStepId": "step2",
+                            "feedback": "Good — fast escalation. The L1 will validate."
+                          },
+                          {
+                            "id": "c1c",
+                            "text": "DM your VP to ask if it's a known issue",
+                            "nextStepId": "step1_bad",
+                            "feedback": "Side-channel. This fragments the response and slows you down."
+                          }
+                        ],
+                        "isEnd": false,
+                        "endMessage": "",
+                        "endType": "neutral"
+                      },
+                      {
+                        "id": "step1_bad",
+                        "text": "Your VP is in a meeting. 8 minutes lost. The investor's colleague has now also tried 3 times. What now?",
+                        "choices": [
+                          {
+                            "id": "c1ba",
+                            "text": "Post immediately to #emergency_stakeholders with the impact",
+                            "nextStepId": "step2",
+                            "feedback": "Right call — late but correct. The lesson: skip the side-channel next time."
+                          },
+                          {
+                            "id": "c1bb",
+                            "text": "Wait for VP to reply",
+                            "nextStepId": "endbad",
+                            "feedback": "No. You're now actively withholding signal during a likely revenue-blocking incident."
+                          }
+                        ],
+                        "isEnd": false,
+                        "endMessage": "",
+                        "endType": "neutral"
+                      },
+                      {
+                        "id": "step2",
+                        "text": "L1 confirms it's an Emergency. They ask for impact context. You provide…",
+                        "choices": [
+                          {
+                            "id": "c2a",
+                            "text": "'I think a few investors can't sign.'",
+                            "nextStepId": "step2_bad",
+                            "feedback": "Too vague. The L1 needs specifics."
+                          },
+                          {
+                            "id": "c2b",
+                            "text": "'4 investors at Bank X confirmed, all on Sign-Agreement step. First report 18:22, last 18:34.'",
+                            "nextStepId": "step3",
+                            "feedback": "Excellent. Specific, scoped, time-stamped."
+                          },
+                          {
+                            "id": "c2c",
+                            "text": "Forward the investor's email screenshots without context",
+                            "nextStepId": "step2_bad",
+                            "feedback": "Raw data without synthesis slows the L1 down."
+                          }
+                        ],
+                        "isEnd": false,
+                        "endMessage": "",
+                        "endType": "neutral"
+                      },
+                      {
+                        "id": "step2_bad",
+                        "text": "L1 asks again for specifics. You re-collect from your contacts and send: 4 investors, Bank X, Sign-Agreement, 18:22-18:34. What now?",
+                        "choices": [
+                          {
+                            "id": "c2ba",
+                            "text": "Stay available for follow-up questions",
+                            "nextStepId": "step3",
+                            "feedback": "Good recovery. Lesson: lead with specifics next time."
+                          }
+                        ],
+                        "isEnd": false,
+                        "endMessage": "",
+                        "endType": "neutral"
+                      },
+                      {
+                        "id": "step3",
+                        "text": "It's now 18:55. The Bank's relationship manager DMs you directly: 'Is this fixed? My CEO wants to know.' What do you do?",
+                        "choices": [
+                          {
+                            "id": "c3a",
+                            "text": "Reply with the latest from the Jira ticket",
+                            "nextStepId": "endbadrelay",
+                            "feedback": "Wrong. Direct partner contact during incidents must go through the Partnerships relay."
+                          },
+                          {
+                            "id": "c3b",
+                            "text": "Forward the question to Max & Nicolai (Partnerships)",
+                            "nextStepId": "endgood",
+                            "feedback": "Correct. Even with the best intentions, direct stakeholder→partner replies fragment the response."
+                          }
+                        ],
+                        "isEnd": false,
+                        "endMessage": "",
+                        "endType": "neutral"
+                      },
+                      {
+                        "id": "endgood",
+                        "text": "",
+                        "choices": [],
+                        "isEnd": true,
+                        "endMessage": "Textbook handling. You escalated fast, gave the L1 useful context, and routed the partner question through the right channel.",
+                        "endType": "success"
+                      },
+                      {
+                        "id": "endbadrelay",
+                        "text": "",
+                        "choices": [],
+                        "isEnd": true,
+                        "endMessage": "The Bank's CEO got two slightly different stories — one from you, one from Partnerships — and the relationship took a hit that lasted weeks. The fix took 35 minutes. The relationship took 6 months.",
+                        "endType": "failure"
+                      },
+                      {
+                        "id": "endbad",
+                        "text": "",
+                        "choices": [],
+                        "isEnd": true,
+                        "endMessage": "The L1 found out about the issue 22 minutes later than they should have, from a different stakeholder. Resolution was delayed. Don't withhold signal during an emergency.",
+                        "endType": "failure"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 180,
+              "transition": "fade"
+            },
+            {
+              "id": "s_b2551f425058",
+              "title": "Knowledge check",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Module 3 check</h2>"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_383bd4958182",
+                  "type": "multiple-choice",
+                  "text": "How often should updates be posted during an active emergency?",
+                  "options": [
+                    {
+                      "id": "o_be815a20b802",
+                      "text": "Every 4 hours",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_32517e32fd0e",
+                      "text": "Once per day",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_792b9a88e652",
+                      "text": "Every 30 minutes",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_752bb9021693",
+                      "text": "Only when asked",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "30 minutes — even if there's no news. Silence is read as the response stalling.",
+                  "points": 1
+                },
+                {
+                  "id": "q_182689e5a1ab",
+                  "type": "ranking",
+                  "text": "Put these emergency-process steps in order",
+                  "options": [
+                    {
+                      "id": "o_fedbb6a8f2c7",
+                      "text": "Alert or report is raised",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_76bb6f679b6d",
+                      "text": "Acknowledge and confirm",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_579eb4cf1c33",
+                      "text": "Create coordination space (Slack)",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_7d0d91c97959",
+                      "text": "Investigate and stabilise",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_135cda66e7cc",
+                      "text": "Communicate every 30 min",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_aee52f46300d",
+                      "text": "Resolve, close, post-mortem",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [
+                    "o_fedbb6a8f2c7",
+                    "o_76bb6f679b6d",
+                    "o_579eb4cf1c33",
+                    "o_7d0d91c97959",
+                    "o_135cda66e7cc",
+                    "o_aee52f46300d"
+                  ],
+                  "explanation": "The six-step arc is fixed: detect → ack → coordinate → investigate → comms → resolve.",
+                  "points": 2
+                },
+                {
+                  "id": "q_8cef170bf0ba",
+                  "type": "fill-in-blank",
+                  "text": "The standard stakeholder-facing update cadence during a live emergency is every ____ minutes.",
+                  "options": [],
+                  "matchingPairs": [],
+                  "correctAnswer": "30",
+                  "correctOrder": [],
+                  "explanation": "30-min cadence is non-negotiable for the duration of a Tier-1 emergency.",
+                  "points": 1
+                }
+              ],
+              "notes": "",
+              "backgroundColor": "#FAF8F4",
+              "backgroundImage": "",
+              "duration": 120,
+              "transition": "fade"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mod_fd6b6fc9220b",
+      "title": "Module 4 — Channels and Tools",
+      "description": "Where to follow updates, where to post, and the one rule about partner relays.",
+      "thumbnail": "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&q=80",
+      "color": "#5B66CF",
+      "lessons": [
+        {
+          "id": "les_9096f45b120b",
+          "title": "Comms discipline",
+          "description": "",
+          "order": 0,
+          "slides": [
+            {
+              "id": "s_95a8382fbc7e",
+              "title": "Channels & tools",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_c1389df5398a",
+                  "type": "heading",
+                  "content": "<h1 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F;font-size:2.4rem\">Where to look. Where to post.</h1>"
+                },
+                {
+                  "id": "b_4bebbb7af34f",
+                  "type": "text",
+                  "content": "<p style=\"color:#5C5A57;font-size:1.05rem\">Three channels. Each has a single audience and a single purpose. Get the channel wrong and the message gets lost.</p>"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_348a8e80b789",
+              "title": "The three channels",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_8e4b94451d7b",
                   "type": "comparison",
                   "content": "",
                   "data": {
-                    "cmpEyebrow": "Slack channels",
-                    "cmpTitle": "Each one has a single audience and a single purpose",
+                    "cmpEyebrow": "Where it lands",
+                    "cmpTitle": "Each channel has one audience",
                     "cmpColumns": [
                       {
-                        "id": "c_oncall",
-                        "eyebrow": "INTERNAL",
-                        "title": "#mf-oncall",
-                        "subtitle": "Engineering response only",
+                        "id": "cmp_d20c781e9483",
+                        "eyebrow": "SOURCE OF TRUTH",
+                        "title": "Jira ticket",
+                        "subtitle": "moonfare.atlassian.net",
                         "bullets": [
                           {
-                            "id": "b_o_1",
-                            "text": "Pages & alerts land here first",
+                            "id": "b_6caeba444797",
+                            "text": "Status, action points, findings",
                             "included": true
                           },
                           {
-                            "id": "b_o_2",
-                            "text": "Engineering-only audience",
+                            "id": "b_843eca755623",
+                            "text": "Read-only for stakeholders",
                             "included": true
                           },
                           {
-                            "id": "b_o_3",
+                            "id": "b_6050b64b6ad6",
+                            "text": "Survives across timezones",
+                            "included": true
+                          }
+                        ],
+                        "featured": true,
+                        "ribbonLabel": "Authoritative"
+                      },
+                      {
+                        "id": "cmp_6aa1e040c8b4",
+                        "eyebrow": "INTERNAL",
+                        "title": "#emergency_product",
+                        "subtitle": "Slack · response team only",
+                        "bullets": [
+                          {
+                            "id": "b_ec6ef230f182",
+                            "text": "Coordination + alert ack",
+                            "included": true
+                          },
+                          {
+                            "id": "b_1d665b9b1467",
+                            "text": "L1 + L2 + L3 working channel",
+                            "included": true
+                          },
+                          {
+                            "id": "b_7bc3ca687694",
                             "text": "Stakeholders should not post here",
                             "included": false
                           }
@@ -741,186 +1493,109 @@
                         "ribbonLabel": ""
                       },
                       {
-                        "id": "c_product",
-                        "eyebrow": "INTERNAL",
-                        "title": "#emergency_product",
-                        "subtitle": "Cross-functional coordination",
+                        "id": "cmp_12470fe406d4",
+                        "eyebrow": "STAKEHOLDER",
+                        "title": "#emergency_stakeholders",
+                        "subtitle": "Slack · stakeholder visibility",
                         "bullets": [
                           {
-                            "id": "b_pr_1",
-                            "text": "L1 Liaison + Senior SME + Command Staff",
+                            "id": "b_8ddf878039b7",
+                            "text": "Read updates from L1",
                             "included": true
                           },
                           {
-                            "id": "b_pr_2",
-                            "text": "Working channel for the response",
+                            "id": "b_fac989447cad",
+                            "text": "Post questions here",
                             "included": true
                           },
                           {
-                            "id": "b_pr_3",
-                            "text": "Decision log lives here",
+                            "id": "b_c0828e038173",
+                            "text": "Don't open parallel DMs",
                             "included": true
                           }
                         ],
                         "featured": false,
-                        "ribbonLabel": ""
-                      },
-                      {
-                        "id": "c_stake",
-                        "eyebrow": "STAKEHOLDER",
-                        "title": "#emergency_stakeholders",
-                        "subtitle": "Where you live",
-                        "bullets": [
-                          {
-                            "id": "b_st_1",
-                            "text": "Status updates from L1 Liaison",
-                            "included": true
-                          },
-                          {
-                            "id": "b_st_2",
-                            "text": "30-min cadence during Tier-1",
-                            "included": true
-                          },
-                          {
-                            "id": "b_st_3",
-                            "text": "Post questions here, not in DMs",
-                            "included": true
-                          }
-                        ],
-                        "featured": true,
-                        "ribbonLabel": "Stakeholder home"
+                        "ribbonLabel": "Your home"
                       }
                     ]
                   },
                   "animation": "slide-up",
-                  "animationDelay": 200
+                  "animationDelay": 100
                 }
               ],
-              "notes": "3-channel comparison. Stakeholder channel is featured.",
               "questions": [],
+              "notes": "",
               "backgroundColor": "#FFFFFF",
               "backgroundImage": "",
-              "duration": 100,
+              "duration": 110,
               "transition": "fade"
             },
             {
-              "id": "s_p_3_partners",
-              "title": "The one rule about partners",
+              "id": "s_7082a0d34fde",
+              "title": "When to use what",
               "layout": "content",
               "content": [
                 {
-                  "id": "b_p_3_pa_h",
+                  "id": "b_1e04d5cc7a83",
                   "type": "heading",
-                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Partner communication runs through one bridge</h2>"
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">A quick channel map</h2>"
                 },
                 {
-                  "id": "b_p_3_pa_p",
-                  "type": "text",
-                  "content": "<p style=\"color:#5C5A57;max-width:600px\">When an emergency touches our distribution partners (banks, wealth managers, family offices), the natural instinct is to reach out directly. <strong>Don't.</strong> The response only works because we have one voice.</p>"
-                },
-                {
-                  "id": "b_p_3_pa_callout",
-                  "type": "callout",
-                  "content": "All partner-bound communication flows through <strong>Max</strong> and <strong>Nicolai</strong> in Partnerships. Never DM a partner contact directly during an active incident — even if you've worked with them for years.",
+                  "id": "b_80b8ced9dd45",
+                  "type": "table",
+                  "content": "",
                   "data": {
-                    "calloutStyle": "danger",
-                    "calloutTitle": "Hard rule"
+                    "tableStriped": true,
+                    "tableHeaders": [
+                      "I want to...",
+                      "Where",
+                      "Notes"
+                    ],
+                    "tableRows": [
+                      [
+                        "Report a suspected emergency",
+                        "#emergency_stakeholders",
+                        "L1 will acknowledge within 5 min"
+                      ],
+                      [
+                        "See the latest authoritative status",
+                        "Jira ticket",
+                        "Linked from every Slack update"
+                      ],
+                      [
+                        "Ask a clarifying question",
+                        "#emergency_stakeholders thread",
+                        "Don't DM the response team"
+                      ],
+                      [
+                        "Follow detailed engineering work",
+                        "—",
+                        "Stakeholders don't watch #emergency_product"
+                      ],
+                      [
+                        "Reach a partner about the incident",
+                        "Max + Nicolai",
+                        "Never DM partners directly during a live incident"
+                      ]
+                    ]
                   },
                   "animation": "fade-in"
                 },
                 {
-                  "id": "b_p_3_pa_pq",
-                  "type": "pull-quote",
-                  "content": "",
+                  "id": "b_1f1bbb9e0993",
+                  "type": "callout",
+                  "content": "Stakeholders should follow the Jira ticket and designated Slack updates rather than opening multiple side conversations. Side conversations fragment decision-making and increase confusion.",
                   "data": {
-                    "pqQuote": "Two stakeholders telling the same partner two slightly different stories is how a 90-minute incident becomes a six-month relationship problem.",
-                    "pqName": "Nicolai",
-                    "pqRole": "Head of Partnerships",
-                    "pqOrg": "Moonfare",
-                    "pqAvatarMode": "auto"
-                  },
-                  "animation": "fade-in",
-                  "animationDelay": 300
+                    "calloutStyle": "warning",
+                    "calloutTitle": "The single biggest stakeholder anti-pattern"
+                  }
                 }
               ],
-              "notes": "The single hardest stakeholder rule, paired with a rationale pull-quote.",
               "questions": [],
-              "backgroundColor": "#FAF8F4",
-              "backgroundImage": "",
-              "duration": 90,
-              "transition": "fade"
-            },
-            {
-              "id": "s_p_3_quiz",
-              "title": "Knowledge check — Communication",
-              "layout": "quiz",
-              "content": [
-                {
-                  "id": "b_p_3_qz_h",
-                  "type": "heading",
-                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Comms quick check</h2>"
-                }
-              ],
-              "questions": [
-                {
-                  "id": "q_p_3_1",
-                  "type": "multiple-choice",
-                  "text": "A trusted partner contact pings you directly during an active Tier-1 Emergency. What do you do?",
-                  "options": [
-                    {
-                      "id": "o_q5_1",
-                      "text": "Reply with what you know — they need information fast",
-                      "isCorrect": false
-                    },
-                    {
-                      "id": "o_q5_2",
-                      "text": "Forward to Max and Nicolai and let them respond",
-                      "isCorrect": true
-                    },
-                    {
-                      "id": "o_q5_3",
-                      "text": "Forward to the Command Staff",
-                      "isCorrect": false
-                    },
-                    {
-                      "id": "o_q5_4",
-                      "text": "Wait for the next 30-minute update, then forward that",
-                      "isCorrect": false
-                    }
-                  ],
-                  "matchingPairs": [],
-                  "correctAnswer": "",
-                  "correctOrder": [],
-                  "explanation": "Partner relay always goes through Max and Nicolai. Even with the best intentions, direct replies create message fragmentation that hurts the relationship.",
-                  "points": 1
-                },
-                {
-                  "id": "q_p_3_2",
-                  "type": "true-false",
-                  "text": "If there's nothing new to report, the L1 Liaison can skip the 30-minute update.",
-                  "options": [
-                    {
-                      "id": "o_q6_1",
-                      "text": "True",
-                      "isCorrect": false
-                    },
-                    {
-                      "id": "o_q6_2",
-                      "text": "False",
-                      "isCorrect": true
-                    }
-                  ],
-                  "matchingPairs": [],
-                  "correctAnswer": "",
-                  "correctOrder": [],
-                  "explanation": "Stakeholders read silence as the response stalling. We always post — even if the post is &ldquo;no change since last update.&rdquo;",
-                  "points": 1
-                }
-              ],
-              "notes": "Module 3 quiz.",
+              "notes": "",
               "backgroundColor": "#FFFFFF",
               "backgroundImage": "",
-              "duration": 70,
+              "duration": 90,
               "transition": "fade"
             }
           ]
@@ -928,250 +1603,500 @@
       ]
     },
     {
-      "id": "mod_premium_4",
-      "title": "Module 4 — Lifecycle & Aftermath",
-      "description": "The five phases from detection to post-mortem, and the culture that makes the process work.",
-      "thumbnail": "",
-      "color": "#5B66CF",
+      "id": "mod_7b1f6dff14d8",
+      "title": "Module 5 — What Stakeholders Should Do",
+      "description": "The Do / Do-Not list, with examples.",
+      "thumbnail": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&q=80",
+      "color": "#7B85D9",
       "lessons": [
         {
-          "id": "les_premium_4_1",
-          "title": "From signal to post-mortem",
-          "description": "The full incident arc.",
+          "id": "les_f72616885230",
+          "title": "Stakeholder playbook",
+          "description": "",
           "order": 0,
           "slides": [
             {
-              "id": "s_p_4_timeline",
-              "title": "The five-phase arc",
+              "id": "s_5289c90a7b52",
+              "title": "What stakeholders should do",
               "layout": "content",
               "content": [
                 {
-                  "id": "b_p_4_t_h",
+                  "id": "b_c1389df5398a",
                   "type": "heading",
-                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Every emergency runs the same arc</h2>"
+                  "content": "<h1 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F;font-size:2.4rem\">Do. Don't. Repeat.</h1>"
                 },
                 {
-                  "id": "b_p_4_t_p",
+                  "id": "b_1177ebf97ff3",
                   "type": "text",
-                  "content": "<p style=\"color:#5C5A57;max-width:560px\">From the first signal to the published post-mortem. Average wall-clock time for a contained Tier-1: <strong>2&ndash;6 hours</strong> live, <strong>10 working days</strong> to written post-mortem.</p>"
-                },
-                {
-                  "id": "b_p_4_t_tl",
-                  "type": "timeline",
-                  "content": "",
-                  "data": {
-                    "timelineEvents": [
-                      {
-                        "id": "tl_1",
-                        "title": "Detection",
-                        "date": "T+0",
-                        "description": "Signal arrives via monitoring, oncall page, or stakeholder report. L1 Liaison acknowledges within 5 minutes."
-                      },
-                      {
-                        "id": "tl_2",
-                        "title": "Triage & Classification",
-                        "date": "T+15 min",
-                        "description": "Severity tier assigned. If Tier-1, Command Staff and stakeholder channel are activated."
-                      },
-                      {
-                        "id": "tl_3",
-                        "title": "Active Response",
-                        "date": "T+15 min onwards",
-                        "description": "Senior SME drives the fix. L1 Liaison posts every 30 minutes. Partner relay activates if needed."
-                      },
-                      {
-                        "id": "tl_4",
-                        "title": "Resolution",
-                        "date": "T+2 to T+6 hr (Tier-1 avg)",
-                        "description": "Fix verified in production, monitoring confirms recovery, stakeholder channel gets the all-clear."
-                      },
-                      {
-                        "id": "tl_5",
-                        "title": "Post-mortem",
-                        "date": "T+10 working days",
-                        "description": "Written post-mortem published. Blameless format. Linked from the Confluence Emergencies index."
-                      }
-                    ]
-                  },
-                  "animation": "fade-in",
-                  "animationDelay": 200
+                  "content": "<p style=\"color:#5C5A57\">A short list of habits that separate helpful stakeholders from accidental disrupters.</p>"
                 }
               ],
-              "notes": "Full incident lifecycle as a timeline block.",
               "questions": [],
-              "backgroundColor": "#FAF8F4",
-              "backgroundImage": "",
-              "duration": 110,
-              "transition": "fade"
-            },
-            {
-              "id": "s_p_4_culture",
-              "title": "Why post-mortems are blameless",
-              "layout": "content",
-              "content": [
-                {
-                  "id": "b_p_4_c_pq",
-                  "type": "pull-quote",
-                  "content": "",
-                  "data": {
-                    "pqQuote": "Trust is built in seconds. It's lost in minutes. Our post-mortems are blameless because the next emergency is more likely to be caught by the engineer who already learned the hard way — not the one who's hiding from the fallout.",
-                    "pqName": "Andrew",
-                    "pqRole": "Co-Founder & CEO · Command Staff",
-                    "pqOrg": "Moonfare",
-                    "pqAvatarMode": "auto"
-                  },
-                  "animation": "fade-in"
-                }
-              ],
-              "notes": "Closing pull-quote on blameless culture.",
-              "questions": [],
+              "notes": "",
               "backgroundColor": "#FFFFFF",
               "backgroundImage": "",
               "duration": 60,
               "transition": "fade"
             },
             {
-              "id": "s_p_4_recap",
-              "title": "Five things to remember",
+              "id": "s_d72be6b164e9",
+              "title": "Do · Do not",
               "layout": "content",
               "content": [
                 {
-                  "id": "b_p_4_r_h",
-                  "type": "heading",
-                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">If you remember nothing else…</h2>"
-                },
-                {
-                  "id": "b_p_4_r_chk",
-                  "type": "checklist",
+                  "id": "b_e0478a20eb9d",
+                  "type": "comparison",
                   "content": "",
                   "data": {
-                    "checklistItems": [
+                    "cmpEyebrow": "Stakeholder behaviours",
+                    "cmpTitle": "Two columns. Strong opinions on each.",
+                    "cmpColumns": [
                       {
-                        "id": "ch_1",
-                        "title": "100% users · €100k impact · data breach → Tier-1 Emergency",
-                        "description": ""
+                        "id": "cmp_d4579b2688d6",
+                        "eyebrow": "DO",
+                        "title": "These help",
+                        "subtitle": "Repeat them",
+                        "bullets": [
+                          {
+                            "id": "b_3ad2ffac5d0e",
+                            "text": "Raise issues fast when impact is suspected",
+                            "included": true
+                          },
+                          {
+                            "id": "b_a730c5427d50",
+                            "text": "Share concrete examples (who, what, when)",
+                            "included": true
+                          },
+                          {
+                            "id": "b_689a51852f01",
+                            "text": "Follow the official Jira ticket",
+                            "included": true
+                          },
+                          {
+                            "id": "b_1acdc0803d4b",
+                            "text": "Escalate business impact clearly",
+                            "included": true
+                          },
+                          {
+                            "id": "b_1e027d37b868",
+                            "text": "Stay available for clarifying questions",
+                            "included": true
+                          }
+                        ],
+                        "featured": true,
+                        "ribbonLabel": "Yes"
                       },
                       {
-                        "id": "ch_2",
-                        "title": "L1 Liaison → Senior SME → Command Staff is the escalation ladder",
-                        "description": ""
-                      },
-                      {
-                        "id": "ch_3",
-                        "title": "Updates land in #emergency_stakeholders every 30 minutes during Tier-1",
-                        "description": ""
-                      },
-                      {
-                        "id": "ch_4",
-                        "title": "Partner contact only via Max + Nicolai — never direct",
-                        "description": ""
-                      },
-                      {
-                        "id": "ch_5",
-                        "title": "Post-mortems are blameless and published within 10 working days",
-                        "description": ""
+                        "id": "cmp_f6b97efb0d0e",
+                        "eyebrow": "DO NOT",
+                        "title": "These hurt",
+                        "subtitle": "Avoid even with good intent",
+                        "bullets": [
+                          {
+                            "id": "b_eea83f5da256",
+                            "text": "Attempt ad-hoc fixes outside the process",
+                            "included": false
+                          },
+                          {
+                            "id": "b_fbc2f4c8638e",
+                            "text": "Resend affected data/documents on your own",
+                            "included": false
+                          },
+                          {
+                            "id": "b_16d9ebed7dc8",
+                            "text": "Start duplicate tickets or parallel threads",
+                            "included": false
+                          },
+                          {
+                            "id": "b_c19a48e3fe2d",
+                            "text": "Declare resolution without L1 confirmation",
+                            "included": false
+                          },
+                          {
+                            "id": "b_df75fe5f6ff3",
+                            "text": "DM partners about the incident directly",
+                            "included": false
+                          }
+                        ],
+                        "featured": false,
+                        "ribbonLabel": "No"
                       }
                     ]
                   },
-                  "animation": "fade-in",
-                  "animationDelay": 200
+                  "animation": "slide-up"
                 }
               ],
-              "notes": "Five-point recap before the final quiz.",
               "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 120,
+              "transition": "fade"
+            },
+            {
+              "id": "s_ad32baae5182",
+              "title": "What a great escalation looks like",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Specific. Scoped. Time-stamped.</h2>"
+                },
+                {
+                  "id": "b_977376afad7c",
+                  "type": "image-right",
+                  "content": "",
+                  "data": {
+                    "layoutText": "<p style=\"font-size:0.95rem;color:#0A0C3F;line-height:1.6\"><strong>Bad:</strong></p><p style=\"font-size:0.9rem;color:#5C5A57;line-height:1.5;font-style:italic;margin-bottom:1rem\">\"I think a few investors can't sign.\"</p><p style=\"font-size:0.95rem;color:#0A0C3F;line-height:1.6\"><strong>Good:</strong></p><p style=\"font-size:0.9rem;color:#0A0C3F;line-height:1.5;font-style:italic\"><b>4 investors at Bank X</b>, all on the <b>Sign-Agreement step</b>, <b>18:22–18:34 CET</b>. Three retried twice. Bank RM aware.</p>",
+                    "layoutImages": [
+                      {
+                        "url": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&q=80",
+                        "caption": "",
+                        "alt": "Stakeholder reporting an issue"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "b_ce2938baf1e5",
+                  "type": "callout",
+                  "content": "Specifics save 20 minutes of back-and-forth. Specifics let the L1 classify in one read. Aim for that quality every time.",
+                  "data": {
+                    "calloutStyle": "success",
+                    "calloutTitle": "The escalation contract"
+                  }
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 110,
+              "transition": "fade"
+            },
+            {
+              "id": "s_27cd8d5dfb09",
+              "title": "Knowledge check",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Module 5 check</h2>"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_6f6f7b9d435d",
+                  "type": "multiple-choice",
+                  "text": "Where should stakeholders follow official emergency updates?",
+                  "options": [
+                    {
+                      "id": "o_a5c1f3f010e2",
+                      "text": "Private DMs",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_cb8d577ecfa0",
+                      "text": "Jira ticket and designated emergency channels",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_c484632192d9",
+                      "text": "Personal notes",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_9aef785610e0",
+                      "text": "Email only",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Jira is the source of truth; #emergency_stakeholders mirrors key updates. DMs and email fragment the response.",
+                  "points": 1
+                },
+                {
+                  "id": "q_5e1912c44aaf",
+                  "type": "true-false",
+                  "text": "If a stakeholder has technical access and can probably fix it, they should do so to save time.",
+                  "options": [
+                    {
+                      "id": "o_d693880f0758",
+                      "text": "True",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_4b0728099f29",
+                      "text": "False",
+                      "isCorrect": true
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Never. Independent action masks root cause and duplicates work. Even technically-capable stakeholders should escalate first.",
+                  "points": 1
+                },
+                {
+                  "id": "q_0ae7ba170778",
+                  "type": "open-ended",
+                  "text": "What information should a stakeholder provide when escalating an emergency?",
+                  "options": [],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Specifics: who is affected (count, segment, identifying detail), what is broken (the exact action or surface), when it started (timestamp), how it was reported (so the L1 can verify).",
+                  "points": 1
+                }
+              ],
+              "notes": "",
               "backgroundColor": "#FAF8F4",
+              "backgroundImage": "",
+              "duration": 120,
+              "transition": "fade"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mod_36604411a85d",
+      "title": "Module 6 — Special Case: Data Breach",
+      "description": "When data is at stake, the rules tighten. Stop, contain, escalate.",
+      "thumbnail": "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1200&q=80",
+      "color": "#A41B1B",
+      "lessons": [
+        {
+          "id": "les_fc8f06bc2898",
+          "title": "Breach response",
+          "description": "",
+          "order": 0,
+          "slides": [
+            {
+              "id": "s_6b3b05645945",
+              "title": "Special case — Data breach",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_c1389df5398a",
+                  "type": "heading",
+                  "content": "<h1 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F;font-size:2.4rem\">When data is at stake</h1>"
+                },
+                {
+                  "id": "b_8d9d4c33beb9",
+                  "type": "text",
+                  "content": "<p style=\"color:#5C5A57\">A different decision tree, with one strict rule about independent action.</p>"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_21bfb1500e0c",
+              "title": "Product or Compliance?",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Where does the issue route?</h2>"
+                },
+                {
+                  "id": "b_61141cc09d3a",
+                  "type": "image-left",
+                  "content": "",
+                  "data": {
+                    "layoutText": "<p style=\"font-size:0.95rem;color:#0A0C3F;line-height:1.6\"><strong>Through Product</strong> — if the issue happened in the portal or Moonfare systems, or Engineering needs to investigate or fix something.</p><p style=\"font-size:0.95rem;color:#0A0C3F;line-height:1.6;margin-top:1rem\"><strong>Direct to Compliance</strong> — if it's purely a manual or process issue, no system involvement.</p><p style=\"font-size:0.85rem;color:#5C5A57;line-height:1.5;margin-top:1rem;font-style:italic\">When in doubt: assume Product. The L1 will hand off to Compliance if it doesn't involve systems.</p>",
+                    "layoutImages": [
+                      {
+                        "url": "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&q=80",
+                        "caption": "",
+                        "alt": "Data routing decision"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 110,
+              "transition": "fade"
+            },
+            {
+              "id": "s_dd34ede32c59",
+              "title": "If Product must be involved",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Five immediate actions</h2>"
+                },
+                {
+                  "id": "b_08954242c947",
+                  "type": "checklist",
+                  "content": "",
+                  "data": {
+                    "checklistTitle": "Step by step",
+                    "checklistItems": [
+                      {
+                        "id": "ch_edbab45572c7",
+                        "title": "Stop and contain the issue",
+                        "description": "Don't propagate. Don't resend. Lock down access if you can."
+                      },
+                      {
+                        "id": "ch_fbfba2e45c20",
+                        "title": "Create a Product emergency ticket",
+                        "description": "Use the standard template. Tag it as breach."
+                      },
+                      {
+                        "id": "ch_7a6f150b8309",
+                        "title": "Notify in Slack",
+                        "description": "#emergency_stakeholders and follow the L1 from there."
+                      },
+                      {
+                        "id": "ch_3dfe563103ab",
+                        "title": "Stay available for questions",
+                        "description": "Compliance and Security may need follow-ups quickly."
+                      },
+                      {
+                        "id": "ch_2283335d8d12",
+                        "title": "Do not independently fix or resend",
+                        "description": "This is the firmest rule. Independent action can compound the breach."
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "b_e0faf977e0c1",
+                  "type": "callout",
+                  "content": "Even if you know exactly how to fix it. Even if it's small. Even if you're trying to help. Stop. Contain. Escalate. The L1 + Compliance + Security will run the playbook.",
+                  "data": {
+                    "calloutStyle": "danger",
+                    "calloutTitle": "Hard rule"
+                  }
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 90,
+              "transition": "fade"
+            },
+            {
+              "id": "s_44f53fa23fd3",
+              "title": "Required ticket details",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">What to include from minute one</h2>"
+                },
+                {
+                  "id": "b_0be6004496ea",
+                  "type": "accordion",
+                  "content": "",
+                  "data": {
+                    "accordionItems": [
+                      {
+                        "id": "acc_c4ca4238a0b9",
+                        "title": "Immediate actions taken",
+                        "content": "<p>Anything you did to contain the issue (e.g. revoked a session, removed a document from a portal, paused a feed). Document <em>before</em> the response team needs it.</p>"
+                      },
+                      {
+                        "id": "acc_c81e728d9d4c",
+                        "title": "Suspected classification",
+                        "content": "<p>What kind of breach do you suspect? Document misrouting? Cross-tenant data leak? Unauthorised access? It's OK to be uncertain — just say so.</p>"
+                      },
+                      {
+                        "id": "acc_eccbc87e4b5c",
+                        "title": "Links and attachments",
+                        "content": "<p>Email screenshots (with sensitive info redacted), Jira ticket links, document IDs, time-stamps. The more concrete, the faster Compliance can assess.</p>"
+                      },
+                      {
+                        "id": "acc_a87ff679a2f3",
+                        "title": "Who knows",
+                        "content": "<p>List who you've already told, including external parties. This shapes Compliance's notification plan.</p>"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
               "backgroundImage": "",
               "duration": 80,
               "transition": "fade"
             },
             {
-              "id": "s_p_4_quiz",
-              "title": "Final assessment",
+              "id": "s_424d0e94dc8f",
+              "title": "Knowledge check",
               "layout": "quiz",
               "content": [
                 {
-                  "id": "b_p_4_qz_h",
+                  "id": "b_1e04d5cc7a83",
                   "type": "heading",
-                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Final assessment</h2>"
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Module 6 check</h2>"
                 }
               ],
               "questions": [
                 {
-                  "id": "q_p_4_1",
+                  "id": "q_4180f8d569a2",
                   "type": "multiple-choice",
-                  "text": "Within how long should the L1 Liaison acknowledge a new signal?",
+                  "text": "In a suspected product-related data breach, what should stakeholders avoid?",
                   "options": [
                     {
-                      "id": "o_q7_1",
-                      "text": "Within 1 minute",
+                      "id": "o_c2aa49a04b08",
+                      "text": "Creating a ticket",
                       "isCorrect": false
                     },
                     {
-                      "id": "o_q7_2",
-                      "text": "Within 5 minutes",
+                      "id": "o_6e657ef97995",
+                      "text": "Notifying Product",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_9905f591315d",
+                      "text": "Independently fixing or resending items",
                       "isCorrect": true
                     },
                     {
-                      "id": "o_q7_3",
-                      "text": "Within 30 minutes",
-                      "isCorrect": false
-                    },
-                    {
-                      "id": "o_q7_4",
-                      "text": "Whenever possible",
+                      "id": "o_282c11f0c3bb",
+                      "text": "Sharing initial facts",
                       "isCorrect": false
                     }
                   ],
                   "matchingPairs": [],
                   "correctAnswer": "",
                   "correctOrder": [],
-                  "explanation": "Acknowledgement within 5 minutes is the SLA. The 30-minute number is the ongoing update cadence — different rule.",
+                  "explanation": "Independent fixes or resends can compound the breach. Stop, contain, escalate — that's it.",
                   "points": 1
                 },
                 {
-                  "id": "q_p_4_2",
-                  "type": "multiple-choice",
-                  "text": "What is the standard target for publishing a written post-mortem?",
-                  "options": [
-                    {
-                      "id": "o_q8_1",
-                      "text": "Within 24 hours",
-                      "isCorrect": false
-                    },
-                    {
-                      "id": "o_q8_2",
-                      "text": "Within 5 working days",
-                      "isCorrect": false
-                    },
-                    {
-                      "id": "o_q8_3",
-                      "text": "Within 10 working days",
-                      "isCorrect": true
-                    },
-                    {
-                      "id": "o_q8_4",
-                      "text": "Within the next quarter",
-                      "isCorrect": false
-                    }
-                  ],
-                  "matchingPairs": [],
-                  "correctAnswer": "",
-                  "correctOrder": [],
-                  "explanation": "10 working days. Published in Confluence, linked from the Emergencies index, blameless.",
-                  "points": 1
-                },
-                {
-                  "id": "q_p_4_3",
+                  "id": "q_905e3aaa22d5",
                   "type": "true-false",
-                  "text": "Moonfare uses blameless post-mortems because hiding mistakes makes the next emergency harder to catch.",
+                  "text": "If a data issue is purely manual/process and doesn't involve Moonfare systems, it goes directly to Compliance, not Product.",
                   "options": [
                     {
-                      "id": "o_q9_1",
+                      "id": "o_cfca31d05682",
                       "text": "True",
                       "isCorrect": true
                     },
                     {
-                      "id": "o_q9_2",
+                      "id": "o_757fe3b8a325",
                       "text": "False",
                       "isCorrect": false
                     }
@@ -1179,14 +2104,544 @@
                   "matchingPairs": [],
                   "correctAnswer": "",
                   "correctOrder": [],
-                  "explanation": "Exactly. Blameless culture is what makes the engineer who tripped the wire the most likely person to catch the next one.",
+                  "explanation": "Per the Data Breach & Misrouted Documents procedure. Product is only the entry point when systems are involved.",
                   "points": 1
                 }
               ],
-              "notes": "Final assessment — 3 questions covering lifecycle and culture.",
+              "notes": "",
+              "backgroundColor": "#FAF8F4",
+              "backgroundImage": "",
+              "duration": 80,
+              "transition": "fade"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mod_0449904fbf32",
+      "title": "Module 7 — After the Incident",
+      "description": "The post-mortem and the culture that makes it work.",
+      "thumbnail": "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1200&q=80",
+      "color": "#26815C",
+      "lessons": [
+        {
+          "id": "les_8118b6cd041f",
+          "title": "Post-mortem",
+          "description": "",
+          "order": 0,
+          "slides": [
+            {
+              "id": "s_365b9ecc13f0",
+              "title": "After the incident",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_c1389df5398a",
+                  "type": "heading",
+                  "content": "<h1 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F;font-size:2.4rem\">The post-mortem</h1>"
+                },
+                {
+                  "id": "b_a713a86be135",
+                  "type": "text",
+                  "content": "<p style=\"color:#5C5A57\">Resolution is not the end. The post-mortem is where the next incident gets prevented.</p>"
+                }
+              ],
+              "questions": [],
+              "notes": "",
               "backgroundColor": "#FFFFFF",
               "backgroundImage": "",
-              "duration": 90,
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_4b1a32f98b85",
+              "title": "Why we do it blameless",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_c5023a953325",
+                  "type": "pull-quote",
+                  "content": "",
+                  "data": {
+                    "pqQuote": "Trust is built in seconds. It's lost in minutes. Our post-mortems are blameless because the next emergency is more likely to be caught by the engineer who already learned the hard way — not the one who's hiding from the fallout.",
+                    "pqName": "Andrew",
+                    "pqRole": "Co-Founder & CEO",
+                    "pqOrg": "Moonfare",
+                    "pqAvatarMode": "auto"
+                  }
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_090c9dbfcdab",
+              "title": "The post-incident arc",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">From resolution to prevention</h2>"
+                },
+                {
+                  "id": "b_10e2fdd237e2",
+                  "type": "timeline",
+                  "content": "",
+                  "data": {
+                    "timelineEvents": [
+                      {
+                        "id": "tl_ec6ef230f182",
+                        "title": "Resolution Confirmed",
+                        "date": "T+resolved",
+                        "description": "L1 sends the all-clear on #emergency_stakeholders. Jira ticket closes.",
+                        "icon": ""
+                      },
+                      {
+                        "id": "tl_1d665b9b1467",
+                        "title": "Stakeholder Email",
+                        "date": "T+1 hr",
+                        "description": "Summary email to all stakeholders with timeline, impact, and root cause (preliminary).",
+                        "icon": ""
+                      },
+                      {
+                        "id": "tl_7bc3ca687694",
+                        "title": "Post-Mortem Doc Created",
+                        "date": "T+24 hr",
+                        "description": "L1 starts the document. SMEs fill in technical detail. Findings, action items, owners.",
+                        "icon": ""
+                      },
+                      {
+                        "id": "tl_13207e3d5722",
+                        "title": "Post-Mortem Review",
+                        "date": "T+5 working days",
+                        "description": "Open meeting. All stakeholders welcome. Blameless format — what failed, what worked, what changes.",
+                        "icon": ""
+                      },
+                      {
+                        "id": "tl_ed92eff813a0",
+                        "title": "Post-Mortem Published",
+                        "date": "T+10 working days",
+                        "description": "Document linked from the Confluence Emergencies index. Action items tracked separately.",
+                        "icon": ""
+                      }
+                    ]
+                  }
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 110,
+              "transition": "fade"
+            },
+            {
+              "id": "s_4fa28918094c",
+              "title": "What stays, what changes",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">After every emergency, four areas get reviewed</h2>"
+                },
+                {
+                  "id": "b_f41fb67ffe10",
+                  "type": "two-images",
+                  "content": "",
+                  "data": {
+                    "layoutImages": [
+                      {
+                        "url": "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1200&q=80",
+                        "caption": "Recovery",
+                        "alt": "After the storm"
+                      },
+                      {
+                        "url": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&q=80",
+                        "caption": "Learning",
+                        "alt": "Team review"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "b_c5ce7db40c9a",
+                  "type": "checklist",
+                  "content": "",
+                  "data": {
+                    "checklistTitle": "Always reviewed",
+                    "checklistItems": [
+                      {
+                        "id": "ch_7c92cf1eee8d",
+                        "title": "Process",
+                        "description": "Were the right people in the room? Did the cadence work?"
+                      },
+                      {
+                        "id": "ch_d279186428a7",
+                        "title": "Tooling",
+                        "description": "Did monitoring catch it? Did the escalation tooling work?"
+                      },
+                      {
+                        "id": "ch_9d3e622df914",
+                        "title": "Communication",
+                        "description": "Were updates clear? Did stakeholders feel informed?"
+                      },
+                      {
+                        "id": "ch_44379f2b1a56",
+                        "title": "Prevention",
+                        "description": "What change ships now to prevent recurrence?"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "b_bf8e8f930720",
+                  "type": "callout",
+                  "content": "Mock emergencies and refresher trainings happen on a regular cadence. Stakeholders are part of these — your honest feedback is what improves the process.",
+                  "data": {
+                    "calloutStyle": "info",
+                    "calloutTitle": "Refreshers and drills"
+                  }
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 80,
+              "transition": "fade"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mod_980b79c2a71b",
+      "title": "Module 8 — Final Assessment & Quick Reference",
+      "description": "Comprehensive check + a printable quick-reference card.",
+      "thumbnail": "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1200&q=80",
+      "color": "#0A0C3F",
+      "lessons": [
+        {
+          "id": "les_b01ce4bfae1e",
+          "title": "Assessment",
+          "description": "",
+          "order": 0,
+          "slides": [
+            {
+              "id": "s_0ab6e6539a26",
+              "title": "Final assessment",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_c1389df5398a",
+                  "type": "heading",
+                  "content": "<h1 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F;font-size:2.4rem\">Pull it all together</h1>"
+                },
+                {
+                  "id": "b_9bf62be63483",
+                  "type": "text",
+                  "content": "<p style=\"color:#5C5A57\">Eight questions across all seven modules. Pass mark: 70%.</p>"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_81c8ff4d0311",
+              "title": "Comprehensive assessment",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">Final assessment</h2>"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_9a3735394671",
+                  "type": "multiple-choice",
+                  "text": "Which of the following is most likely to qualify as a product emergency?",
+                  "options": [
+                    {
+                      "id": "o_05171e2d9d2c",
+                      "text": "A typo on a non-critical page",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_ff2b4f0bf7be",
+                      "text": "A critical investor journey is broken",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_7a400f7c49ab",
+                      "text": "One internal report is delayed by five minutes",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_dae516c24c55",
+                      "text": "A feature request is blocked",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Confluence: Emergency Playbook — broken critical journeys are textbook Tier-1.",
+                  "points": 1
+                },
+                {
+                  "id": "q_e8df3ad2943a",
+                  "type": "multiple-choice",
+                  "text": "Where should stakeholders follow official emergency updates?",
+                  "options": [
+                    {
+                      "id": "o_67bcad5d57ab",
+                      "text": "Private DMs",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_478188643e1b",
+                      "text": "Jira ticket and designated emergency channels",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_d58832c4d09c",
+                      "text": "Personal notes",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_53494ea4186a",
+                      "text": "Email only",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Confluence: Emergency Playbook — Jira is source of truth, Slack is mirror.",
+                  "points": 1
+                },
+                {
+                  "id": "q_f5327f00e00a",
+                  "type": "multiple-choice",
+                  "text": "How often should updates be posted during an active emergency?",
+                  "options": [
+                    {
+                      "id": "o_6f58118e3fe2",
+                      "text": "Every 4 hours",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_2a3afc9f6c1d",
+                      "text": "Once per day",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_d94919216590",
+                      "text": "Every 30 minutes",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_7331b86b3e6e",
+                      "text": "Only when asked",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "30-minute cadence is non-negotiable.",
+                  "points": 1
+                },
+                {
+                  "id": "q_cb27b0ed62b4",
+                  "type": "multiple-choice",
+                  "text": "Who is primarily responsible for coordinating communication and managing the emergency process?",
+                  "options": [
+                    {
+                      "id": "o_705fb473de81",
+                      "text": "Any stakeholder",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_065ce72a9ca1",
+                      "text": "L1 / Incident Manager / Product Ops",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_f98c9dbdd7fc",
+                      "text": "Finance",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_b0c349dc64c9",
+                      "text": "Compliance only",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "L1 owns the process from intake through post-mortem.",
+                  "points": 1
+                },
+                {
+                  "id": "q_e0fcc17996e1",
+                  "type": "multiple-choice",
+                  "text": "In a suspected product-related data breach, what should stakeholders avoid?",
+                  "options": [
+                    {
+                      "id": "o_cfb998d29e78",
+                      "text": "Creating a ticket",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_c1e510f473dd",
+                      "text": "Notifying Product",
+                      "isCorrect": false
+                    },
+                    {
+                      "id": "o_eed775304378",
+                      "text": "Independently fixing or resending items",
+                      "isCorrect": true
+                    },
+                    {
+                      "id": "o_23e1aa4c55f5",
+                      "text": "Sharing initial facts",
+                      "isCorrect": false
+                    }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Stop. Contain. Escalate. No independent action.",
+                  "points": 1
+                },
+                {
+                  "id": "q_3c727e130739",
+                  "type": "open-ended",
+                  "text": "Name 3 examples of incidents that may qualify as a product emergency.",
+                  "options": [],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Acceptable answers include: app crash, key flow not functional, backend service failure, third-party outage affecting product, database outage, data breach, ≥50% users affected, ≤20% can access a critical function.",
+                  "points": 1
+                },
+                {
+                  "id": "q_a78e36149a50",
+                  "type": "open-ended",
+                  "text": "What information should a stakeholder provide when escalating an emergency?",
+                  "options": [],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Who is affected (count, segment), what is broken (exact action/surface), when it started (timestamp), and how it was reported. Specificity speeds the L1's classification.",
+                  "points": 1
+                },
+                {
+                  "id": "q_05589e69ab6b",
+                  "type": "open-ended",
+                  "text": "What happens after an emergency is resolved?",
+                  "options": [],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Stakeholder email + closed Jira ticket + post-mortem document + blameless review meeting within ~5 working days, doc published within ~10 working days. Process/tooling/comms/prevention reviewed.",
+                  "points": 1
+                }
+              ],
+              "notes": "",
+              "backgroundColor": "#FAF8F4",
+              "backgroundImage": "",
+              "duration": 300,
+              "transition": "fade"
+            },
+            {
+              "id": "s_02ad9836591f",
+              "title": "Quick reference card",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_1e04d5cc7a83",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:Fraunces,serif;font-weight:400;color:#0A0C3F\">If you suspect a product emergency</h2>"
+                },
+                {
+                  "id": "b_960db39cadb5",
+                  "type": "checklist",
+                  "content": "",
+                  "data": {
+                    "checklistTitle": "Print this. Pin this.",
+                    "checklistItems": [
+                      {
+                        "id": "ch_bd19836ddb62",
+                        "title": "Escalate immediately",
+                        "description": "Speed beats certainty. False positives downgrade easily."
+                      },
+                      {
+                        "id": "ch_3667f6a0c974",
+                        "title": "Ensure a Jira emergency ticket exists",
+                        "description": "Single source of truth from minute one."
+                      },
+                      {
+                        "id": "ch_1779cf3aa50c",
+                        "title": "Follow the official emergency channel",
+                        "description": "#emergency_stakeholders for status."
+                      },
+                      {
+                        "id": "ch_6e1fcd704528",
+                        "title": "Provide business impact details",
+                        "description": "Who, what, when. Specifics."
+                      },
+                      {
+                        "id": "ch_74ce2e1a498f",
+                        "title": "Wait for coordinated updates from the incident owner",
+                        "description": "Don't open parallel threads."
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "b_3fe0be164cec",
+                  "type": "pull-quote",
+                  "content": "",
+                  "data": {
+                    "pqQuote": "Fast escalation. Single source of truth. Clear ownership. Disciplined communication. That's the entire playbook in one line.",
+                    "pqName": "Hasan",
+                    "pqRole": "Product Operations · L1 Liaison",
+                    "pqOrg": "Moonfare",
+                    "pqAvatarMode": "auto"
+                  }
+                },
+                {
+                  "id": "b_635bd9bd373d",
+                  "type": "divider",
+                  "content": ""
+                },
+                {
+                  "id": "b_d33337ca13d8",
+                  "type": "text",
+                  "content": "<p style=\"text-align:center;color:#5C5A57;font-size:0.9rem\">Source references: Emergency Playbook · Mobile Emergency Process · Data Breach & Misrouted Documents Procedure · Emergency Refresher · Weekly Stakeholder Meeting · Weekly Prod Ops Sync</p>"
+                }
+              ],
+              "questions": [],
+              "notes": "",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 80,
               "transition": "fade"
             }
           ]
