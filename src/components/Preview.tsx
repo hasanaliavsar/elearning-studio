@@ -562,54 +562,130 @@ export function CoursePreview() {
             </div>
           </div>
 
-          {/* Completion Certificate */}
-          {course.settings.showCertificate && passed && (
-            <div className="mt-8 max-w-lg w-full">
-              <div
-                className="rounded-2xl p-1"
-                style={{
-                  background: 'transparent',
-                }}
-              >
-                <div className="bg-white rounded-xl p-8 text-center relative overflow-hidden">
-                  {/* Decorative corner accents */}
-                  <div className="absolute top-3 left-3 w-8 h-8 border-t-2 border-l-2 border-amber-400 rounded-tl-lg" />
-                  <div className="absolute top-3 right-3 w-8 h-8 border-t-2 border-r-2 border-amber-400 rounded-tr-lg" />
-                  <div className="absolute bottom-3 left-3 w-8 h-8 border-b-2 border-l-2 border-amber-400 rounded-bl-lg" />
-                  <div className="absolute bottom-3 right-3 w-8 h-8 border-b-2 border-r-2 border-amber-400 rounded-br-lg" />
+          {/* Completion Certificate — Moonfare premium (sketch #6) */}
+          {course.settings.showCertificate && passed && (() => {
+            // Bindings (preserved from original): course.title is the program,
+            // date is today, certificateOrg doubles as the recipient name when set.
+            const recipientName = course.settings.certificateOrg || 'Course Participant';
+            const programTitle = course.title;
+            const issuedDate = new Date();
+            const dateStr = issuedDate.toLocaleDateString('en-GB', {
+              day: 'numeric', month: 'long', year: 'numeric'
+            });
+            // Stable certificate number derived from course id + year
+            const courseKey = (course.id || course.title || 'course');
+            let h = 0;
+            for (let i = 0; i < courseKey.length; i++) {
+              h = ((h << 5) - h + courseKey.charCodeAt(i)) | 0;
+            }
+            const certificateNo = `MF-${issuedDate.getFullYear()}-${String(Math.abs(h) % 99999).padStart(5, '0')}`;
+            const eyebrow = (course.settings.certificateTitle || 'Certificate of Completion').toUpperCase();
 
-                  <Award className="w-12 h-12 text-amber-500 mx-auto mb-3" />
-                  <h3 className="text-xl font-bold text-gray-900 mb-1">
-                    {course.settings.certificateTitle || 'Certificate of Completion'}
-                  </h3>
-                  <div className="w-16 h-0.5 bg-amber-400 mx-auto my-3" />
-                  <p className="text-sm text-gray-500 mb-2">This certifies that</p>
-                  <p className="text-lg font-semibold mb-2" style={{ color: '#0A0C3F' }}>{course.title}</p>
-                  <p className="text-sm text-gray-500 mb-4">has been successfully completed</p>
-                  <div className="flex justify-center gap-8 text-sm text-gray-600 mb-4">
-                    <div>
-                      <p className="font-semibold">{scorePercent}%</p>
-                      <p className="text-xs text-gray-400">Score</p>
+            return (
+              <div className="mt-8 w-full flex flex-col items-center">
+                <div
+                  style={{
+                    width: 760, height: 540, background: '#FFFFFF', position: 'relative',
+                    boxShadow: '0 20px 60px -20px rgba(16,18,88,0.25), 0 0 0 1px rgba(16,18,88,0.06)',
+                    overflow: 'hidden', fontFamily: "'Inter', system-ui, sans-serif", color: '#1A1A1F',
+                  }}
+                >
+                  {/* Sand + ivory double frame */}
+                  <div style={{ position: 'absolute', inset: 16, border: '1px solid #D4A574', pointerEvents: 'none' }} />
+                  <div style={{ position: 'absolute', inset: 22, border: '1px solid #E8E5DE', pointerEvents: 'none' }} />
+
+                  {/* Watermark monogram, bottom-right */}
+                  <img
+                    src={`${import.meta.env.BASE_URL}moonfare-monogram-blue.png`}
+                    alt=""
+                    aria-hidden="true"
+                    style={{ position: 'absolute', right: 40, bottom: 40, height: 200, opacity: 0.04 }}
+                  />
+
+                  <div style={{ position: 'absolute', inset: 60, display: 'flex', flexDirection: 'column' }}>
+                    {/* Header: wordmark · cert number */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <img src={`${import.meta.env.BASE_URL}moonfare-wordmark-blue.png`} alt="Moonfare" style={{ height: 22 }} />
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontSize: 9, letterSpacing: '0.15em', color: '#5C5A57', fontWeight: 600 }}>
+                          CERTIFICATE NO.
+                        </div>
+                        <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 14, color: '#0A0C3F', marginTop: 2 }}>
+                          {certificateNo}
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-semibold">{new Date().toLocaleDateString()}</p>
-                      <p className="text-xs text-gray-400">Date</p>
+
+                    {/* Center stack */}
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
+                      <div style={{ fontSize: 11, letterSpacing: '0.2em', color: '#D4A574', fontWeight: 600 }}>
+                        {eyebrow}
+                      </div>
+                      <div style={{ marginTop: 24, fontSize: 13, color: '#5C5A57' }}>This is to certify that</div>
+                      <div style={{
+                        fontFamily: "'Fraunces', Georgia, serif",
+                        fontSize: 44, fontWeight: 400, color: '#0A0C3F',
+                        margin: '12px 0', letterSpacing: '-0.01em', fontStyle: 'italic',
+                        textWrap: 'balance' as any,
+                      }}>
+                        {recipientName}
+                      </div>
+                      <div style={{ fontSize: 13, color: '#5C5A57', lineHeight: 1.6, maxWidth: 480, alignSelf: 'center' }}>
+                        has successfully completed the Moonfare program
+                      </div>
+                      <div style={{
+                        fontFamily: "'Fraunces', Georgia, serif",
+                        fontSize: 22, color: '#171D97', fontWeight: 500, marginTop: 8,
+                        textWrap: 'balance' as any,
+                      }}>
+                        {programTitle}
+                      </div>
+                    </div>
+
+                    {/* Footer: signatory · monogram seal · date */}
+                    <div style={{
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
+                      borderTop: '1px solid #E8E5DE', paddingTop: 16,
+                    }}>
+                      <div>
+                        <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 18, color: '#0A0C3F', fontStyle: 'italic' }}>
+                          Steffen Pauls
+                        </div>
+                        <div style={{ fontSize: 9, color: '#5C5A57', letterSpacing: '0.08em', marginTop: 2 }}>
+                          CO-FOUNDER &amp; CEO
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{
+                          width: 56, height: 56, borderRadius: '50%', border: '2px solid #D4A574',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto',
+                        }}>
+                          <img src={`${import.meta.env.BASE_URL}moonfare-monogram-blue.png`} alt="" style={{ height: 28 }} />
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 16, color: '#0A0C3F' }}>
+                          {dateStr}
+                        </div>
+                        <div style={{ fontSize: 9, color: '#5C5A57', letterSpacing: '0.08em', marginTop: 2 }}>
+                          ISSUED · BERLIN
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  {course.settings.certificateOrg && (
-                    <p className="text-sm text-gray-500 italic">{course.settings.certificateOrg}</p>
-                  )}
-                  <button
-                    onClick={() => window.print()}
-                    className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-amber-500 text-white text-sm font-medium rounded-lg hover:bg-amber-600 transition-colors"
-                  >
-                    <Download className="w-4 h-4" />
-                    Download Certificate
-                  </button>
                 </div>
+
+                <button
+                  onClick={() => window.print()}
+                  className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg transition-colors"
+                  style={{ background: '#171D97', color: '#fff' }}
+                >
+                  <Download className="w-4 h-4" />
+                  Download Certificate
+                </button>
               </div>
-            </div>
-          )}
+            );
+          })()}
         </div>
       </div>
     );
