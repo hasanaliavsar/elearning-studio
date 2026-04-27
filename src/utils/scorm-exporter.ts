@@ -534,115 +534,107 @@ function generatePlayer(): string {
 
     var placeholderColors = ['#6366f1','#8b5cf6','#ec4899','#f59e0b','#10b981','#3b82f6','#ef4444','#14b8a6'];
 
-    var html = '<div class="landing-page" style="' + leftStyle + '">';
+    var totalDurationSec = 0;
+    COURSE_DATA.slides.forEach(function(s) { totalDurationSec += (s.duration || 0); });
+    var totalDurationLabel = totalDurationSec > 0 ? formatDuration(totalDurationSec) : 'Self-paced';
+
+    var html = '<div class="landing-page-v2">';
 
     // === LEFT HERO PANEL ===
-    html += '<div class="landing-hero">';
-    if (lp.heroImageUrl) {
-      html += '<div class="landing-hero-overlay" style="background-color:' + (lp.backgroundColor || '#1e1b4b') + ';opacity:0.82;"></div>';
-    }
-    html += '<div class="landing-hero-inner">';
+    html += '<div class="landing-hero-v2" style="' + leftStyle + '">';
 
-    // Logo
+    // Decorative orbs
+    html += '<div style="position:absolute;top:-200px;right:-200px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(212,165,116,0.22) 0%,transparent 70%);pointer-events:none;"></div>';
+    html += '<div style="position:absolute;bottom:-300px;left:-150px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(91,102,207,0.30) 0%,transparent 70%);pointer-events:none;"></div>';
+
+    html += '<div class="landing-hero-inner-v2">';
+
+    // Top: company logo if available
+    html += '<div class="landing-top-v2">';
     if (COURSE_DATA.settings.logoUrl) {
-      html += '<div class="landing-logo"><img src="' + COURSE_DATA.settings.logoUrl + '" alt="Logo" class="landing-logo-img"/></div>';
+      html += '<img src="' + COURSE_DATA.settings.logoUrl + '" alt="' + escapeHtml(lp.companyName || 'Logo') + '" class="landing-logo-v2"/>';
+    } else if (lp.companyName) {
+      html += '<span class="landing-company-name-v2" style="color:' + textColor + ';">' + escapeHtml(lp.companyName) + '</span>';
     }
+    html += '</div>';
 
     // Center content
-    html += '<div class="landing-center">';
-    html += '<h1 class="landing-title" style="color:' + textColor + ';">' + escapeHtml(COURSE_DATA.title) + '</h1>';
+    html += '<div class="landing-center-v2">';
+    html += '<div class="landing-eyebrow-v2" style="color:' + textColor + 'CC;">Internal training</div>';
+    html += '<h1 class="landing-title-v2" style="color:' + textColor + ';">' + escapeHtml(COURSE_DATA.title) + '</h1>';
 
     if (lp.tagline) {
-      html += '<p class="landing-tagline" style="color:' + textColor + ';">' + escapeHtml(lp.tagline) + '</p>';
+      html += '<p class="landing-tagline-v2" style="color:' + textColor + 'C7;">' + escapeHtml(lp.tagline) + '</p>';
     } else if (COURSE_DATA.description) {
-      html += '<p class="landing-tagline" style="color:' + textColor + ';opacity:0.7;">' + escapeHtml(COURSE_DATA.description) + '</p>';
+      html += '<p class="landing-tagline-v2" style="color:' + textColor + 'C7;">' + escapeHtml(COURSE_DATA.description) + '</p>';
     }
 
-    // Stats row
-    html += '<div class="landing-stats" style="color:' + textColor + ';">';
-    html += '<span>' + COURSE_DATA.modules.length + ' module' + (COURSE_DATA.modules.length !== 1 ? 's' : '') + '</span>';
-    html += '<span>' + totalSlideCount + ' slide' + (totalSlideCount !== 1 ? 's' : '') + '</span>';
+    // Stats row (4 stat blocks)
+    html += '<div class="landing-stats-v2">';
+    html += '<div class="stat-v2"><div class="stat-n-v2" style="color:' + textColor + ';">' + COURSE_DATA.modules.length + '</div><div class="stat-l-v2" style="color:' + textColor + '8C;">' + (COURSE_DATA.modules.length === 1 ? 'module' : 'modules') + '</div></div>';
+    html += '<div class="stat-v2"><div class="stat-n-v2" style="color:' + textColor + ';">' + totalSlideCount + '</div><div class="stat-l-v2" style="color:' + textColor + '8C;">slides</div></div>';
+    html += '<div class="stat-v2"><div class="stat-n-v2" style="color:' + textColor + ';">' + escapeHtml(totalDurationLabel) + '</div><div class="stat-l-v2" style="color:' + textColor + '8C;">estimated</div></div>';
     if (totalQuestionCount > 0) {
-      html += '<span>' + totalQuestionCount + ' question' + (totalQuestionCount !== 1 ? 's' : '') + '</span>';
+      html += '<div class="stat-v2"><div class="stat-n-v2" style="color:' + textColor + ';">' + totalQuestionCount + '</div><div class="stat-l-v2" style="color:' + textColor + '8C;">questions</div></div>';
     }
     html += '</div>';
 
-    // Progress bar
-    if (lp.showProgress) {
-      var completionPercent = totalSlideCount > 0 ? Math.round((visitedSlides.size / totalSlideCount) * 100) : 0;
-      html += '<div class="landing-progress">';
-      html += '<span class="landing-progress-label" style="color:' + textColor + ';">You completed ' + completionPercent + '%</span>';
-      html += '<div class="landing-progress-track" style="background:' + textColor + '20;">';
-      html += '<div class="landing-progress-fill" style="width:' + completionPercent + '%;background:' + primaryColor + ';"></div>';
-      html += '</div></div>';
-    }
-
-    // Start button
-    html += '<button class="landing-start-btn" style="background:' + primaryColor + ';" onclick="window._startCourse()">&#9654; Start Course</button>';
+    // Start button (white on navy)
+    var buttonBg = lp.backgroundColor || '#171D97';
+    html += '<button class="landing-start-btn-v2" style="color:' + buttonBg + ';" onclick="window._startCourse()">';
+    html += 'Start course<span class="landing-start-arrow">&rsaquo;</span>';
+    html += '</button>';
     html += '</div>';
 
-    // Company branding
-    if ((lp.showCompanyLogo && lp.companyLogoUrl) || lp.companyName) {
-      html += '<div class="landing-company">';
-      if (lp.showCompanyLogo && lp.companyLogoUrl) {
-        html += '<img src="' + lp.companyLogoUrl + '" alt="Company" class="landing-company-logo"/>';
-      }
-      if (lp.companyName) {
-        html += '<span class="landing-company-name" style="color:' + textColor + ';">' + escapeHtml(lp.companyName) + '</span>';
-      }
-      html += '</div>';
+    // Bottom: meta
+    html += '<div class="landing-meta-v2" style="color:' + textColor + '73;">';
+    if (COURSE_DATA.author) {
+      html += 'Owner &middot; ' + escapeHtml(COURSE_DATA.author);
+    } else {
+      html += 'Powered by Moonfare Learning Studio';
     }
+    if (lp.companyName) {
+      html += ' &middot; ' + escapeHtml(lp.companyName);
+    }
+    html += '</div>';
 
     html += '</div>';
     html += '</div>';
 
     // === RIGHT MODULE LIST PANEL ===
-    html += '<div class="landing-modules">';
-    html += '<div class="landing-modules-header">';
-    html += '<h2>Course Content</h2>';
-    html += '<p>' + COURSE_DATA.modules.length + ' module' + (COURSE_DATA.modules.length !== 1 ? 's' : '') +
-      ' \\u00b7 ' + totalSlideCount + ' slide' + (totalSlideCount !== 1 ? 's' : '') +
-      (totalQuestionCount > 0 ? ' \\u00b7 ' + totalQuestionCount + ' question' + (totalQuestionCount !== 1 ? 's' : '') : '') +
-      '</p>';
+    html += '<div class="landing-modules-v2">';
+    html += '<div class="landing-modules-header-v2">';
+    html += '<h2>What you&rsquo;ll cover</h2>';
+    html += '<p>' + COURSE_DATA.modules.length + ' ' + (COURSE_DATA.modules.length === 1 ? 'module' : 'modules');
+    if (totalQuestionCount > 0) {
+      html += ' &middot; finishes with ' + totalQuestionCount + ' ' + (totalQuestionCount === 1 ? 'question' : 'questions');
+    }
+    html += '</p>';
     html += '</div>';
 
-    html += '<div class="landing-modules-list">';
+    html += '<div class="landing-modules-list-v2">';
     COURSE_DATA.modules.forEach(function(mod, idx) {
-      var color = mod.color || placeholderColors[idx % placeholderColors.length];
-      html += '<button class="module-card" onclick="window._jumpToModule(' + idx + ')">';
-      html += '<div class="module-card-inner">';
-
-      // Thumbnail
-      html += '<div class="module-card-thumb">';
-      if (mod.thumbnail) {
-        html += '<img src="' + escapeHtml(mod.thumbnail) + '" alt="' + escapeHtml(mod.title) + '" class="module-card-thumb-img"/>';
-      } else {
-        html += '<div class="module-card-thumb-placeholder" style="background:' + color + ';">&#x1F4D6;</div>';
-      }
-      html += '<div class="module-card-badge">' + String(idx + 1).padStart(2, '0') + '</div>';
-      html += '</div>';
-
-      // Content
-      html += '<div class="module-card-content">';
-      html += '<h3 class="module-card-title">' + escapeHtml(mod.title) + '</h3>';
+      html += '<button class="module-row-v2" onclick="window._jumpToModule(' + idx + ')">';
+      html += '<div class="module-row-num-v2">' + String(idx + 1).padStart(2, '0') + '</div>';
+      html += '<div class="module-row-body-v2">';
+      html += '<h3 class="module-row-title-v2">' + escapeHtml(mod.title) + '</h3>';
       if (mod.description) {
-        html += '<p class="module-card-desc">' + escapeHtml(mod.description) + '</p>';
+        html += '<p class="module-row-desc-v2">' + escapeHtml(mod.description) + '</p>';
       }
-      html += '<div class="module-card-meta">';
-      html += '<span>' + mod.lessonCount + ' lesson' + (mod.lessonCount !== 1 ? 's' : '') + '</span>';
-      html += '<span>' + mod.slideCount + ' slide' + (mod.slideCount !== 1 ? 's' : '') + '</span>';
-      if (mod.duration > 0) {
-        html += '<span>' + formatDuration(mod.duration) + '</span>';
-      }
+      html += '<div class="module-row-meta-v2">';
+      html += mod.lessonCount + ' ' + (mod.lessonCount === 1 ? 'lesson' : 'lessons');
+      if (mod.slideCount > 0) html += ' &middot; ' + mod.slideCount + ' slides';
+      if (mod.duration > 0) html += ' &middot; ' + formatDuration(mod.duration);
       html += '</div>';
       html += '</div>';
-
-      html += '</div>';
+      html += '<div class="module-row-arrow-v2">&rsaquo;</div>';
       html += '</button>';
     });
     html += '</div>';
 
-    html += '<div class="landing-footer">Powered by eLearning Studio</div>';
+    html += '<div class="landing-footer-v2">Powered by Moonfare Learning Studio</div>';
+    html += '</div>';
+
     html += '</div>';
 
     landingEl.innerHTML = html;
@@ -3944,6 +3936,221 @@ body {
   z-index: 100;
   overflow: hidden;
 }
+
+/* ============ Premium landing v2 ============ */
+.landing-page-v2 {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #FAF8F4;
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+}
+.landing-hero-v2 {
+  position: relative;
+  width: 46%;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 56px;
+  color: #fff;
+  background-color: #171D97;
+}
+.landing-hero-inner-v2 {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: calc(100vh - 112px);
+}
+.landing-top-v2 {
+  flex-shrink: 0;
+}
+.landing-logo-v2 {
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+}
+.landing-company-name-v2 {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+.landing-center-v2 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 32px 0;
+}
+.landing-eyebrow-v2 {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.landing-title-v2 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(40px, 5vw, 60px);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  margin: 0 0 24px 0;
+  text-wrap: balance;
+}
+.landing-tagline-v2 {
+  font-size: 18px;
+  line-height: 1.5;
+  max-width: 460px;
+  margin: 0 0 36px 0;
+}
+.landing-stats-v2 {
+  display: flex;
+  gap: 36px;
+  margin-bottom: 36px;
+}
+.stat-v2 .stat-n-v2 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1;
+}
+.stat-v2 .stat-l-v2 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+.landing-start-btn-v2 {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #FFFFFF;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.landing-start-btn-v2:hover {
+  background: #FAF8F4;
+}
+.landing-start-arrow {
+  font-size: 16px;
+  line-height: 1;
+}
+.landing-meta-v2 {
+  font-size: 12px;
+}
+.landing-modules-v2 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 54%;
+  background: #FFFFFF;
+  padding: 56px;
+  overflow: auto;
+}
+.landing-modules-header-v2 {
+  margin-bottom: 28px;
+}
+.landing-modules-header-v2 h2 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #0A0C3F;
+  margin: 0;
+}
+.landing-modules-header-v2 p {
+  font-size: 13px;
+  color: #5C5A57;
+  margin: 4px 0 0 0;
+}
+.landing-modules-list-v2 {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.module-row-v2 {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  text-align: left;
+  background: #FFFFFF;
+  border: 1px solid #E8E5DE;
+  border-radius: 8px;
+  padding: 20px 22px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  font-family: inherit;
+}
+.module-row-v2:hover {
+  border-color: #C4CCED;
+  box-shadow: 0 6px 18px -8px rgba(10,12,63,0.12);
+}
+.module-row-num-v2 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: #171D97;
+  line-height: 1;
+  min-width: 38px;
+  flex-shrink: 0;
+}
+.module-row-body-v2 {
+  flex: 1;
+  min-width: 0;
+}
+.module-row-title-v2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0A0C3F;
+  margin: 0 0 4px 0;
+}
+.module-row-desc-v2 {
+  font-size: 13.5px;
+  color: #5C5A57;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.module-row-meta-v2 {
+  margin-top: 10px;
+  font-size: 11.5px;
+  color: #9CA3AF;
+  letter-spacing: 0.02em;
+}
+.module-row-arrow-v2 {
+  color: #9CA3AF;
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.module-row-v2:hover .module-row-arrow-v2 {
+  color: #171D97;
+}
+.landing-footer-v2 {
+  margin-top: auto;
+  padding-top: 28px;
+  font-size: 11px;
+  color: #9CA3AF;
+  text-align: right;
+}
+@media (max-width: 900px) {
+  .landing-page-v2 { flex-direction: column; }
+  .landing-hero-v2 { width: 100%; min-height: 50vh; padding: 40px; }
+  .landing-modules-v2 { width: 100%; padding: 40px; }
+}
+
+/* ============ Legacy landing (kept for backwards compat) ============ */
 .landing-page {
   display: flex;
   flex-direction: row;
