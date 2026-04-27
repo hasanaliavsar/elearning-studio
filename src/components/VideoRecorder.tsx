@@ -431,10 +431,10 @@ export function VideoRecorderModal({ open, onClose, onRecordingComplete }: Video
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-brand-600 to-brand-700">
+        <div className="flex items-center justify-between px-6 py-4 border-b bg-brand-700">
           <div className="flex items-center gap-3">
             <Video className="w-5 h-5 text-white" />
-            <h2 className="text-lg font-bold text-white">Record Video</h2>
+            <h2 className="text-base font-semibold text-white tracking-wide">Record Video</h2>
           </div>
           <button
             onClick={handleClose}

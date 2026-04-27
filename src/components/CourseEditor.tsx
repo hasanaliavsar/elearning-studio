@@ -225,10 +225,10 @@ export function CourseEditor() {
       <div className="flex-1 flex overflow-hidden">
         {/* Left sidebar - Course structure */}
         {!editor.sidebarCollapsed && (
-          <aside className="w-72 bg-sidebar flex flex-col flex-shrink-0 overflow-hidden border-r border-gray-800">
-            <div className="p-3 border-b border-gray-700">
+          <aside className="w-72 bg-sidebar flex flex-col flex-shrink-0 overflow-hidden border-r border-ivory-200">
+            <div className="p-3 border-b border-ivory-200">
               <div className="flex items-center justify-between mb-2">
-                <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Course Structure</h2>
+                <h2 className="text-[11px] font-semibold text-ink-muted uppercase tracking-[0.08em]">Course Structure</h2>
                 <button
                   onClick={() => addModule(course.id)}
                   className="text-gray-400 hover:text-white transition-colors"

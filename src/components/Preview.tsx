@@ -418,7 +418,7 @@ export function CoursePreview() {
     return '';
   };
 
-  const primaryColor = course.settings.primaryColor || '#4f46e5';
+  const primaryColor = course.settings.primaryColor || '#171D97';
 
   // Build sidebar module tree with flat indices
   const sidebarModules = useMemo(() => {
@@ -568,7 +568,7 @@ export function CoursePreview() {
               <div
                 className="rounded-2xl p-1"
                 style={{
-                  background: 'linear-gradient(135deg, #d4af37, #6366f1, #d4af37)',
+                  background: 'linear-gradient(135deg, #D4A574, #171D97, #D4A574)',
                 }}
               >
                 <div className="bg-white rounded-xl p-8 text-center relative overflow-hidden">
@@ -584,7 +584,7 @@ export function CoursePreview() {
                   </h3>
                   <div className="w-16 h-0.5 bg-amber-400 mx-auto my-3" />
                   <p className="text-sm text-gray-500 mb-2">This certifies that</p>
-                  <p className="text-lg font-semibold text-indigo-700 mb-2">{course.title}</p>
+                  <p className="text-lg font-semibold mb-2" style={{ color: '#0A0C3F' }}>{course.title}</p>
                   <p className="text-sm text-gray-500 mb-4">has been successfully completed</p>
                   <div className="flex justify-center gap-8 text-sm text-gray-600 mb-4">
                     <div>
@@ -866,7 +866,7 @@ export function CoursePreview() {
               className="relative flex flex-col items-center justify-center text-center"
               style={{
                 minHeight: 'calc(100vh - 12rem)',
-                backgroundColor: currentSlide.backgroundColor || '#1e293b',
+                backgroundColor: currentSlide.backgroundColor || '#171D97',
                 backgroundImage: currentSlide.backgroundImage ? `url(${currentSlide.backgroundImage})` : undefined,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
@@ -903,15 +903,15 @@ export function CoursePreview() {
           >
             {/* Learning objectives */}
             {currentSlide.learningObjectives && currentSlide.learningObjectives.length > 0 && (
-              <div className="mb-6 rounded-xl border border-indigo-200 bg-indigo-50/60 p-5">
-                <h3 className="text-sm font-semibold text-indigo-700 uppercase tracking-wide mb-3 flex items-center gap-2">
+              <div className="mb-6 rounded-md p-5" style={{ backgroundColor: '#FAF8F4', borderLeft: '3px solid #171D97' }}>
+                <h3 className="text-[11px] font-semibold uppercase mb-3 flex items-center gap-2" style={{ color: '#171D97', letterSpacing: '0.12em' }}>
                   <Lightbulb className="w-4 h-4" />
                   Learning Objectives
                 </h3>
                 <ul className="space-y-1.5">
                   {currentSlide.learningObjectives.map((obj) => (
-                    <li key={obj.id} className="flex items-start gap-2 text-sm text-indigo-900">
-                      <CheckCircle className="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" />
+                    <li key={obj.id} className="flex items-start gap-2 text-sm" style={{ color: '#1A1A1F' }}>
+                      <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#171D97' }} />
                       <span>{obj.text}</span>
                     </li>
                   ))}
@@ -923,7 +923,7 @@ export function CoursePreview() {
             {currentSlide.title && (
               <h1
                 className={`text-3xl font-bold mb-6 ${
-                  currentSlide.backgroundColor === '#0f172a' || currentSlide.backgroundColor === '#1e293b'
+                  currentSlide.backgroundColor === '#0f172a' || currentSlide.backgroundColor === '#1e293b' || currentSlide.backgroundColor === '#171D97' || currentSlide.backgroundColor === '#0A0C3F' || currentSlide.backgroundColor === '#101258'
                     ? 'text-white'
                     : 'text-gray-900'
                 }`}
@@ -952,8 +952,8 @@ export function CoursePreview() {
                 >
                   {(block.type === 'text' || block.type === 'heading' || block.type === 'list') && (
                     <div
-                      className={`prose prose-lg max-w-none ${
-                        currentSlide.backgroundColor === '#0f172a' || currentSlide.backgroundColor === '#1e293b'
+                      className={`prose prose-lg max-w-none [&>h1]:font-display [&>h1]:font-normal [&>h1]:tracking-[-0.02em] [&>h1]:text-[44px] [&>h1]:leading-[1.08] [&>h2]:font-display [&>h2]:font-normal [&>h2]:tracking-[-0.01em] [&>h3]:font-display [&>h3]:font-medium ${
+                        currentSlide.backgroundColor === '#0f172a' || currentSlide.backgroundColor === '#1e293b' || currentSlide.backgroundColor === '#171D97' || currentSlide.backgroundColor === '#0A0C3F' || currentSlide.backgroundColor === '#101258'
                           ? 'prose-invert'
                           : ''
                       }`}
@@ -1025,7 +1025,7 @@ export function CoursePreview() {
                               </div>
                               {/* Back */}
                               <div
-                                className="absolute inset-0 rounded-xl border-2 border-indigo-300 bg-indigo-50 shadow-md flex flex-col items-center justify-center p-4 text-center"
+                                className="absolute inset-0 rounded-xl border-2 border-brand-400 bg-brand-50 shadow-md flex flex-col items-center justify-center p-4 text-center"
                                 style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
                               >
                                 {card.backImage && (
@@ -1056,7 +1056,7 @@ export function CoursePreview() {
                           style={{ left: `${marker.x}%`, top: `${marker.y}%`, transform: 'translate(-50%, -50%)' }}
                         >
                           <button
-                            className="w-6 h-6 rounded-full bg-indigo-500 border-2 border-white shadow-lg text-white text-xs font-bold hover:scale-125 transition-transform focus:outline-none"
+                            className="w-6 h-6 rounded-full bg-brand-600 border-2 border-white shadow-lg text-white text-xs font-bold hover:scale-125 transition-transform focus:outline-none"
                             onClick={(e) => { e.stopPropagation(); setActiveTooltip(activeTooltip === marker.id ? null : marker.id); }}
                             onMouseEnter={() => setActiveTooltip(marker.id)}
                             onMouseLeave={() => setActiveTooltip(null)}
@@ -1117,7 +1117,7 @@ export function CoursePreview() {
                               onClick={() => setActiveTab(block.id, tab.id)}
                               className={`px-5 py-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
                                 tab.id === activeTabId
-                                  ? 'border-indigo-500 text-indigo-600 bg-white'
+                                  ? 'border-brand-600 text-brand-600 bg-white'
                                   : 'border-transparent text-gray-500 hover:text-gray-700'
                               }`}
                             >
@@ -1144,12 +1144,12 @@ export function CoursePreview() {
                           <div key={event.id} className="relative">
                             {/* Dot */}
                             <div
-                              className="absolute -left-5 top-1 w-4 h-4 rounded-full border-2 border-indigo-500 bg-white z-10"
+                              className="absolute -left-5 top-1 w-4 h-4 rounded-full border-2 border-brand-600 bg-white z-10"
                               style={{ left: '-1.25rem' }}
                             />
                             <div className="bg-white rounded-lg border p-4 shadow-sm ml-2">
                               {event.date && (
-                                <span className="text-xs font-semibold text-indigo-500 uppercase tracking-wide">
+                                <span className="text-xs font-semibold text-brand-600 uppercase tracking-wide">
                                   {event.date}
                                 </span>
                               )}
@@ -1231,10 +1231,10 @@ export function CoursePreview() {
                           block.data.buttonStyle === 'secondary'
                             ? 'bg-gray-200 text-gray-800 hover:bg-gray-300'
                             : block.data.buttonStyle === 'outline'
-                              ? 'border-2 border-indigo-500 text-indigo-600 hover:bg-indigo-50'
+                              ? 'border-2 border-brand-600 text-brand-600 hover:bg-brand-50'
                               : block.data.buttonStyle === 'link'
-                                ? 'text-indigo-600 underline hover:text-indigo-800'
-                                : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                                ? 'text-brand-600 underline hover:text-brand-800'
+                                : 'bg-brand-600 text-white hover:bg-brand-700'
                         }`}
                         style={
                           !block.data.buttonStyle || block.data.buttonStyle === 'primary'
@@ -1316,7 +1316,7 @@ export function CoursePreview() {
                         >
                           <button
                             className="w-6 h-6 rounded-full text-white text-xs font-bold shadow-lg hover:scale-125 transition-transform focus:outline-none border-2 border-white"
-                            style={{ backgroundColor: marker.color || '#6366f1' }}
+                            style={{ backgroundColor: marker.color || '#171D97' }}
                             onClick={(e) => { e.stopPropagation(); setActiveTooltip(activeTooltip === marker.id ? null : marker.id); }}
                             onMouseEnter={() => setActiveTooltip(marker.id)}
                             onMouseLeave={() => setActiveTooltip(null)}
@@ -1521,7 +1521,7 @@ export function CoursePreview() {
                                       }
                                     }
                                   }}
-                                  className="w-full text-left px-4 py-3 rounded-lg border-2 border-gray-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all text-sm font-medium text-gray-700"
+                                  className="w-full text-left px-4 py-3 rounded-lg border-2 border-gray-200 hover:border-brand-500 hover:bg-brand-50 transition-all text-sm font-medium text-gray-700"
                                 >
                                   {choice.text}
                                 </button>
@@ -1696,7 +1696,7 @@ export function CoursePreview() {
                           <button
                             onClick={checkAnswers}
                             disabled={unsorted.length > 0}
-                            className="px-4 py-2 rounded-lg text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                            className="px-4 py-2 rounded-lg text-sm font-medium bg-brand-600 text-white hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed"
                           >
                             Check
                           </button>

@@ -231,7 +231,7 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
               ) : (
                 <div
                   onClick={() => handleImageUpload(block.id)}
-                  className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-brand-400 hover:bg-brand-50/50 transition-colors"
+                  className="border border-dashed border-ivory-300 rounded-md p-8 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50/40 transition-colors"
                 >
                   <Image className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                   <p className="text-sm text-gray-500">Click to upload an image</p>
@@ -286,7 +286,7 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
           {block.type === 'code' && (
             <div>
               <textarea
-                className="w-full font-mono text-sm bg-gray-900 text-gray-100 rounded-lg p-4 resize-none focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="w-full font-mono text-sm bg-brand-800 text-ivory-50 rounded-md p-4 resize-none focus:outline-none focus:ring-2 focus:ring-brand-500"
                 rows={6}
                 value={block.content.replace(/<[^>]*>/g, '')}
                 onChange={e => handleBlockUpdate(block.id, { content: `<pre><code>${e.target.value}</code></pre>` })}

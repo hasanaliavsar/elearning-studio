@@ -5,13 +5,13 @@ import { useState } from 'react';
 import { AISettingsSection } from './AIGenerator';
 
 const THEME_OPTIONS: { id: ThemeTemplate; label: string; primary: string; accent: string; swatch: React.CSSProperties }[] = [
-  { id: 'modern', label: 'Modern', primary: '#4f46e5', accent: '#ffffff', swatch: { background: 'linear-gradient(135deg, #4f46e5 60%, #ffffff 60%)' } },
-  { id: 'corporate', label: 'Corporate', primary: '#1e3a5f', accent: '#6b7280', swatch: { background: 'linear-gradient(135deg, #1e3a5f 60%, #6b7280 60%)' } },
-  { id: 'playful', label: 'Playful', primary: '#ec4899', accent: '#8b5cf6', swatch: { background: 'linear-gradient(135deg, #ec4899 50%, #8b5cf6 50%)' } },
-  { id: 'dark', label: 'Dark', primary: '#0f172a', accent: '#22d3ee', swatch: { background: 'linear-gradient(135deg, #0f172a 60%, #22d3ee 60%)' } },
-  { id: 'minimal', label: 'Minimal', primary: '#18181b', accent: '#f4f4f5', swatch: { background: 'linear-gradient(135deg, #18181b 60%, #f4f4f5 60%)' } },
-  { id: 'elegant', label: 'Elegant', primary: '#7f1d1d', accent: '#d97706', swatch: { background: 'linear-gradient(135deg, #7f1d1d 60%, #d97706 60%)' } },
-  { id: 'moonfare', label: 'Moonfare', primary: '#171D97', accent: '#101321', swatch: { background: 'linear-gradient(135deg, #101321 30%, #121648 50%, #171D97 70%, #968F83 100%)' } },
+  { id: 'moonfare',  label: 'Moonfare',  primary: '#171D97', accent: '#0A0C3F', swatch: { background: 'linear-gradient(135deg, #171D97 60%, #D4A574 60%)' } },
+  { id: 'modern',    label: 'Navy ink',  primary: '#0A0C3F', accent: '#FAF8F4', swatch: { background: 'linear-gradient(135deg, #0A0C3F 60%, #FAF8F4 60%)' } },
+  { id: 'corporate', label: 'Slate',     primary: '#1A1A1F', accent: '#5C5A57', swatch: { background: 'linear-gradient(135deg, #1A1A1F 60%, #5C5A57 60%)' } },
+  { id: 'elegant',   label: 'Sand',      primary: '#171D97', accent: '#D4A574', swatch: { background: 'linear-gradient(135deg, #171D97 50%, #D4A574 50%)' } },
+  { id: 'minimal',   label: 'Minimal',   primary: '#1A1A1F', accent: '#F4F1EB', swatch: { background: 'linear-gradient(135deg, #1A1A1F 60%, #F4F1EB 60%)' } },
+  { id: 'dark',      label: 'Midnight',  primary: '#040520', accent: '#5B66CF', swatch: { background: 'linear-gradient(135deg, #040520 60%, #5B66CF 60%)' } },
+  { id: 'playful',   label: 'Soft navy', primary: '#2B3AB8', accent: '#EEF0FF', swatch: { background: 'linear-gradient(135deg, #2B3AB8 60%, #EEF0FF 60%)' } },
 ];
 
 interface Props {

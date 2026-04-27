@@ -1183,11 +1183,11 @@ export function AIGenerateCourseModal({ open, onClose }: AIGenerateCourseModalPr
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-indigo-100 rounded-lg">
-              <Brain className="w-5 h-5 text-indigo-600" />
+            <div className="p-2 bg-brand-50 rounded-md">
+              <Brain className="w-5 h-5 text-brand-700" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">AI Course Generator</h2>
+              <h2 className="font-display text-2xl text-brand-800" style={{ fontWeight: 400 }}>AI Course Generator</h2>
               <p className="text-sm text-gray-500">
                 {step === 'input' ? 'Provide content to generate a course' : 'Review and customize'}
               </p>
@@ -1547,7 +1547,7 @@ export function AIQuizGeneratorButton({
       <button
         ref={buttonRef}
         onClick={() => setOpen(!open)}
-        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors"
+        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-brand-700 bg-brand-50 hover:bg-brand-100 rounded-md transition-colors"
         title="AI Quiz Generator"
       >
         <Sparkles className="w-3.5 h-3.5" />
@@ -1561,7 +1561,7 @@ export function AIQuizGeneratorButton({
         >
           <div className="p-4 space-y-4">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-indigo-500" />
+              <Sparkles className="w-4 h-4 text-brand-600" />
               <h3 className="text-sm font-semibold text-gray-900">Generate Quiz Questions</h3>
             </div>
 
@@ -1613,7 +1613,7 @@ export function AIQuizGeneratorButton({
                       type="checkbox"
                       checked={selectedTypes.includes(type)}
                       onChange={() => toggleType(type)}
-                      className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                      className="rounded border-ivory-200 text-brand-600 focus:ring-brand-600"
                     />
                     {label}
                   </label>
@@ -1679,7 +1679,7 @@ export function AISettingsSection() {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <Brain className="w-4 h-4 text-indigo-500" />
+        <Brain className="w-4 h-4 text-brand-600" />
         <h3 className="text-sm font-semibold text-gray-900">AI Generation Settings</h3>
       </div>
 
