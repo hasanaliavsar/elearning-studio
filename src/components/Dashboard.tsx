@@ -354,48 +354,40 @@ export function Dashboard() {
                 return (
                   <article
                     key={course.id}
-                    className="bg-white rounded-lg border border-ivory-200 overflow-hidden cursor-pointer transition-shadow hover:shadow-raise group"
+                    className="bg-white rounded-lg border border-ivory-200 overflow-hidden cursor-pointer transition-all hover:shadow-lift group"
                     onClick={() => openCourseEditor(course.id)}
                   >
-                    {/* Typographic cover */}
-                    <div
-                      className="h-40 relative px-6 py-5 flex flex-col justify-between"
-                      style={{ backgroundColor: bgColor }}
-                    >
+                    {/* Cinematic cover */}
+                    <div className="h-48 relative overflow-hidden" style={{ backgroundColor: bgColor }}>
+                      {/* Gradient orbs */}
+                      <div style={{ position: 'absolute', top: -80, right: -80, width: 240, height: 240, borderRadius: '50%', background: 'radial-gradient(circle, rgba(212,165,116,0.28) 0%, transparent 70%)', pointerEvents: 'none' }} />
+                      <div style={{ position: 'absolute', bottom: -100, left: -60, width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(91,102,207,0.35) 0%, transparent 70%)', pointerEvents: 'none' }} />
                       {/* Watermark monogram */}
-                      <img
-                        src={`${import.meta.env.BASE_URL}moonfare-monogram-white.png`}
-                        alt=""
-                        className="absolute -right-5 -bottom-5 h-40 opacity-[0.08] pointer-events-none"
-                      />
-
-                      {/* Top row: meta + menu */}
-                      <div className="flex items-start justify-between relative z-10">
+                      <img src={`${import.meta.env.BASE_URL}moonfare-monogram-white.png`} alt="" className="absolute -right-5 -bottom-5 h-44 opacity-[0.08] pointer-events-none" />
+                      {/* Top row */}
+                      <div className="relative z-10 px-6 pt-5 flex items-start justify-between">
                         <div className="text-[11px] uppercase tracking-[0.12em] text-white/60 font-medium">
                           {course.modules.length} {course.modules.length === 1 ? 'module' : 'modules'} · {getSlideCount(course)} slides
                         </div>
-                        <button
-                          onClick={e => { e.stopPropagation(); setMenuOpen(menuOpen === course.id ? null : course.id); }}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity w-7 h-7 rounded-md flex items-center justify-center text-white hover:bg-white/15"
-                        >
+                        <button onClick={e => { e.stopPropagation(); setMenuOpen(menuOpen === course.id ? null : course.id); }}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity w-7 h-7 rounded-md flex items-center justify-center text-white hover:bg-white/15">
                           <MoreVertical className="w-4 h-4" />
                         </button>
                       </div>
-
                       {/* Title */}
-                      <div
-                        className="font-display text-2xl text-white leading-[1.15] relative z-10"
-                        style={{ fontWeight: 400, letterSpacing: '-0.01em', textWrap: 'balance' as any }}
-                      >
+                      <div className="absolute left-6 right-6 bottom-12 z-10 font-display text-[26px] text-white leading-[1.1]"
+                        style={{ fontWeight: 400, letterSpacing: '-0.01em', textWrap: 'balance' }}>
                         {course.title}
                       </div>
-
+                      {/* Chapter rail */}
+                      <div className="absolute left-6 right-6 bottom-3 z-10 flex gap-1.5">
+                        {Array.from({ length: Math.min(course.modules.length || 1, 6) }).map((_, i) => (
+                          <div key={i} className="flex-1 h-[2px] rounded-sm" style={{ background: i === 0 ? '#D4A574' : 'rgba(255,255,255,0.18)' }} />
+                        ))}
+                      </div>
                       {/* Dropdown menu */}
                       {menuOpen === course.id && (
-                        <div
-                          className="absolute top-12 right-3 bg-white rounded-md shadow-lift border border-ivory-200 py-1 min-w-[160px] z-20"
-                          onClick={e => e.stopPropagation()}
-                        >
+                        <div className="absolute top-12 right-3 bg-white rounded-md shadow-lift border border-ivory-200 py-1 min-w-[160px] z-20" onClick={e => e.stopPropagation()}>
                           <button onClick={() => { duplicateCourse(course.id); setMenuOpen(null); }} className="flex items-center gap-2 px-3 py-2 text-sm text-ink hover:bg-ivory-100 w-full">
                             <Copy className="w-4 h-4" /> Duplicate
                           </button>
@@ -409,7 +401,6 @@ export function Dashboard() {
                         </div>
                       )}
                     </div>
-
                     {/* Body */}
                     <div className="px-5 py-4">
                       <p className="text-[13.5px] text-ink-muted leading-[1.5] m-0 line-clamp-2 min-h-[40px]">
@@ -417,9 +408,7 @@ export function Dashboard() {
                       </p>
                       <div className="flex justify-between items-center mt-4 text-xs text-ink-faint">
                         <span>Updated {formatDate(course.updatedAt)}</span>
-                        <span className="px-2.5 py-0.5 rounded-full font-medium text-[11px] tracking-wide" style={{ backgroundColor: '#E6F2EC', color: '#2D7A50' }}>
-                          Published
-                        </span>
+                        <span className="px-2.5 py-0.5 rounded-full font-medium text-[11px] tracking-wide" style={{ backgroundColor: '#E6F2EC', color: '#2D7A50' }}>Published</span>
                       </div>
                     </div>
                   </article>

@@ -568,7 +568,7 @@ export function CoursePreview() {
               <div
                 className="rounded-2xl p-1"
                 style={{
-                  background: 'linear-gradient(135deg, #D4A574, #171D97, #D4A574)',
+                  background: 'transparent',
                 }}
               >
                 <div className="bg-white rounded-xl p-8 text-center relative overflow-hidden">

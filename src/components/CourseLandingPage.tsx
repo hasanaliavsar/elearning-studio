@@ -43,6 +43,9 @@ export function CourseLandingPage({ course, onStartCourse, onJumpToModule }: Pro
         className="relative flex flex-col justify-between w-full lg:w-[46%] min-h-[50vh] lg:min-h-screen overflow-hidden"
         style={{ backgroundColor: '#171D97', color: '#FFFFFF', padding: '56px' }}
       >
+        {/* Gradient orbs */}
+        <div style={{ position: 'absolute', top: -200, right: -200, width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(212,165,116,0.22) 0%, transparent 70%)', pointerEvents: 'none' }} aria-hidden />
+        <div style={{ position: 'absolute', bottom: -300, left: -150, width: 700, height: 700, borderRadius: '50%', background: 'radial-gradient(circle, rgba(91,102,207,0.30) 0%, transparent 70%)', pointerEvents: 'none' }} aria-hidden />
         {/* Watermark monogram */}
         <img
           src={`${import.meta.env.BASE_URL}moonfare-monogram-white.png`}
