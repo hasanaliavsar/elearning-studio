@@ -17,7 +17,18 @@ const INTERACTIVE_HINT_TYPES = new Set([
   'card-sorting', 'labeled-graphic', 'audio', 'video', 'embed',
 ]);
 
+// Real canvas size — matches a typical learner viewport so vw-based
+// units inside the slide HTML render at their authored size. The
+// outer wrapper then CSS-scales the whole thing down to fit the pane.
+const REAL_W = 1280;
+const REAL_H = 800;
+
 export function LivePreviewPane({ course, slide }: Props) {
+  // Pane content area is ~432px wide (460 - 28 px padding/border).
+  const paneW = 432;
+  const scale = paneW / REAL_W;
+  const scaledH = REAL_H * scale;
+
   return (
     <aside className="w-[460px] flex-shrink-0 border-l border-gray-200 bg-gray-50 overflow-y-auto">
       <div className="px-4 py-3 border-b border-gray-200 bg-white sticky top-0 z-10">
@@ -31,49 +42,63 @@ export function LivePreviewPane({ course, slide }: Props) {
       </div>
 
       <div className="p-4">
+        {/* Outer: takes the scaled-down dimensions in flow */}
         <div
-          className={`rounded-md shadow-sm relative ${slide.fullBleed ? 'overflow-hidden' : ''}`}
-          style={{
-            backgroundColor: slide.backgroundColor || '#FFFFFF',
-            backgroundImage: slide.backgroundImage ? `url(${slide.backgroundImage})` : undefined,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            minHeight: 360,
-            padding: slide.fullBleed ? 0 : 24,
-            fontFamily: course.settings.fontFamily || 'Inter',
-          }}
+          className="rounded-md shadow-sm overflow-hidden bg-white"
+          style={{ width: paneW, height: scaledH }}
         >
-          {slide.title && !slide.fullBleed && (
-            <h2
-              className="mb-4"
-              style={{
-                fontFamily: "'Fraunces', Georgia, serif",
-                fontSize: 22,
-                fontWeight: 400,
-                color: isDarkBg(slide.backgroundColor) ? '#FFFFFF' : '#0A0C3F',
-                letterSpacing: '-0.01em',
-              }}
-            >
-              {slide.title}
-            </h2>
-          )}
+          {/* Inner: renders at real size, then scales */}
+          <div
+            style={{
+              width: REAL_W,
+              height: REAL_H,
+              transform: `scale(${scale})`,
+              transformOrigin: 'top left',
+              position: 'relative',
+              backgroundColor: slide.backgroundColor || '#FFFFFF',
+              backgroundImage: slide.backgroundImage ? `url(${slide.backgroundImage})` : undefined,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              padding: slide.fullBleed ? 0 : 48,
+              fontFamily: course.settings.fontFamily || 'Inter',
+              overflow: 'hidden',
+            }}
+          >
+            {slide.title && !slide.fullBleed && (
+              <h2
+                style={{
+                  fontFamily: "'Fraunces', Georgia, serif",
+                  fontSize: 32,
+                  fontWeight: 400,
+                  color: isDarkBg(slide.backgroundColor) ? '#FFFFFF' : '#0A0C3F',
+                  letterSpacing: '-0.01em',
+                  marginBottom: 24,
+                }}
+              >
+                {slide.title}
+              </h2>
+            )}
 
-          <div className={slide.fullBleed ? '' : `space-y-4 ${slide.layout === 'two-column' ? 'grid grid-cols-2 gap-4 space-y-0' : ''}`}>
-            {slide.content.length === 0 ? (
-              <p className="text-sm text-gray-400 italic">No content blocks yet.</p>
-            ) : (
-              slide.content.map((b, i) => <BlockPreview key={b.id || i} block={b} />)
+            <div
+              className={slide.fullBleed ? '' : `${slide.layout === 'two-column' ? 'grid grid-cols-2 gap-6' : 'space-y-5'}`}
+              style={{ position: slide.fullBleed ? 'absolute' : 'static', inset: slide.fullBleed ? 0 : undefined }}
+            >
+              {slide.content.length === 0 ? (
+                <p className="text-base text-gray-400 italic">No content blocks yet.</p>
+              ) : (
+                slide.content.map((b, i) => <BlockPreview key={b.id || i} block={b} />)
+              )}
+            </div>
+
+            {slide.questions.length > 0 && !slide.fullBleed && (
+              <div className="mt-8 pt-5 border-t border-gray-200">
+                <p className="text-xs font-semibold tracking-wider uppercase text-[#171D97] mb-2">
+                  Quiz · {slide.questions.length} question{slide.questions.length === 1 ? '' : 's'}
+                </p>
+                <p className="text-sm text-gray-500">Open Preview to take the quiz.</p>
+              </div>
             )}
           </div>
-
-          {slide.questions.length > 0 && (
-            <div className="mt-6 pt-4 border-t border-gray-200">
-              <p className="text-[10px] font-semibold tracking-wider uppercase text-[#171D97] mb-2">
-                Quiz · {slide.questions.length} question{slide.questions.length === 1 ? '' : 's'}
-              </p>
-              <p className="text-xs text-gray-500">Open Preview to take the quiz.</p>
-            </div>
-          )}
         </div>
       </div>
     </aside>
@@ -116,11 +141,11 @@ function BlockPreview({ block }: { block: ContentBlock }) {
     };
     const p = palette[style] || palette['info']!;
     return (
-      <div className="rounded p-3" style={{ backgroundColor: p.bg, borderLeft: `3px solid ${p.border}`, color: p.text }}>
+      <div style={{ borderRadius: 8, padding: 20, backgroundColor: p.bg, borderLeft: `4px solid ${p.border}`, color: p.text }}>
         {block.data?.calloutTitle && (
-          <p className="text-xs font-semibold mb-1" style={{ color: p.border }}>{block.data.calloutTitle}</p>
+          <p style={{ fontSize: 14, fontWeight: 600, marginBottom: 6, color: p.border }}>{block.data.calloutTitle}</p>
         )}
-        <div className="text-xs" dangerouslySetInnerHTML={{ __html: block.content || '' }} />
+        <div style={{ fontSize: 16, lineHeight: 1.5 }} dangerouslySetInnerHTML={{ __html: block.content || '' }} />
       </div>
     );
   }
@@ -128,12 +153,9 @@ function BlockPreview({ block }: { block: ContentBlock }) {
   if (t === 'button') {
     return (
       <a
-        href={block.data?.buttonUrl || '#'}
-        target={block.data?.buttonNewTab ? '_blank' : undefined}
-        rel="noopener noreferrer"
-        className="inline-block px-4 py-2 rounded text-sm font-medium"
-        style={{ background: '#171D97', color: '#FFFFFF', textDecoration: 'none' }}
+        href="#"
         onClick={e => e.preventDefault()}
+        style={{ display: 'inline-block', padding: '12px 24px', borderRadius: 8, background: '#171D97', color: '#FFFFFF', textDecoration: 'none', fontSize: 16, fontWeight: 500 }}
       >
         {block.data?.buttonText || 'Button'}
       </a>
@@ -151,27 +173,27 @@ function BlockPreview({ block }: { block: ContentBlock }) {
     })();
     const useImage = d.pqAvatarMode === 'image' && d.pqPortraitUrl;
     return (
-      <div className="relative rounded p-4" style={{ backgroundColor: '#FAF8F4' }}>
-        <div style={{ position: 'absolute', left: 0, top: 16, bottom: 16, width: 2, backgroundColor: '#171D97' }} />
-        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 12, alignItems: 'start', paddingLeft: 8 }}>
+      <div style={{ position: 'relative', borderRadius: 8, padding: 40, backgroundColor: '#FAF8F4' }}>
+        <div style={{ position: 'absolute', left: 0, top: 32, bottom: 32, width: 3, backgroundColor: '#171D97' }} />
+        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 32, alignItems: 'start', paddingLeft: 16 }}>
           {useImage ? (
-            <img src={d.pqPortraitUrl} alt={name} style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover' }} />
+            <img src={d.pqPortraitUrl} alt={name} style={{ width: 96, height: 96, borderRadius: '50%', objectFit: 'cover' }} />
           ) : (
             <div style={{
-              width: 56, height: 56, borderRadius: '50%',
+              width: 96, height: 96, borderRadius: '50%',
               background: 'linear-gradient(135deg, #171D97 0%, #0A0C3F 100%)',
               color: '#D4A574', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontFamily: "'Fraunces', Georgia, serif", fontSize: 20, fontWeight: 500,
+              fontFamily: "'Fraunces', Georgia, serif", fontSize: 34, fontWeight: 500,
             }}>{initials}</div>
           )}
           <div>
-            <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 32, lineHeight: 0.5, color: '#D4A574', display: 'block', marginBottom: 4 }}>“</span>
-            <p style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 14, lineHeight: 1.4, color: '#0A0C3F', fontWeight: 300, margin: '0 0 8px 0' }}>
+            <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 64, lineHeight: 0.5, color: '#D4A574', display: 'block', marginBottom: 6 }}>“</span>
+            <p style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 22, lineHeight: 1.4, color: '#0A0C3F', fontWeight: 300, margin: '0 0 22px 0' }}>
               {d.pqQuote || 'Your quotation will appear here.'}
             </p>
-            <div style={{ fontSize: 11, color: '#0A0C3F', fontWeight: 600 }}>{name || 'Name'}</div>
+            <div style={{ fontSize: 14, color: '#0A0C3F', fontWeight: 600 }}>{name || 'Name'}</div>
             {(d.pqRole || d.pqOrg) && (
-              <div style={{ fontSize: 10, color: '#5C5A57', marginTop: 1 }}>
+              <div style={{ fontSize: 12, color: '#5C5A57', marginTop: 2 }}>
                 {d.pqRole}{d.pqRole && d.pqOrg && ' · '}{d.pqOrg && <b style={{ color: '#171D97' }}>{d.pqOrg}</b>}
               </div>
             )}
@@ -186,23 +208,23 @@ function BlockPreview({ block }: { block: ContentBlock }) {
     return (
       <div>
         {block.data.cmpEyebrow && (
-          <p className="text-[9px] font-semibold tracking-[0.18em] uppercase mb-1" style={{ color: '#171D97' }}>{block.data.cmpEyebrow}</p>
+          <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#171D97', marginBottom: 6 }}>{block.data.cmpEyebrow}</p>
         )}
         {block.data.cmpTitle && (
-          <h3 className="mb-3" style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 16, fontWeight: 400, color: '#0A0C3F' }}>{block.data.cmpTitle}</h3>
+          <h3 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 24, fontWeight: 400, color: '#0A0C3F', marginBottom: 16 }}>{block.data.cmpTitle}</h3>
         )}
-        <div className={`grid gap-2 grid-cols-${Math.min(cols.length, 4)}`} style={{ gridTemplateColumns: `repeat(${Math.min(cols.length, 4)}, minmax(0, 1fr))` }}>
+        <div style={{ display: 'grid', gap: 12, gridTemplateColumns: `repeat(${Math.min(cols.length, 4)}, minmax(0, 1fr))` }}>
           {cols.map(c => (
-            <div key={c.id} className="rounded p-2 relative" style={{ backgroundColor: '#FFFFFF', border: c.featured ? '1px solid #D4A574' : '1px solid #E8E5DE' }}>
+            <div key={c.id} style={{ position: 'relative', borderRadius: 8, padding: 16, backgroundColor: '#FFFFFF', border: c.featured ? '2px solid #D4A574' : '1px solid #E8E5DE' }}>
               {c.featured && c.ribbonLabel && (
-                <span className="absolute -top-1.5 left-2 text-[8px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded" style={{ background: '#D4A574', color: '#FFFFFF' }}>{c.ribbonLabel}</span>
+                <span style={{ position: 'absolute', top: -10, left: 12, fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '2px 8px', borderRadius: 4, background: '#D4A574', color: '#FFFFFF' }}>{c.ribbonLabel}</span>
               )}
-              <p className="text-[8px] font-semibold tracking-wider uppercase mb-0.5" style={{ color: '#171D97' }}>{c.eyebrow}</p>
-              <p className="text-[12px] font-medium" style={{ fontFamily: "'Fraunces', Georgia, serif", color: '#0A0C3F', lineHeight: 1.1 }}>{c.title}</p>
-              {c.subtitle && <p className="text-[9px] font-mono mt-0.5" style={{ color: '#5C5A57' }}>{c.subtitle}</p>}
-              <ul className="mt-2 space-y-0.5">
+              <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#171D97', marginBottom: 4 }}>{c.eyebrow}</p>
+              <p style={{ fontSize: 18, fontWeight: 500, fontFamily: "'Fraunces', Georgia, serif", color: '#0A0C3F', lineHeight: 1.15 }}>{c.title}</p>
+              {c.subtitle && <p style={{ fontSize: 12, fontFamily: 'monospace', color: '#5C5A57', marginTop: 4 }}>{c.subtitle}</p>}
+              <ul style={{ marginTop: 12, padding: 0, listStyle: 'none' }}>
                 {c.bullets.map(b => (
-                  <li key={b.id} className="text-[10px] flex items-start gap-1" style={{ color: b.included ? '#0A0C3F' : '#9CA3AF' }}>
+                  <li key={b.id} style={{ fontSize: 13, display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: 4, color: b.included ? '#0A0C3F' : '#9CA3AF' }}>
                     <span style={{ color: b.included ? '#171D97' : '#D1D5DB' }}>{b.included ? '✓' : '–'}</span>
                     <span>{b.text}</span>
                   </li>
@@ -217,12 +239,12 @@ function BlockPreview({ block }: { block: ContentBlock }) {
 
   if (t === 'timeline' && block.data?.timelineEvents) {
     return (
-      <ol className="space-y-2 border-l-2 pl-3" style={{ borderColor: '#171D97' }}>
+      <ol style={{ listStyle: 'none', padding: 0, margin: 0, borderLeft: '3px solid #171D97' }}>
         {block.data.timelineEvents.map(ev => (
-          <li key={ev.id} className="text-xs">
-            <p className="font-semibold" style={{ color: '#0A0C3F' }}>{ev.title}</p>
-            {ev.date && <p className="text-[10px]" style={{ color: '#171D97' }}>{ev.date}</p>}
-            {ev.description && <p className="text-[11px] text-gray-600 mt-0.5">{ev.description}</p>}
+          <li key={ev.id} style={{ paddingLeft: 20, marginBottom: 16 }}>
+            <p style={{ fontSize: 16, fontWeight: 600, color: '#0A0C3F', margin: 0 }}>{ev.title}</p>
+            {ev.date && <p style={{ fontSize: 12, color: '#171D97', margin: '2px 0 0 0' }}>{ev.date}</p>}
+            {ev.description && <p style={{ fontSize: 13, color: '#5C5A57', margin: '4px 0 0 0', lineHeight: 1.4 }}>{ev.description}</p>}
           </li>
         ))}
       </ol>
@@ -231,13 +253,13 @@ function BlockPreview({ block }: { block: ContentBlock }) {
 
   if (t === 'checklist' && block.data?.checklistItems) {
     return (
-      <ul className="space-y-1">
+      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {block.data.checklistItems.map(item => (
-          <li key={item.id} className="text-xs flex items-start gap-2">
-            <span className="mt-0.5" style={{ color: '#171D97' }}>☑</span>
+          <li key={item.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
+            <span style={{ color: '#171D97', fontSize: 18, lineHeight: 1 }}>☑</span>
             <div>
-              <p style={{ color: '#0A0C3F', fontWeight: 500 }}>{item.title}</p>
-              {item.description && <p className="text-[10px]" style={{ color: '#5C5A57' }}>{item.description}</p>}
+              <p style={{ color: '#0A0C3F', fontWeight: 500, fontSize: 16, margin: 0 }}>{item.title}</p>
+              {item.description && <p style={{ fontSize: 13, color: '#5C5A57', margin: '2px 0 0 0' }}>{item.description}</p>}
             </div>
           </li>
         ))}
@@ -247,13 +269,13 @@ function BlockPreview({ block }: { block: ContentBlock }) {
 
   if (t === 'table' && block.data?.tableHeaders) {
     return (
-      <table className="w-full text-xs border-collapse">
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
         <thead>
-          <tr>{block.data.tableHeaders.map((h, i) => <th key={i} className="text-left p-1 border-b font-semibold" style={{ color: '#0A0C3F' }}>{h}</th>)}</tr>
+          <tr>{block.data.tableHeaders.map((h, i) => <th key={i} style={{ textAlign: 'left', padding: 8, borderBottom: '2px solid #0A0C3F', fontWeight: 600, color: '#0A0C3F' }}>{h}</th>)}</tr>
         </thead>
         <tbody>
           {(block.data.tableRows || []).map((row, ri) => (
-            <tr key={ri}>{row.map((cell, ci) => <td key={ci} className="p-1 border-b border-gray-100" style={{ color: '#5C5A57' }}>{cell}</td>)}</tr>
+            <tr key={ri}>{row.map((cell, ci) => <td key={ci} style={{ padding: 8, borderBottom: '1px solid #E8E5DE', color: '#5C5A57' }}>{cell}</td>)}</tr>
           ))}
         </tbody>
       </table>
@@ -262,11 +284,11 @@ function BlockPreview({ block }: { block: ContentBlock }) {
 
   if (t === 'accordion' && block.data?.accordionItems) {
     return (
-      <div className="space-y-1">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {block.data.accordionItems.map(item => (
-          <details key={item.id} className="border rounded p-2 text-xs" style={{ borderColor: '#E8E5DE' }}>
-            <summary className="cursor-pointer font-medium" style={{ color: '#0A0C3F' }}>{item.title}</summary>
-            <div className="mt-1 text-[11px] text-gray-600" dangerouslySetInnerHTML={{ __html: item.content || '' }} />
+          <details key={item.id} style={{ border: '1px solid #E8E5DE', borderRadius: 8, padding: 14 }}>
+            <summary style={{ cursor: 'pointer', fontWeight: 600, fontSize: 16, color: '#0A0C3F' }}>{item.title}</summary>
+            <div style={{ marginTop: 10, fontSize: 14, color: '#5C5A57', lineHeight: 1.5 }} dangerouslySetInnerHTML={{ __html: item.content || '' }} />
           </details>
         ))}
       </div>
@@ -280,9 +302,9 @@ function BlockPreview({ block }: { block: ContentBlock }) {
     const imgs = block.data?.layoutImages || [];
     const text = block.data?.layoutText || '';
     return (
-      <div className={horizontal ? `flex gap-3 ${reverse ? 'flex-row-reverse' : ''}` : `flex flex-col ${reverse ? 'flex-col-reverse' : ''} gap-3`}>
-        {imgs[0]?.url && <img src={imgs[0].url} alt={imgs[0].alt || ''} className="rounded flex-1 max-w-[40%] object-cover" />}
-        <div className="text-xs flex-1" dangerouslySetInnerHTML={{ __html: text }} />
+      <div style={{ display: 'flex', flexDirection: horizontal ? (reverse ? 'row-reverse' : 'row') : (reverse ? 'column-reverse' : 'column'), gap: 16 }}>
+        {imgs[0]?.url && <img src={imgs[0].url} alt={imgs[0].alt || ''} style={{ borderRadius: 8, flex: 1, maxWidth: horizontal ? '40%' : '100%', objectFit: 'cover' }} />}
+        <div style={{ fontSize: 16, flex: 1, lineHeight: 1.6 }} dangerouslySetInnerHTML={{ __html: text }} />
       </div>
     );
   }
@@ -290,15 +312,15 @@ function BlockPreview({ block }: { block: ContentBlock }) {
   // Fallback for interactive types
   if (INTERACTIVE_HINT_TYPES.has(t)) {
     return (
-      <div className="rounded border border-dashed p-3 text-center" style={{ borderColor: '#171D97', backgroundColor: '#EFF2FF' }}>
-        <p className="text-[10px] font-semibold tracking-wider uppercase" style={{ color: '#171D97' }}>{t.replace('-', ' ')}</p>
-        <p className="text-[10px] mt-0.5" style={{ color: '#5C5A57' }}>Open Preview to interact.</p>
+      <div style={{ borderRadius: 8, border: '2px dashed #171D97', padding: 20, textAlign: 'center', backgroundColor: '#EFF2FF' }}>
+        <p style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#171D97', margin: 0 }}>{t.replace('-', ' ')}</p>
+        <p style={{ fontSize: 13, marginTop: 4, color: '#5C5A57' }}>Open Preview to interact.</p>
       </div>
     );
   }
 
   // Generic fallback
   return (
-    <div className="text-[10px] text-gray-400 italic">[{t} block]</div>
+    <div style={{ fontSize: 13, color: '#9CA3AF', fontStyle: 'italic' }}>[{t} block]</div>
   );
 }
