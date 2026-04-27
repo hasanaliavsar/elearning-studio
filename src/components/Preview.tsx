@@ -1164,6 +1164,266 @@ export function CoursePreview() {
                     </div>
                   )}
 
+                  {/* Pull Quote */}
+                  {block.type === 'pull-quote' && (() => {
+                    const d = block.data || {};
+                    const mode = d.pqAvatarMode || 'auto';
+                    const name = d.pqName || '';
+                    const deriveInit = (n: string) => {
+                      if (!n) return '?';
+                      const parts = n.trim().split(/\s+/).filter(Boolean);
+                      if (parts.length === 0) return '?';
+                      if (parts.length === 1) return parts[0]!.slice(0, 2).toUpperCase();
+                      return (parts[0]![0]! + parts[parts.length - 1]![0]!).toUpperCase();
+                    };
+                    const initials =
+                      mode === 'initials' && d.pqInitialsOverride
+                        ? d.pqInitialsOverride.slice(0, 3).toUpperCase()
+                        : deriveInit(name);
+                    const useImage = mode === 'image' && d.pqPortraitUrl;
+                    return (
+                      <div
+                        className="relative rounded-md p-8 md:p-12"
+                        style={{ backgroundColor: '#FAF8F4' }}
+                      >
+                        <div
+                          style={{
+                            position: 'absolute',
+                            left: 0,
+                            top: 32,
+                            bottom: 32,
+                            width: 3,
+                            backgroundColor: '#171D97',
+                          }}
+                        />
+                        <div className="grid gap-6 md:gap-8" style={{ gridTemplateColumns: 'auto 1fr', alignItems: 'start' }}>
+                          {useImage ? (
+                            <img
+                              src={d.pqPortraitUrl}
+                              alt={name}
+                              className="rounded-full object-cover flex-shrink-0"
+                              style={{ width: 96, height: 96, boxShadow: '0 6px 18px rgba(10,12,63,0.18)' }}
+                            />
+                          ) : (
+                            <div
+                              className="rounded-full flex items-center justify-center flex-shrink-0"
+                              style={{
+                                width: 96,
+                                height: 96,
+                                background: 'linear-gradient(135deg, #171D97 0%, #0A0C3F 100%)',
+                                color: '#D4A574',
+                                fontFamily: "'Fraunces', Georgia, serif",
+                                fontSize: 34,
+                                fontWeight: 500,
+                                letterSpacing: '-0.02em',
+                                boxShadow: '0 6px 18px rgba(10,12,63,0.18)',
+                              }}
+                            >
+                              {initials}
+                            </div>
+                          )}
+                          <div>
+                            <div
+                              style={{
+                                fontFamily: "'Fraunces', Georgia, serif",
+                                fontSize: 64,
+                                lineHeight: 0.5,
+                                color: '#D4A574',
+                                marginBottom: 6,
+                              }}
+                            >
+                              &ldquo;
+                            </div>
+                            <p
+                              className="m-0"
+                              style={{
+                                fontFamily: "'Fraunces', Georgia, serif",
+                                fontSize: 22,
+                                lineHeight: 1.4,
+                                color: '#0A0C3F',
+                                fontWeight: 300,
+                                letterSpacing: '-0.005em',
+                                textWrap: 'pretty',
+                                marginBottom: 22,
+                              }}
+                            >
+                              {d.pqQuote || 'Your quotation will appear here.'}
+                            </p>
+                            <div style={{ fontSize: 13, lineHeight: 1.5 }}>
+                              <div style={{ fontWeight: 600, color: '#0A0C3F', fontSize: 14 }}>{name || 'Name'}</div>
+                              <div style={{ color: '#5C5A57', marginTop: 2, fontSize: 12 }}>
+                                {d.pqRole}
+                                {d.pqRole && d.pqOrg && ' · '}
+                                {d.pqOrg && <b style={{ color: '#171D97', fontWeight: 600 }}>{d.pqOrg}</b>}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Comparison */}
+                  {block.type === 'comparison' && block.data?.cmpColumns && block.data.cmpColumns.length > 0 && (() => {
+                    const d = block.data;
+                    const cols = d.cmpColumns!;
+                    return (
+                      <div className="rounded-md overflow-hidden border" style={{ borderColor: '#E8E5DE', backgroundColor: '#FFFFFF' }}>
+                        {(d.cmpEyebrow || d.cmpTitle) && (
+                          <div style={{ padding: '24px 28px 18px' }}>
+                            {d.cmpEyebrow && (
+                              <div
+                                style={{
+                                  fontSize: 11,
+                                  letterSpacing: '0.14em',
+                                  textTransform: 'uppercase',
+                                  color: '#171D97',
+                                  fontWeight: 700,
+                                }}
+                              >
+                                {d.cmpEyebrow}
+                              </div>
+                            )}
+                            {d.cmpTitle && (
+                              <div
+                                style={{
+                                  fontFamily: "'Fraunces', Georgia, serif",
+                                  fontWeight: 400,
+                                  fontSize: 24,
+                                  color: '#0A0C3F',
+                                  letterSpacing: '-0.01em',
+                                  marginTop: 6,
+                                }}
+                              >
+                                {d.cmpTitle}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        <div
+                          style={{
+                            display: 'grid',
+                            gridTemplateColumns: `repeat(${cols.length}, 1fr)`,
+                          }}
+                        >
+                          {cols.map((col, ci) => (
+                            <div
+                              key={col.id}
+                              style={{
+                                position: 'relative',
+                                padding: '28px 22px',
+                                borderLeft: ci === 0 ? '0' : '1px solid #E8E5DE',
+                                background: col.featured
+                                  ? 'linear-gradient(180deg, rgba(212,165,116,0.10) 0%, rgba(212,165,116,0.02) 100%)'
+                                  : '#FFFFFF',
+                              }}
+                            >
+                              {col.featured && (
+                                <>
+                                  <div
+                                    style={{
+                                      position: 'absolute',
+                                      top: 0,
+                                      left: -1,
+                                      right: -1,
+                                      height: 3,
+                                      backgroundColor: '#D4A574',
+                                    }}
+                                  />
+                                  {col.ribbonLabel && (
+                                    <div
+                                      style={{
+                                        position: 'absolute',
+                                        top: -1,
+                                        right: 18,
+                                        backgroundColor: '#171D97',
+                                        color: '#FFFFFF',
+                                        fontSize: 9,
+                                        letterSpacing: '0.14em',
+                                        fontWeight: 700,
+                                        padding: '5px 10px',
+                                        borderRadius: '0 0 3px 3px',
+                                      }}
+                                    >
+                                      {col.ribbonLabel.toUpperCase()}
+                                    </div>
+                                  )}
+                                </>
+                              )}
+                              {col.eyebrow && (
+                                <div
+                                  style={{
+                                    fontSize: 10,
+                                    letterSpacing: '0.16em',
+                                    textTransform: 'uppercase',
+                                    color: col.featured ? '#171D97' : '#5C5A57',
+                                    fontWeight: 600,
+                                    marginBottom: 8,
+                                  }}
+                                >
+                                  {col.eyebrow}
+                                </div>
+                              )}
+                              {col.title && (
+                                <h4
+                                  style={{
+                                    fontFamily: "'Fraunces', Georgia, serif",
+                                    fontWeight: 400,
+                                    fontSize: 24,
+                                    color: '#0A0C3F',
+                                    margin: '0 0 4px',
+                                    letterSpacing: '-0.01em',
+                                    lineHeight: 1,
+                                  }}
+                                >
+                                  {col.title}
+                                </h4>
+                              )}
+                              {col.subtitle && (
+                                <div
+                                  style={{
+                                    fontSize: 12,
+                                    color: '#5C5A57',
+                                    marginBottom: 16,
+                                    fontFamily: "'JetBrains Mono', monospace",
+                                    letterSpacing: '0.02em',
+                                  }}
+                                >
+                                  {col.subtitle}
+                                </div>
+                              )}
+                              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                {col.bullets.map((b) => (
+                                  <li
+                                    key={b.id}
+                                    style={{
+                                      display: 'flex',
+                                      gap: 10,
+                                      fontSize: 12.5,
+                                      lineHeight: 1.45,
+                                      color: b.included ? '#1A1A1F' : '#9A9893',
+                                    }}
+                                  >
+                                    {b.included ? (
+                                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0, marginTop: 2, color: col.featured ? '#D4A574' : '#171D97' }}>
+                                        <path d="M3 7l3 3 5-6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                                      </svg>
+                                    ) : (
+                                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0, marginTop: 2, color: '#9A9893', opacity: 0.5 }}>
+                                        <path d="M3.5 3.5l7 7m0-7l-7 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                                      </svg>
+                                    )}
+                                    <span>{b.text || <span style={{ opacity: 0.4 }}>Bullet text</span>}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
+
                   {/* Callout */}
                   {block.type === 'callout' && (() => {
                     const style = block.data?.calloutStyle || 'info';

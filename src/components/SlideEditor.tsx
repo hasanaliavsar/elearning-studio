@@ -13,7 +13,7 @@ import {
   RotateCw, MousePointerClick, ChevronsUpDown, LayoutPanelTop, Clock, AlertCircle,
   Table2, MousePointer, Music, Code2, Images, MapPin, Sparkles, BookOpen, Play,
   ArrowUpFromLine, ArrowDownFromLine, PanelLeft, PanelRight, Columns2, Grid3x3,
-  GitBranch, ListChecks, Layers
+  GitBranch, ListChecks, Layers, Quote, Columns3
 } from 'lucide-react';
 
 interface Props {
@@ -35,6 +35,8 @@ const blockCategories: { label: string; options: BlockOption[] }[] = [
       { type: 'video', label: 'Video', icon: <Video className="w-4 h-4" /> },
       { type: 'divider', label: 'Divider', icon: <Minus className="w-4 h-4" /> },
       { type: 'code', label: 'Code', icon: <Code className="w-4 h-4" /> },
+      { type: 'pull-quote', label: 'Pull Quote', icon: <Quote className="w-4 h-4" /> },
+      { type: 'comparison', label: 'Comparison', icon: <Columns3 className="w-4 h-4" /> },
     ],
   },
   {

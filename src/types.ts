@@ -133,6 +133,26 @@ export interface LabeledMarker {
 export type CalloutStyle = 'info' | 'warning' | 'tip' | 'success';
 export type ButtonStyle = 'primary' | 'secondary' | 'outline' | 'link';
 
+// --- Pull quote ---
+export type AvatarMode = 'auto' | 'initials' | 'image';
+
+// --- Comparison ---
+export interface ComparisonBullet {
+  id: string;
+  text: string;
+  included: boolean; // true = checkmark, false = muted dash
+}
+
+export interface ComparisonColumn {
+  id: string;
+  eyebrow: string;
+  title: string;
+  subtitle: string; // pricing or amount line, e.g. "From €125,000"
+  bullets: ComparisonBullet[];
+  featured: boolean;
+  ribbonLabel: string; // e.g. "Recommended"
+}
+
 export interface ContentBlockData {
   // Flip cards
   flipCards?: FlipCardItem[];
@@ -182,6 +202,18 @@ export interface ContentBlockData {
   // Card sorting
   cardSortCategories?: string[];
   cardSortCards?: SortCard[];
+  // Pull quote
+  pqQuote?: string;
+  pqName?: string;
+  pqRole?: string;
+  pqOrg?: string;
+  pqAvatarMode?: AvatarMode;
+  pqPortraitUrl?: string;
+  pqInitialsOverride?: string;
+  // Comparison
+  cmpEyebrow?: string;
+  cmpTitle?: string;
+  cmpColumns?: ComparisonColumn[];
 }
 
 export interface ScenarioStep {
@@ -219,7 +251,8 @@ export type ContentBlockType =
   | 'gallery' | 'labeled-graphic'
   | 'image-top' | 'image-bottom' | 'image-left' | 'image-right'
   | 'two-images' | 'three-images'
-  | 'scenario' | 'checklist' | 'card-sorting';
+  | 'scenario' | 'checklist' | 'card-sorting'
+  | 'pull-quote' | 'comparison';
 
 // --- Animation types ---
 export type EntranceAnimation = 'none' | 'fade-in' | 'slide-up' | 'slide-left' | 'slide-right' | 'zoom-in' | 'bounce-in';

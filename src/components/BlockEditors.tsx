@@ -16,6 +16,9 @@ import type {
   ScenarioChoice,
   ChecklistItem,
   SortCard,
+  AvatarMode,
+  ComparisonColumn,
+  ComparisonBullet,
 } from '../types';
 import {
   Plus,
@@ -38,6 +41,12 @@ import {
   Columns,
   MapPin,
   Tag,
+  Quote,
+  User,
+  Columns3,
+  Star,
+  Check,
+  Minus as MinusIcon,
 } from 'lucide-react';
 
 // ---------------------------------------------------------------------------
@@ -1824,6 +1833,446 @@ function CardSortingEditor({ block, onUpdateData }: BlockEditorProps) {
 }
 
 // ---------------------------------------------------------------------------
+// Pull Quote Editor
+// ---------------------------------------------------------------------------
+
+function deriveInitials(name: string): string {
+  if (!name) return '?';
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0]!.slice(0, 2).toUpperCase();
+  return (parts[0]![0]! + parts[parts.length - 1]![0]!).toUpperCase();
+}
+
+function PullQuoteEditor({ block, onUpdateData }: BlockEditorProps) {
+  const data = ensureData(block);
+  const mode: AvatarMode = data.pqAvatarMode ?? 'auto';
+  const name = data.pqName ?? '';
+  const computedInitials =
+    mode === 'initials' && data.pqInitialsOverride
+      ? data.pqInitialsOverride.slice(0, 3).toUpperCase()
+      : deriveInitials(name);
+
+  const handlePortraitUpload = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        onUpdateData({
+          pqPortraitUrl: reader.result as string,
+          pqAvatarMode: 'image',
+        });
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <SectionHeading>Pull Quote</SectionHeading>
+        <span className="text-[10px] text-gray-400 uppercase tracking-wide">Editorial block</span>
+      </div>
+
+      <div>
+        <label className="label">Quote</label>
+        <textarea
+          className="input text-sm resize-none"
+          rows={4}
+          maxLength={320}
+          placeholder="The committee wanted exposure to private credit without the operational drag…"
+          value={data.pqQuote ?? ''}
+          onChange={(e) => onUpdateData({ pqQuote: e.target.value })}
+        />
+        <div className="text-[10px] text-gray-400 text-right mt-1">{(data.pqQuote ?? '').length}/320</div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <div>
+          <label className="label">Name</label>
+          <input
+            className="input text-sm"
+            placeholder="Sofia Kessler"
+            value={name}
+            onChange={(e) => onUpdateData({ pqName: e.target.value })}
+          />
+        </div>
+        <div>
+          <label className="label">Role</label>
+          <input
+            className="input text-sm"
+            placeholder="Head of Allocations"
+            value={data.pqRole ?? ''}
+            onChange={(e) => onUpdateData({ pqRole: e.target.value })}
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="label">Organisation</label>
+        <input
+          className="input text-sm"
+          placeholder="Linnaeus Family Office"
+          value={data.pqOrg ?? ''}
+          onChange={(e) => onUpdateData({ pqOrg: e.target.value })}
+        />
+      </div>
+
+      <div>
+        <label className="label">Avatar</label>
+        <div className="grid grid-cols-3 gap-1 p-1 bg-ivory-100 rounded-md" style={{ backgroundColor: '#F4F1EB' }}>
+          {(['auto', 'initials', 'image'] as AvatarMode[]).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => onUpdateData({ pqAvatarMode: m })}
+              className={`text-xs py-1.5 rounded transition-colors capitalize ${
+                mode === m ? 'bg-white shadow-sm font-medium' : 'text-gray-500 hover:text-gray-800'
+              }`}
+              style={mode === m ? { color: '#171D97' } : {}}
+            >
+              {m === 'auto' ? 'Auto initials' : m}
+            </button>
+          ))}
+        </div>
+
+        {mode === 'initials' && (
+          <div className="mt-2">
+            <input
+              className="input text-sm"
+              maxLength={3}
+              placeholder={deriveInitials(name)}
+              value={data.pqInitialsOverride ?? ''}
+              onChange={(e) => onUpdateData({ pqInitialsOverride: e.target.value.toUpperCase() })}
+            />
+            <p className="text-[10px] text-gray-400 mt-1">Up to 3 characters. Leave blank to use auto-derived.</p>
+          </div>
+        )}
+
+        {mode === 'image' && (
+          <div className="mt-2 flex items-center gap-2">
+            {data.pqPortraitUrl ? (
+              <>
+                <img
+                  src={data.pqPortraitUrl}
+                  alt=""
+                  className="w-12 h-12 rounded-full object-cover border"
+                  style={{ borderColor: '#E8E5DE' }}
+                />
+                <button onClick={handlePortraitUpload} className="btn-secondary text-xs">Replace</button>
+                <button
+                  onClick={() => onUpdateData({ pqPortraitUrl: '' })}
+                  className="btn-icon"
+                  title="Remove portrait"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </>
+            ) : (
+              <button onClick={handlePortraitUpload} className="btn-secondary text-xs w-full justify-center">
+                <Image className="w-3 h-3 mr-1" /> Upload portrait
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Live preview */}
+      <div className="rounded-md p-4" style={{ backgroundColor: '#FAF8F4', borderLeft: '3px solid #171D97' }}>
+        <div className="flex items-start gap-3">
+          {mode === 'image' && data.pqPortraitUrl ? (
+            <img
+              src={data.pqPortraitUrl}
+              alt=""
+              className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+            />
+          ) : (
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{
+                background: 'linear-gradient(135deg, #171D97 0%, #0A0C3F 100%)',
+                color: '#D4A574',
+                fontFamily: "'Fraunces', Georgia, serif",
+                fontSize: 16,
+                fontWeight: 500,
+              }}
+            >
+              {computedInitials}
+            </div>
+          )}
+          <div className="flex-1 min-w-0">
+            <p
+              className="text-sm leading-snug m-0"
+              style={{ fontFamily: "'Fraunces', Georgia, serif", color: '#0A0C3F' }}
+            >
+              “{data.pqQuote || 'Your quotation will appear here…'}”
+            </p>
+            <div className="text-xs mt-1.5" style={{ color: '#5C5A57' }}>
+              <span className="font-medium" style={{ color: '#0A0C3F' }}>{name || 'Name'}</span>
+              {data.pqRole && <> · {data.pqRole}</>}
+              {data.pqOrg && <>, <b style={{ color: '#171D97', fontWeight: 600 }}>{data.pqOrg}</b></>}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Comparison Editor
+// ---------------------------------------------------------------------------
+
+function makeColumn(seed: Partial<ComparisonColumn> = {}): ComparisonColumn {
+  return {
+    id: generateId(),
+    eyebrow: '',
+    title: '',
+    subtitle: '',
+    bullets: [
+      { id: generateId(), text: '', included: true },
+      { id: generateId(), text: '', included: true },
+      { id: generateId(), text: '', included: false },
+    ],
+    featured: false,
+    ribbonLabel: 'Recommended',
+    ...seed,
+  };
+}
+
+function ComparisonEditor({ block, onUpdateData }: BlockEditorProps) {
+  const data = ensureData(block);
+  const columns = data.cmpColumns ?? [];
+
+  const ensureColumns = () => {
+    if (columns.length === 0) {
+      onUpdateData({
+        cmpColumns: [
+          makeColumn({ eyebrow: 'Class A', title: 'Standard' }),
+          makeColumn({ eyebrow: 'Class B', title: 'Plus', featured: true }),
+          makeColumn({ eyebrow: 'Class C', title: 'Institutional' }),
+        ],
+      });
+    }
+  };
+
+  const updateCols = (updated: ComparisonColumn[]) => onUpdateData({ cmpColumns: updated });
+
+  const setColCount = (n: 2 | 3 | 4) => {
+    let next = [...columns];
+    if (next.length === 0) {
+      next = Array.from({ length: n }, (_, i) =>
+        makeColumn({ eyebrow: `Option ${String.fromCharCode(65 + i)}` })
+      );
+    } else if (next.length < n) {
+      while (next.length < n) {
+        next.push(makeColumn({ eyebrow: `Option ${String.fromCharCode(65 + next.length)}` }));
+      }
+    } else if (next.length > n) {
+      next = next.slice(0, n);
+      // Ensure at most one featured
+      const firstFeat = next.findIndex((c) => c.featured);
+      next = next.map((c, i) => ({ ...c, featured: i === firstFeat }));
+    }
+    updateCols(next);
+  };
+
+  const updateColumn = (id: string, updates: Partial<ComparisonColumn>) => {
+    updateCols(columns.map((c) => (c.id === id ? { ...c, ...updates } : c)));
+  };
+
+  const setFeatured = (id: string) => {
+    updateCols(columns.map((c) => ({ ...c, featured: c.id === id ? !c.featured : false })));
+  };
+
+  const addBullet = (colId: string) => {
+    updateCols(
+      columns.map((c) =>
+        c.id === colId
+          ? { ...c, bullets: [...c.bullets, { id: generateId(), text: '', included: true }] }
+          : c
+      )
+    );
+  };
+
+  const updateBullet = (colId: string, bulletId: string, updates: Partial<ComparisonBullet>) => {
+    updateCols(
+      columns.map((c) =>
+        c.id === colId
+          ? { ...c, bullets: c.bullets.map((b) => (b.id === bulletId ? { ...b, ...updates } : b)) }
+          : c
+      )
+    );
+  };
+
+  const removeBullet = (colId: string, bulletId: string) => {
+    updateCols(
+      columns.map((c) =>
+        c.id === colId ? { ...c, bullets: c.bullets.filter((b) => b.id !== bulletId) } : c
+      )
+    );
+  };
+
+  const colCount = columns.length || 3;
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <SectionHeading>Comparison</SectionHeading>
+        <span className="text-[10px] text-gray-400 uppercase tracking-wide">Side-by-side block</span>
+      </div>
+
+      {columns.length === 0 ? (
+        <EmptyState
+          icon={Columns3}
+          text="No comparison set up yet"
+          onAction={ensureColumns}
+          actionLabel="Create 3 columns"
+        />
+      ) : (
+        <>
+          <div>
+            <label className="label">Header eyebrow (optional)</label>
+            <input
+              className="input text-sm"
+              placeholder="Choose the right share class"
+              value={data.cmpEyebrow ?? ''}
+              onChange={(e) => onUpdateData({ cmpEyebrow: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="label">Header title (optional)</label>
+            <input
+              className="input text-sm"
+              placeholder="Three ways to access this fund"
+              value={data.cmpTitle ?? ''}
+              onChange={(e) => onUpdateData({ cmpTitle: e.target.value })}
+            />
+          </div>
+
+          <div>
+            <label className="label">Columns</label>
+            <div
+              className="grid grid-cols-3 gap-1 p-1 rounded-md"
+              style={{ backgroundColor: '#F4F1EB' }}
+            >
+              {([2, 3, 4] as const).map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setColCount(n)}
+                  className={`text-xs py-1.5 rounded transition-colors ${
+                    colCount === n ? 'bg-white shadow-sm font-medium' : 'text-gray-500 hover:text-gray-800'
+                  }`}
+                  style={colCount === n ? { color: '#171D97' } : {}}
+                >
+                  {n} columns
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {columns.map((col, idx) => (
+            <div key={col.id} className="card p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-gray-500">Column {idx + 1}</span>
+                <button
+                  onClick={() => setFeatured(col.id)}
+                  className="text-[10px] px-2 py-1 rounded inline-flex items-center gap-1 transition-colors"
+                  style={
+                    col.featured
+                      ? { backgroundColor: '#171D97', color: '#FFFFFF' }
+                      : { backgroundColor: '#F4F1EB', color: '#5C5A57' }
+                  }
+                  title="Mark as featured / recommended"
+                >
+                  <Star className="w-3 h-3" fill={col.featured ? '#D4A574' : 'none'} />
+                  {col.featured ? 'Featured' : 'Make featured'}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  className="input text-xs"
+                  placeholder="Eyebrow (Class A)"
+                  value={col.eyebrow}
+                  onChange={(e) => updateColumn(col.id, { eyebrow: e.target.value })}
+                />
+                <input
+                  className="input text-xs"
+                  placeholder="Title (Standard)"
+                  value={col.title}
+                  onChange={(e) => updateColumn(col.id, { title: e.target.value })}
+                />
+              </div>
+              <input
+                className="input text-xs"
+                placeholder="Subtitle / pricing line (From €125,000)"
+                value={col.subtitle}
+                onChange={(e) => updateColumn(col.id, { subtitle: e.target.value })}
+              />
+
+              {col.featured && (
+                <input
+                  className="input text-xs"
+                  placeholder="Ribbon label (Recommended)"
+                  value={col.ribbonLabel}
+                  onChange={(e) => updateColumn(col.id, { ribbonLabel: e.target.value })}
+                />
+              )}
+
+              <div className="space-y-1 pt-1">
+                {col.bullets.map((b) => (
+                  <div key={b.id} className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => updateBullet(col.id, b.id, { included: !b.included })}
+                      className="w-6 h-6 rounded flex items-center justify-center flex-shrink-0"
+                      style={
+                        b.included
+                          ? { backgroundColor: '#171D97', color: '#FFFFFF' }
+                          : { backgroundColor: '#F4F1EB', color: '#9A9893' }
+                      }
+                      title={b.included ? 'Included' : 'Not included'}
+                    >
+                      {b.included ? <Check className="w-3 h-3" /> : <MinusIcon className="w-3 h-3" />}
+                    </button>
+                    <input
+                      className="input text-xs"
+                      placeholder="Bullet text"
+                      value={b.text}
+                      onChange={(e) => updateBullet(col.id, b.id, { text: e.target.value })}
+                    />
+                    <button
+                      onClick={() => removeBullet(col.id, b.id)}
+                      className="btn-icon w-6 h-6 text-red-400 hover:text-red-600"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  onClick={() => addBullet(col.id)}
+                  className="text-xs flex items-center gap-1 hover:underline"
+                  style={{ color: '#171D97' }}
+                >
+                  <Plus className="w-3 h-3" /> Add bullet
+                </button>
+              </div>
+            </div>
+          ))}
+        </>
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Block Editor (switch)
 // ---------------------------------------------------------------------------
 
@@ -1873,6 +2322,10 @@ export function BlockEditor(props: BlockEditorProps) {
       return <ChecklistEditor {...props} />;
     case 'card-sorting':
       return <CardSortingEditor {...props} />;
+    case 'pull-quote':
+      return <PullQuoteEditor {...props} />;
+    case 'comparison':
+      return <ComparisonEditor {...props} />;
     default:
       return null;
   }
