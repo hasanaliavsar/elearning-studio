@@ -4,7 +4,7 @@ import type { Course, Module, Lesson, Slide, Question, ContentBlock, EditorState
 import { generateId, deepClone } from './utils/helpers';
 import moonfareEmergencyCourse from './data/moonfare-emergency-course.json';
 
-const SEED_FLAG_KEY = 'elearning-studio-seed-v1-applied';
+const SEED_FLAG_KEY = 'elearning-studio-seed-v2-applied';
 
 function buildSeedCourses(): Course[] {
   return [
