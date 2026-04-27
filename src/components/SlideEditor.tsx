@@ -306,6 +306,7 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
             'table', 'button', 'audio', 'embed', 'gallery', 'labeled-graphic',
             'image-top', 'image-bottom', 'image-left', 'image-right', 'two-images', 'three-images',
             'scenario', 'checklist', 'card-sorting',
+            'pull-quote', 'comparison',
           ].includes(block.type) && (
             <BlockEditor
               block={block}
