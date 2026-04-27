@@ -869,8 +869,11 @@ function generatePlayer(): string {
       container.style.position = '';
     }
 
-    var isDark = slide.backgroundColor === '#0f172a' || slide.backgroundColor === '#1e293b';
-    var textColor = isDark ? '#f8fafc' : '#1e293b';
+    // Match Preview.tsx dark-bg list: brand navy variants display white text.
+    var darkBgs = ['#0f172a', '#1e293b', '#171D97', '#0A0C3F', '#101258', '#101321'];
+    var bg = (slide.backgroundColor || '').toLowerCase();
+    var isDark = darkBgs.some(function(c) { return c.toLowerCase() === bg; });
+    var textColor = isDark ? '#FFFFFF' : '#111827';
 
     // Cover slide layout
     if (slide.isCoverSlide) {
@@ -891,13 +894,10 @@ function generatePlayer(): string {
       return;
     }
 
-    // Title + breadcrumb (skip on full-bleed slides — the content block fills the slide edge-to-edge)
-    if (!slide.fullBleed) {
-      if (slide.title) {
-        html += '<h1 style="color:' + textColor + ';font-size:2rem;font-weight:700;margin-bottom:1.5rem;">' + slide.title + '</h1>';
-      }
-      html += '<p style="color:' + (isDark ? '#94a3b8' : '#64748b') + ';font-size:0.75rem;margin-bottom:1rem;">' +
-        escapeHtml(slide.moduleTitle) + ' &rsaquo; ' + escapeHtml(slide.lessonTitle) + '</p>';
+    // Slide title — match Preview.tsx: text-3xl font-bold mb-6, white on dark bg.
+    // No breadcrumb (Preview doesn't show one).
+    if (!slide.fullBleed && slide.title) {
+      html += '<h1 style="color:' + textColor + ';font-size:1.875rem;font-weight:700;line-height:1.2;margin-bottom:1.5rem;">' + escapeHtml(slide.title) + '</h1>';
     }
 
     // Learning objectives
@@ -2336,9 +2336,13 @@ function generatePlayer(): string {
 function generateStyles(course: Course): string {
   const primary = course.settings.primaryColor || '#4f46e5';
   const font = course.settings.fontFamily || 'Inter';
+  const bodyFontImport = `family=${font.replace(/ /g, '+')}:wght@300;400;500;600;700`;
+  // Always include Fraunces — used heavily in pull-quote, comparison, landing, premium blocks.
+  // Match the app's index.html font stack exactly.
+  const fraunces = `family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600`;
 
   return `
-@import url('https://fonts.googleapis.com/css2?family=${font.replace(/ /g, '+')}:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?${bodyFontImport}&${fraunces}&display=swap');
 
 * {
   margin: 0;
@@ -2714,9 +2718,10 @@ body {
 
 #slide-content {
   flex: 1;
-  padding: 1rem 2.5rem 2rem;
+  padding: 2.5rem;
   overflow-y: auto;
   overflow-x: hidden;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 #slide-content h1 { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.2; }
@@ -3792,25 +3797,27 @@ body {
   font-weight: 600;
 }
 
-/* ========= Learning Objectives ========= */
+/* ========= Learning Objectives — match Preview.tsx (sand bg + navy left rule) ========= */
 .objectives-box {
-  background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
-  border: 1px solid #bfdbfe;
-  border-radius: 0.75rem;
-  padding: 1.25rem 1.5rem;
+  background: #FAF8F4;
+  border-left: 3px solid #171D97;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
   margin-bottom: 1.5rem;
 }
 .objectives-header {
-  font-weight: 700;
-  font-size: 0.938rem;
-  color: #1e40af;
+  font-weight: 600;
+  font-size: 0.6875rem;
+  color: #171D97;
   margin-bottom: 0.75rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
 }
 .objectives-icon {
-  font-size: 1.125rem;
+  font-size: 1rem;
 }
 .objectives-list {
   list-style: none;
@@ -3822,12 +3829,12 @@ body {
   align-items: flex-start;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: #334155;
+  color: #1A1A1F;
   line-height: 1.6;
   margin-bottom: 0.375rem;
 }
 .objectives-check {
-  color: #10b981;
+  color: #171D97;
   font-weight: 700;
   flex-shrink: 0;
   margin-top: 0.1rem;
