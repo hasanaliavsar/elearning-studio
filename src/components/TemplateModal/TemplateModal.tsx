@@ -1,10 +1,16 @@
 // src/components/TemplateModal/TemplateModal.tsx
-// Grid-style template picker.
-// Picks a template, calls back with a fully-formed Slide.
+// 3-column card grid template picker with hand-coded SVG thumbnails.
+//
+// Drop alongside thumbnails.tsx. Same path: src/components/TemplateModal/
+//
+// Public contract:
+//   <TemplateModal open onClose onInsert={slide => …} />
+// Pulls templates from src/data/templates.ts.
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import type { Slide } from '../../types';
 import { SLIDE_TEMPLATES, SlideTemplate } from '../../data/templates';
+import { THUMBNAILS } from './thumbnails';
 
 interface Props {
   open: boolean;
@@ -18,57 +24,30 @@ type Category = typeof CATEGORIES[number];
 export function TemplateModal({ open, onClose, onInsert }: Props) {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<Category>('All');
-  const [selectedKey, setSelectedKey] = useState<string>(SLIDE_TEMPLATES[0]?.key ?? '');
-  const gridRef = useRef<HTMLDivElement>(null);
+  const [hoveredKey, setHoveredKey] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return SLIDE_TEMPLATES.filter(t => {
       if (category !== 'All' && t.category !== category) return false;
       if (!q) return true;
-      return t.name.toLowerCase().includes(q) || t.summary.toLowerCase().includes(q);
+      return (
+        t.name.toLowerCase().includes(q) ||
+        t.summary.toLowerCase().includes(q) ||
+        t.category.toLowerCase().includes(q)
+      );
     });
   }, [query, category]);
 
-  const selected = filtered.find(t => t.key === selectedKey) ?? filtered[0];
-
-  useEffect(() => {
-    if (filtered.length && !filtered.find(t => t.key === selectedKey)) {
-      const first = filtered[0];
-      if (first) setSelectedKey(first.key);
-    }
-  }, [filtered, selectedKey]);
-
+  // Keyboard
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') { e.preventDefault(); onClose(); return; }
-      if (e.key === 'Enter' && selected) { e.preventDefault(); insert(selected); return; }
-      const i = filtered.findIndex(t => t.key === selectedKey);
-      if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        const next = filtered[Math.min(filtered.length - 1, i + 1)];
-        if (next) setSelectedKey(next.key);
-      }
-      if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        const prev = filtered[Math.max(0, i - 1)];
-        if (prev) setSelectedKey(prev.key);
-      }
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        const next = filtered[Math.min(filtered.length - 1, i + 3)];
-        if (next) setSelectedKey(next.key);
-      }
-      if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        const prev = filtered[Math.max(0, i - 3)];
-        if (prev) setSelectedKey(prev.key);
-      }
+      if (e.key === 'Escape') { e.preventDefault(); onClose(); }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [open, filtered, selectedKey, selected]);
+  }, [open, onClose]);
 
   if (!open) return null;
 
@@ -81,25 +60,38 @@ export function TemplateModal({ open, onClose, onInsert }: Props) {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
       onClick={onClose}
+      style={{ fontFamily: "-apple-system, system-ui, 'Helvetica Neue', Arial, sans-serif" }}
     >
       <div
-        className="bg-white w-[1140px] max-w-[95vw] h-[760px] max-h-[94vh] rounded-xl shadow-2xl flex flex-col overflow-hidden"
+        className="w-[1180px] max-w-[96vw] h-[760px] max-h-[94vh] rounded-xl shadow-2xl flex flex-col overflow-hidden"
+        style={{ backgroundColor: '#FAF8F4' }}
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-start justify-between px-8 pt-7 pb-5">
           <div>
-            <p className="text-[10px] font-semibold tracking-[0.14em] uppercase text-[#171D97] mb-1">New slide</p>
-            <h2 className="text-[28px] font-medium text-gray-900 mb-2" style={{ fontFamily: 'Fraunces, serif' }}>
+            <p
+              className="text-[10px] font-semibold tracking-[0.16em] uppercase mb-1"
+              style={{ color: '#171D97' }}
+            >
+              New slide
+            </p>
+            <h2
+              className="text-[32px] leading-tight font-medium"
+              style={{ fontFamily: "Fraunces, 'Times New Roman', Georgia, serif", color: '#0A0C3F', letterSpacing: '-0.02em' }}
+            >
               Choose a template
             </h2>
-            <p className="text-[13px] text-gray-500 leading-relaxed max-w-[520px]">
-              Start with a layout that matches your intent. Every template is fully editable after insertion.
+            <p className="text-sm mt-1.5" style={{ color: '#5C5A57' }}>
+              Each template is a fully designed starting point. You can edit anything after inserting.
             </p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-md hover:bg-gray-100 flex items-center justify-center text-gray-500"
+            className="w-9 h-9 rounded-md flex items-center justify-center text-base transition"
+            style={{ color: '#5C5A57' }}
+            onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#FFFFFF')}
+            onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
             aria-label="Close"
           >
             ✕
@@ -108,96 +100,143 @@ export function TemplateModal({ open, onClose, onInsert }: Props) {
 
         {/* Filters */}
         <div className="flex items-center gap-3 px-8 pb-5">
-          <div className="relative w-[280px]">
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.3-4.3" />
-            </svg>
+          <div className="relative flex-1 max-w-[360px]">
             <input
               type="text"
               placeholder="Search templates…"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              className="w-full h-10 pl-9 pr-3 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#171D97]/20 focus:border-[#171D97]"
+              className="w-full h-10 pl-9 pr-3 text-sm rounded-md focus:outline-none transition"
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #E8E5DE',
+                color: '#1A1A1F',
+              }}
+              onFocus={e => (e.currentTarget.style.borderColor = '#171D97')}
+              onBlur={e => (e.currentTarget.style.borderColor = '#E8E5DE')}
               autoFocus
             />
+            <svg
+              className="absolute left-3 top-1/2 -translate-y-1/2"
+              width="14" height="14" viewBox="0 0 16 16" fill="none"
+            >
+              <circle cx="7" cy="7" r="5" stroke="#5C5A57" strokeWidth="1.5" />
+              <path d="M11 11l3 3" stroke="#5C5A57" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
           </div>
-          <div className="flex gap-1.5 flex-1">
-            {CATEGORIES.map(c => (
-              <button
-                key={c}
-                onClick={() => setCategory(c)}
-                className={`h-9 px-3.5 text-[13px] font-medium rounded-full transition ${
-                  category === c
-                    ? 'bg-[#171D97] text-white'
-                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                {c}
-              </button>
-            ))}
+          <div className="flex gap-1.5 flex-wrap">
+            {CATEGORIES.map(c => {
+              const active = category === c;
+              return (
+                <button
+                  key={c}
+                  onClick={() => setCategory(c)}
+                  className="h-9 px-3.5 text-xs font-medium rounded-md transition"
+                  style={{
+                    backgroundColor: active ? '#171D97' : '#FFFFFF',
+                    color: active ? '#FFFFFF' : '#1A1A1F',
+                    border: `1px solid ${active ? '#171D97' : '#E8E5DE'}`,
+                  }}
+                >
+                  {c}
+                </button>
+              );
+            })}
           </div>
-          <span className="text-[12px] text-gray-400 whitespace-nowrap">{filtered.length} template{filtered.length === 1 ? '' : 's'}</span>
+          <div className="flex-1" />
+          <span className="text-xs" style={{ color: '#5C5A57' }}>
+            {filtered.length} {filtered.length === 1 ? 'template' : 'templates'}
+          </span>
         </div>
 
         {/* Grid */}
-        <div ref={gridRef} className="flex-1 overflow-y-auto px-8 pb-8 bg-[#FAF8F4]">
+        <div className="flex-1 overflow-y-auto px-8 pb-8">
           {filtered.length === 0 ? (
-            <div className="p-16 text-center text-sm text-gray-400">No templates match your search.</div>
+            <div className="h-full flex items-center justify-center">
+              <p className="text-sm" style={{ color: '#5C5A57' }}>No templates match your search.</p>
+            </div>
           ) : (
-            <div className="grid grid-cols-3 gap-4 pt-2">
+            <div className="grid grid-cols-3 gap-5">
               {filtered.map(t => {
-                const isSelected = t.key === selected?.key;
-                const built = t.build();
-                const blockCount = built.content.length + built.questions.length;
+                const Thumb = THUMBNAILS[t.key];
+                const isHovered = hoveredKey === t.key;
                 return (
                   <button
                     key={t.key}
-                    onClick={() => setSelectedKey(t.key)}
-                    onDoubleClick={() => insert(t)}
-                    className={`group bg-white rounded-lg border-2 transition text-left flex flex-col overflow-hidden ${
-                      isSelected
-                        ? 'border-[#171D97] shadow-md'
-                        : 'border-transparent hover:border-gray-200 shadow-sm hover:shadow'
-                    }`}
+                    onClick={() => insert(t)}
+                    onMouseEnter={() => setHoveredKey(t.key)}
+                    onMouseLeave={() => setHoveredKey(null)}
+                    className="text-left rounded-lg overflow-hidden transition group"
+                    style={{
+                      backgroundColor: '#FFFFFF',
+                      border: `1px solid ${isHovered ? '#171D97' : '#E8E5DE'}`,
+                      boxShadow: isHovered
+                        ? '0 12px 28px -8px rgba(23, 29, 151, 0.18)'
+                        : '0 1px 2px rgba(10, 12, 63, 0.04)',
+                      transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+                    }}
                   >
-                    {/* Thumbnail area */}
-                    <div className="relative h-[160px] bg-[#F3F0EA] flex items-center justify-center overflow-hidden">
-                      <ThumbPreview template={t} />
+                    {/* Thumbnail */}
+                    <div
+                      className="relative w-full"
+                      style={{
+                        aspectRatio: '320 / 200',
+                        backgroundColor: '#FAF8F4',
+                        borderBottom: '1px solid #E8E5DE',
+                      }}
+                    >
+                      {Thumb ? (
+                        <Thumb className="w-full h-full block" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-xs" style={{ color: '#5C5A57' }}>
+                          {t.name}
+                        </div>
+                      )}
                       {t.badge && (
-                        <span className="absolute top-3 right-3 text-[9px] font-semibold tracking-wider uppercase text-[#D4A574] bg-white px-2 py-1 rounded-full shadow-sm">
+                        <span
+                          className="absolute top-2.5 right-2.5 text-[9px] font-bold tracking-[0.12em] uppercase px-2 py-1 rounded"
+                          style={{
+                            backgroundColor: '#D4A574',
+                            color: '#0A0C3F',
+                          }}
+                        >
                           {t.badge}
                         </span>
                       )}
                     </div>
+
                     {/* Meta */}
-                    <div className="p-4 flex flex-col gap-1.5">
-                      <div className="flex items-baseline justify-between gap-2">
-                        <h3 className="text-[15px] font-medium text-gray-900 truncate" style={{ fontFamily: 'Fraunces, serif' }}>
-                          {t.name}
-                        </h3>
-                        <span className="text-[9px] font-semibold tracking-wider uppercase text-[#171D97] whitespace-nowrap">
+                    <div className="px-4 py-3.5">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span
+                          className="text-[10px] font-semibold tracking-[0.12em] uppercase"
+                          style={{ color: '#171D97' }}
+                        >
                           {t.category}
                         </span>
+                        <span
+                          className="text-[10px] font-medium opacity-0 group-hover:opacity-100 transition"
+                          style={{ color: '#171D97' }}
+                        >
+                          Insert →
+                        </span>
                       </div>
-                      <p className="text-[12px] text-gray-500 leading-snug line-clamp-2 min-h-[32px]">{t.summary}</p>
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {built.content.slice(0, 4).map((b, i) => (
-                          <span key={i} className="text-[9px] font-mono text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">
-                            {b.type}
-                          </span>
-                        ))}
-                        {built.questions.length > 0 && (
-                          <span className="text-[9px] font-mono text-[#D4A574] bg-[#D4A574]/10 px-1.5 py-0.5 rounded">
-                            {built.questions.length}q
-                          </span>
-                        )}
-                        {blockCount > 4 && (
-                          <span className="text-[9px] font-mono text-gray-400 px-1.5 py-0.5">
-                            +{blockCount - 4}
-                          </span>
-                        )}
-                      </div>
+                      <h3
+                        className="text-[15px] font-medium mb-1"
+                        style={{
+                          fontFamily: "Fraunces, 'Times New Roman', Georgia, serif",
+                          color: '#0A0C3F',
+                          letterSpacing: '-0.005em',
+                        }}
+                      >
+                        {t.name}
+                      </h3>
+                      <p
+                        className="text-xs leading-relaxed line-clamp-2"
+                        style={{ color: '#5C5A57' }}
+                      >
+                        {t.summary}
+                      </p>
                     </div>
                   </button>
                 );
@@ -205,156 +244,7 @@ export function TemplateModal({ open, onClose, onInsert }: Props) {
             </div>
           )}
         </div>
-
-        {/* Footer */}
-        <div className="flex items-center justify-between px-8 py-4 border-t border-gray-200 bg-white">
-          <div className="flex items-center gap-3 text-[11px] text-gray-400">
-            <span><kbd className="px-1.5 py-0.5 bg-gray-100 rounded font-mono">↑↓←→</kbd> navigate</span>
-            <span><kbd className="px-1.5 py-0.5 bg-gray-100 rounded font-mono">Enter</kbd> insert</span>
-            <span><kbd className="px-1.5 py-0.5 bg-gray-100 rounded font-mono">Esc</kbd> close</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={onClose}
-              className="h-10 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() => selected && insert(selected)}
-              disabled={!selected}
-              className="h-10 px-5 text-sm font-medium bg-[#171D97] text-white rounded-md hover:bg-[#0A0C3F] transition disabled:opacity-50"
-            >
-              + Insert {selected ? selected.name : 'template'}
-            </button>
-          </div>
-        </div>
       </div>
-    </div>
-  );
-}
-
-// Lightweight per-template thumbnail. Picks a visual based on the template key
-// or category so authors can scan the grid without rendering full slides.
-function ThumbPreview({ template }: { template: SlideTemplate }) {
-  const key = template.key;
-  const cat = template.category;
-
-  // Per-template hand-tuned thumbnails for the most distinctive ones
-  if (key === 'blank') {
-    return (
-      <div className="w-[78%] h-[78%] border border-dashed border-gray-300 rounded-md flex items-center justify-center text-gray-300">
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-      </div>
-    );
-  }
-  if (key === 'pull-quote') {
-    return (
-      <div className="w-[78%] flex flex-col items-center text-center gap-2">
-        <span className="text-[#D4A574] text-2xl leading-none" style={{ fontFamily: 'Fraunces, serif' }}>“</span>
-        <p className="text-[11px] italic text-gray-700 leading-snug" style={{ fontFamily: 'Fraunces, serif' }}>
-          You can&apos;t predict. You can prepare.
-        </p>
-        <div className="flex items-center gap-1.5 mt-1">
-          <div className="w-4 h-4 rounded-full bg-[#171D97]" />
-          <span className="text-[9px] text-gray-500">Attribution</span>
-        </div>
-      </div>
-    );
-  }
-  if (key === 'number-lead' || cat === 'Data') {
-    return (
-      <div className="w-[80%] flex flex-col gap-2">
-        <div className="text-[28px] font-medium text-[#171D97] leading-none" style={{ fontFamily: 'Fraunces, serif' }}>
-          23<span className="text-base">%</span>
-        </div>
-        <p className="text-[9px] text-gray-500 leading-tight">Headline figure with sourced context</p>
-        <div className="flex items-end gap-1 h-6 mt-1">
-          {[3, 5, 4, 7, 6, 8].map((h, i) => (
-            <div key={i} className="flex-1 bg-[#171D97] rounded-sm" style={{ height: `${h * 10}%`, opacity: 0.4 + i * 0.1 }} />
-          ))}
-        </div>
-      </div>
-    );
-  }
-  if (key === 'editorial-split' || cat === 'Editorial') {
-    return (
-      <div className="w-[82%] flex gap-2 items-center">
-        <div className="flex-1 flex flex-col gap-1">
-          <p className="text-[10px] font-medium text-gray-900 leading-tight" style={{ fontFamily: 'Fraunces, serif' }}>
-            The case for <em>private</em> markets
-          </p>
-          <div className="h-1 bg-gray-200 rounded w-full" />
-          <div className="h-1 bg-gray-200 rounded w-[80%]" />
-          <div className="h-1 bg-gray-200 rounded w-[60%]" />
-        </div>
-        <div className="w-12 h-14 rounded bg-gradient-to-br from-[#171D97] to-[#0A0C3F]" />
-      </div>
-    );
-  }
-  if (key === 'cover-hotspots') {
-    return (
-      <div className="w-[82%] h-[78%] rounded-md bg-gradient-to-br from-[#171D97] to-[#0A0C3F] flex items-center justify-center p-3">
-        <p className="text-[11px] text-white text-center leading-tight" style={{ fontFamily: 'Fraunces, serif' }}>
-          How a fund<br />actually makes money
-        </p>
-      </div>
-    );
-  }
-  if (cat === 'Reference') {
-    return (
-      <div className="w-[82%] flex flex-col gap-1.5">
-        <p className="text-[10px] font-medium text-gray-900 mb-1" style={{ fontFamily: 'Fraunces, serif' }}>
-          Glossary of terms
-        </p>
-        {['AUM — assets under management', 'Capital call (drawdown)', 'Carried interest (carry)'].map((t, i) => (
-          <div key={i} className="flex items-center gap-1.5 border-b border-gray-200 pb-0.5">
-            <span className="text-[8px] text-gray-700 truncate flex-1">{t}</span>
-            <span className="text-gray-300 text-[8px]">▾</span>
-          </div>
-        ))}
-      </div>
-    );
-  }
-  if (cat === 'Assessment') {
-    return (
-      <div className="w-[82%] flex flex-col gap-1.5">
-        <p className="text-[11px] font-medium text-gray-900 mb-1" style={{ fontFamily: 'Fraunces, serif' }}>
-          Let&apos;s see what stuck
-        </p>
-        {[1, 2, 3].map(i => (
-          <div key={i} className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full border border-gray-300" />
-            <div className="flex-1 h-1.5 bg-gray-200 rounded" />
-          </div>
-        ))}
-      </div>
-    );
-  }
-  if (cat === 'How-to') {
-    return (
-      <div className="w-[82%] flex items-center gap-1">
-        {[1, 2, 3, 4].map(i => (
-          <div key={i} className="flex-1 flex flex-col items-center gap-1">
-            <div className="w-5 h-5 rounded-full bg-[#171D97] text-white text-[8px] flex items-center justify-center">{i}</div>
-            <div className="w-full h-1 bg-gray-200 rounded" />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  // Default fallback — typographic
-  return (
-    <div className="w-[80%] flex flex-col gap-1.5">
-      <p className="text-[12px] font-medium text-gray-900 truncate" style={{ fontFamily: 'Fraunces, serif' }}>
-        {template.name}
-      </p>
-      <div className="h-1 bg-gray-200 rounded w-full" />
-      <div className="h-1 bg-gray-200 rounded w-[80%]" />
-      <div className="h-1 bg-gray-200 rounded w-[60%]" />
     </div>
   );
 }
