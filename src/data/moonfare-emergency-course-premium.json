@@ -1,0 +1,921 @@
+{
+  "id": "course_emergency_premium_2026",
+  "title": "Product Emergency Process — Premium Stakeholder Edition",
+  "description": "A 20-minute, premium walkthrough of how Moonfare handles product emergencies. Built for stakeholders who need to know what to expect, who does what, and how to respond — without becoming an incident responder.",
+  "author": "Moonfare Product Operations",
+  "version": "2.0.0",
+  "language": "en",
+  "thumbnail": "",
+  "tags": ["emergency", "stakeholder", "premium"],
+  "createdAt": "2026-04-27T00:00:00.000Z",
+  "updatedAt": "2026-04-27T00:00:00.000Z",
+  "settings": {
+    "passingScore": 70,
+    "showFeedback": true,
+    "allowRetry": true,
+    "maxAttempts": 3,
+    "shuffleQuestions": false,
+    "showProgress": true,
+    "completionCriteria": "all-slides",
+    "primaryColor": "#171D97",
+    "accentColor": "#D4A574",
+    "fontFamily": "Inter",
+    "logoUrl": "",
+    "theme": "moonfare",
+    "defaultTransition": "fade",
+    "defaultAnimation": "fade-in",
+    "showCertificate": true,
+    "certificateTitle": "Certificate of Completion",
+    "certificateOrg": "Moonfare Stakeholder",
+    "enableScrollReveal": true,
+    "enableKeyboardNav": true,
+    "enableGamification": true,
+    "landingPage": {
+      "enabled": true,
+      "backgroundColor": "#171D97",
+      "backgroundGradient": "linear-gradient(160deg, #0A0C3F 0%, #101258 50%, #171D97 100%)",
+      "textColor": "#FFFFFF",
+      "showModuleList": true,
+      "showProgress": true,
+      "showCompanyLogo": true,
+      "companyLogoUrl": "",
+      "companyName": "Moonfare",
+      "tagline": "When something breaks, this is what happens next.",
+      "heroImageUrl": ""
+    }
+  },
+  "modules": [
+    {
+      "id": "mod_premium_1",
+      "title": "Module 1 — What Counts as an Emergency",
+      "description": "The threshold framework: when a product issue becomes a Moonfare emergency.",
+      "thumbnail": "",
+      "color": "#171D97",
+      "lessons": [
+        {
+          "id": "les_premium_1_1",
+          "title": "Recognise the signal",
+          "description": "Severity classification, threshold criteria, and what the highest tier looks like.",
+          "order": 0,
+          "slides": [
+            {
+              "id": "s_p_1_cover",
+              "title": "When something breaks",
+              "layout": "title",
+              "content": [
+                {
+                  "id": "b_p_1_cover_h",
+                  "type": "heading",
+                  "content": "<h1 style=\"font-family:'Fraunces',serif;font-weight:400;font-size:3.4rem;line-height:1.05;color:#FFFFFF;letter-spacing:-0.02em\">When something breaks at Moonfare,<br/>the response is fast,<br/>structured, and transparent.</h1>",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_p_1_cover_t",
+                  "type": "text",
+                  "content": "<p style=\"color:rgba(255,255,255,0.72);font-size:1.05rem;line-height:1.6;max-width:520px\">This 20-minute course teaches you what an emergency looks like, who owns the response, and exactly where you fit in.</p>",
+                  "animation": "fade-in",
+                  "animationDelay": 200
+                }
+              ],
+              "questions": [],
+              "notes": "Cover slide — sets the tone. Premium navy hero.",
+              "backgroundColor": "#0A0C3F",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade",
+              "isCoverSlide": true,
+              "coverSubtitle": "A premium stakeholder briefing"
+            },
+            {
+              "id": "s_p_1_threshold",
+              "title": "The Emergency threshold",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_p_1_th_eyebrow",
+                  "type": "text",
+                  "content": "<p style=\"text-transform:uppercase;letter-spacing:0.18em;font-size:0.7rem;color:#171D97;font-weight:600;margin-bottom:0.5rem\">The threshold</p>",
+                  "animation": "fade-in"
+                },
+                {
+                  "id": "b_p_1_th_h",
+                  "type": "heading",
+                  "content": "<h1 style=\"font-family:'Fraunces',serif;font-weight:400;font-size:5.5rem;line-height:0.95;color:#171D97;letter-spacing:-0.03em;margin:0\">100<span style=\"font-size:2.5rem;color:#D4A574;vertical-align:super\">%</span></h1>",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_p_1_th_sub",
+                  "type": "text",
+                  "content": "<p style=\"font-size:1.05rem;color:#0A0C3F;line-height:1.6;max-width:560px;margin-top:1rem\">An issue becomes an <strong>Emergency</strong> when 100% of users are affected, financial impact exceeds <strong>€100,000</strong>, or there is a confirmed <strong>data breach</strong>. Anything below those triggers is a different tier.</p>",
+                  "animation": "fade-in",
+                  "animationDelay": 200
+                },
+                {
+                  "id": "b_p_1_th_callout",
+                  "type": "callout",
+                  "content": "If you spot one of these signals, escalate to <strong>#emergency_stakeholders</strong> immediately. False positives are fine — silence isn't.",
+                  "data": {
+                    "calloutStyle": "warning",
+                    "calloutTitle": "Stakeholder action"
+                  },
+                  "animation": "fade-in",
+                  "animationDelay": 400
+                }
+              ],
+              "questions": [],
+              "notes": "Number-lead style slide. Anchors the 100% / €100k / data-breach triggers.",
+              "backgroundColor": "#FAF8F4",
+              "backgroundImage": "",
+              "duration": 80,
+              "transition": "fade"
+            },
+            {
+              "id": "s_p_1_severity",
+              "title": "Five tiers, one ladder",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_p_1_sev_h",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Severity classification</h2>",
+                  "animation": "fade-in"
+                },
+                {
+                  "id": "b_p_1_sev_p",
+                  "type": "text",
+                  "content": "<p style=\"color:#5C5A57\">Every issue is classified at intake. The tier sets the response cadence and the people who get pulled in.</p>",
+                  "animation": "fade-in"
+                },
+                {
+                  "id": "b_p_1_sev_cmp",
+                  "type": "comparison",
+                  "content": "",
+                  "data": {
+                    "cmpEyebrow": "Severity Matrix",
+                    "cmpTitle": "From all-hands to log-and-monitor",
+                    "cmpColumns": [
+                      {
+                        "id": "c_em",
+                        "eyebrow": "TIER 1",
+                        "title": "Emergency",
+                        "subtitle": "All-hands · 30-min cadence",
+                        "bullets": [
+                          { "id": "b_em_1", "text": "100% users affected", "included": true },
+                          { "id": "b_em_2", "text": "€100k+ financial impact", "included": true },
+                          { "id": "b_em_3", "text": "Data breach confirmed", "included": true },
+                          { "id": "b_em_4", "text": "Command Staff activated", "included": true }
+                        ],
+                        "featured": true,
+                        "ribbonLabel": "Highest priority"
+                      },
+                      {
+                        "id": "c_hi",
+                        "eyebrow": "TIER 2",
+                        "title": "Highest",
+                        "subtitle": "Major-segment outage",
+                        "bullets": [
+                          { "id": "b_hi_1", "text": "Large user segment broken", "included": true },
+                          { "id": "b_hi_2", "text": "Revenue-critical flow down", "included": true },
+                          { "id": "b_hi_3", "text": "Hourly updates", "included": true },
+                          { "id": "b_hi_4", "text": "Command Staff activated", "included": false }
+                        ],
+                        "featured": false,
+                        "ribbonLabel": ""
+                      },
+                      {
+                        "id": "c_mh",
+                        "eyebrow": "TIER 3 / 4 / 5",
+                        "title": "High · Medium · Low",
+                        "subtitle": "Standard incident process",
+                        "bullets": [
+                          { "id": "b_mh_1", "text": "Localised impact", "included": true },
+                          { "id": "b_mh_2", "text": "Workaround available", "included": true },
+                          { "id": "b_mh_3", "text": "Daily updates", "included": true },
+                          { "id": "b_mh_4", "text": "Stakeholder Slack alert", "included": false }
+                        ],
+                        "featured": false,
+                        "ribbonLabel": ""
+                      }
+                    ]
+                  },
+                  "animation": "slide-up",
+                  "animationDelay": 200
+                }
+              ],
+              "questions": [],
+              "notes": "3-column comparison covering 5 tiers (collapsing High/Medium/Low into one column for clarity).",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 110,
+              "transition": "fade"
+            },
+            {
+              "id": "s_p_1_quiz",
+              "title": "Knowledge check — Threshold",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_p_1_qz_h",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Quick check</h2>"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_p_1_1",
+                  "type": "multiple-choice",
+                  "text": "A bug affects 5% of users and has €30,000 of impact. What tier is this?",
+                  "options": [
+                    { "id": "o_q1_1", "text": "Emergency — escalate immediately", "isCorrect": false },
+                    { "id": "o_q1_2", "text": "Highest — large-segment outage", "isCorrect": false },
+                    { "id": "o_q1_3", "text": "High / Medium / Low — standard incident process", "isCorrect": true },
+                    { "id": "o_q1_4", "text": "Not an incident", "isCorrect": false }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Both triggers (% users and €) are below the Emergency threshold and the segment is small. This is a standard incident, not an Emergency.",
+                  "points": 1
+                },
+                {
+                  "id": "q_p_1_2",
+                  "type": "true-false",
+                  "text": "A confirmed data breach is always classified as an Emergency, regardless of how many users are affected.",
+                  "options": [
+                    { "id": "o_q2_1", "text": "True", "isCorrect": true },
+                    { "id": "o_q2_2", "text": "False", "isCorrect": false }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Data breach is one of three independent Emergency triggers. User-count is irrelevant once a breach is confirmed.",
+                  "points": 1
+                }
+              ],
+              "notes": "Module 1 knowledge check — 2 questions on threshold and classification.",
+              "backgroundColor": "#FAF8F4",
+              "backgroundImage": "",
+              "duration": 80,
+              "transition": "fade"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mod_premium_2",
+      "title": "Module 2 — Who Owns the Response",
+      "description": "Three response roles: L1 Liaison, Senior SMEs, Command Staff. What each one does.",
+      "thumbnail": "",
+      "color": "#101258",
+      "lessons": [
+        {
+          "id": "les_premium_2_1",
+          "title": "The response structure",
+          "description": "How responsibility flows from intake to executive sign-off.",
+          "order": 0,
+          "slides": [
+            {
+              "id": "s_p_2_pq",
+              "title": "Why structure matters",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_p_2_pq_block",
+                  "type": "pull-quote",
+                  "content": "",
+                  "data": {
+                    "pqQuote": "In an emergency, ambiguity is the enemy. Everyone needs to know — within sixty seconds — whether they're driving, supporting, or watching.",
+                    "pqName": "Elena",
+                    "pqRole": "VP Engineering · Senior SME",
+                    "pqOrg": "Moonfare",
+                    "pqAvatarMode": "auto",
+                    "pqPortraitUrl": "",
+                    "pqInitialsOverride": ""
+                  },
+                  "animation": "fade-in"
+                }
+              ],
+              "questions": [],
+              "notes": "Pull-quote opening for Module 2 — frames the importance of role clarity.",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_p_2_roles",
+              "title": "Three roles, three jobs",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_p_2_r_h",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">The response trio</h2>",
+                  "animation": "fade-in"
+                },
+                {
+                  "id": "b_p_2_r_p",
+                  "type": "text",
+                  "content": "<p style=\"color:#5C5A57;max-width:560px\">Every Moonfare emergency is staffed by three role types working in parallel. None of them is optional.</p>"
+                },
+                {
+                  "id": "b_p_2_r_cmp",
+                  "type": "comparison",
+                  "content": "",
+                  "data": {
+                    "cmpEyebrow": "Response Roles",
+                    "cmpTitle": "From front-line intake to executive ownership",
+                    "cmpColumns": [
+                      {
+                        "id": "c_l1",
+                        "eyebrow": "ROLE 1",
+                        "title": "L1 Liaison",
+                        "subtitle": "Lily · Hasan · rotational PMs",
+                        "bullets": [
+                          { "id": "b_l1_1", "text": "First point of contact for stakeholders", "included": true },
+                          { "id": "b_l1_2", "text": "Triages and classifies the issue", "included": true },
+                          { "id": "b_l1_3", "text": "Posts the 30-min update", "included": true },
+                          { "id": "b_l1_4", "text": "Escalates to Senior SMEs", "included": true }
+                        ],
+                        "featured": false,
+                        "ribbonLabel": ""
+                      },
+                      {
+                        "id": "c_sme",
+                        "eyebrow": "ROLE 2",
+                        "title": "Senior SME",
+                        "subtitle": "Elena (Eng) · Hassan (Security)",
+                        "bullets": [
+                          { "id": "b_sme_1", "text": "Domain authority for the fix", "included": true },
+                          { "id": "b_sme_2", "text": "Approves the response plan", "included": true },
+                          { "id": "b_sme_3", "text": "Owns the resolution timeline", "included": true },
+                          { "id": "b_sme_4", "text": "Pulls in Command Staff if scope grows", "included": true }
+                        ],
+                        "featured": false,
+                        "ribbonLabel": ""
+                      },
+                      {
+                        "id": "c_cmd",
+                        "eyebrow": "ROLE 3",
+                        "title": "Command Staff",
+                        "subtitle": "Andrew · Elena · Hassan",
+                        "bullets": [
+                          { "id": "b_cmd_1", "text": "Activated for Tier-1 Emergency only", "included": true },
+                          { "id": "b_cmd_2", "text": "External & regulator comms", "included": true },
+                          { "id": "b_cmd_3", "text": "Public statement sign-off", "included": true },
+                          { "id": "b_cmd_4", "text": "Post-incident accountability", "included": true }
+                        ],
+                        "featured": true,
+                        "ribbonLabel": "Highest authority"
+                      }
+                    ]
+                  },
+                  "animation": "slide-up",
+                  "animationDelay": 200
+                }
+              ],
+              "questions": [],
+              "notes": "3-column role comparison, Command Staff featured.",
+              "backgroundColor": "#FAF8F4",
+              "backgroundImage": "",
+              "duration": 110,
+              "transition": "fade"
+            },
+            {
+              "id": "s_p_2_glossary",
+              "title": "Role definitions",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_p_2_g_h",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Glossary of response terms</h2>"
+                },
+                {
+                  "id": "b_p_2_g_acc",
+                  "type": "accordion",
+                  "content": "",
+                  "data": {
+                    "accordionItems": [
+                      {
+                        "id": "a_1",
+                        "title": "L1 Liaison",
+                        "content": "<p>The 24/7 front line for stakeholder-reported issues. Owns triage, classification, and the public-facing cadence. Sits in <strong>Product Operations</strong>. Lily and Hasan are permanent members; PMs rotate weekly.</p>"
+                      },
+                      {
+                        "id": "a_2",
+                        "title": "Senior SME (Subject Matter Expert)",
+                        "content": "<p>The domain owner for the affected system. Elena owns Engineering. Hassan owns Security. They have authority to approve a fix without further escalation — but must pull in Command Staff if scope or impact grows.</p>"
+                      },
+                      {
+                        "id": "a_3",
+                        "title": "Command Staff",
+                        "content": "<p>Activated only for <strong>Tier-1 Emergency</strong>. Andrew (CEO), Elena, and Hassan. Owns external communication, regulator notification where applicable, and post-incident accountability. They sign off on every public statement.</p>"
+                      },
+                      {
+                        "id": "a_4",
+                        "title": "Partner Relay",
+                        "content": "<p>Max and Nicolai (Partnerships). When an emergency touches our distribution partners, all communication flows through them — never direct from response team to partner. This protects the relationship and prevents conflicting messages.</p>"
+                      }
+                    ]
+                  },
+                  "animation": "fade-in",
+                  "animationDelay": 200
+                }
+              ],
+              "questions": [],
+              "notes": "Glossary accordion — drill-down for each role.",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 80,
+              "transition": "fade"
+            },
+            {
+              "id": "s_p_2_quiz",
+              "title": "Knowledge check — Roles",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_p_2_qz_h",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Who owns what?</h2>"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_p_2_1",
+                  "type": "multiple-choice",
+                  "text": "Who is responsible for posting the 30-minute Jira update during a live emergency?",
+                  "options": [
+                    { "id": "o_q3_1", "text": "Command Staff", "isCorrect": false },
+                    { "id": "o_q3_2", "text": "Senior SME", "isCorrect": false },
+                    { "id": "o_q3_3", "text": "L1 Liaison", "isCorrect": true },
+                    { "id": "o_q3_4", "text": "The Partnerships team", "isCorrect": false }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "L1 Liaison owns the public cadence — including the 30-min Jira update — for the duration of the live response.",
+                  "points": 1
+                },
+                {
+                  "id": "q_p_2_2",
+                  "type": "multiple-choice",
+                  "text": "When are the Command Staff (Andrew, Elena, Hassan) activated?",
+                  "options": [
+                    { "id": "o_q4_1", "text": "For every incident, regardless of tier", "isCorrect": false },
+                    { "id": "o_q4_2", "text": "Only for Tier-1 Emergency", "isCorrect": true },
+                    { "id": "o_q4_3", "text": "Only when external regulators are involved", "isCorrect": false },
+                    { "id": "o_q4_4", "text": "Only after resolution, for the post-mortem", "isCorrect": false }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Command Staff activate only at Tier-1. Lower tiers are handled by L1 Liaison plus the relevant Senior SME.",
+                  "points": 1
+                }
+              ],
+              "notes": "Module 2 quiz — 2 questions on response roles.",
+              "backgroundColor": "#FAF8F4",
+              "backgroundImage": "",
+              "duration": 70,
+              "transition": "fade"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mod_premium_3",
+      "title": "Module 3 — Communication Channels",
+      "description": "Where updates land, how often, and the one rule about partners.",
+      "thumbnail": "",
+      "color": "#2B3AB8",
+      "lessons": [
+        {
+          "id": "les_premium_3_1",
+          "title": "Channels & cadence",
+          "description": "The three Slack channels, the 30-minute rule, and the partner relay.",
+          "order": 0,
+          "slides": [
+            {
+              "id": "s_p_3_cadence",
+              "title": "The 30-minute rule",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_p_3_c_eb",
+                  "type": "text",
+                  "content": "<p style=\"text-transform:uppercase;letter-spacing:0.18em;font-size:0.7rem;color:#171D97;font-weight:600;margin-bottom:0.5rem\">Cadence</p>"
+                },
+                {
+                  "id": "b_p_3_c_h",
+                  "type": "heading",
+                  "content": "<h1 style=\"font-family:'Fraunces',serif;font-weight:400;font-size:5.5rem;line-height:0.95;color:#171D97;letter-spacing:-0.03em;margin:0\">30 <span style=\"font-size:2rem;color:#D4A574\">min</span></h1>",
+                  "animation": "slide-up"
+                },
+                {
+                  "id": "b_p_3_c_p",
+                  "type": "text",
+                  "content": "<p style=\"font-size:1.05rem;color:#0A0C3F;line-height:1.6;max-width:560px;margin-top:1rem\">For the duration of a live Tier-1 Emergency, the L1 Liaison posts an update on the Jira ticket every <strong>30 minutes</strong>. Even when there's no progress — silence is interpreted as the response stalling.</p>",
+                  "animation": "fade-in",
+                  "animationDelay": 200
+                },
+                {
+                  "id": "b_p_3_c_callout",
+                  "type": "callout",
+                  "content": "&ldquo;No update&rdquo; is itself an update. A blank 30-minute window is read by stakeholders as <em>something has gone wrong with the response</em> — so we always post.",
+                  "data": {
+                    "calloutStyle": "info",
+                    "calloutTitle": "Why we post even with nothing new"
+                  },
+                  "animation": "fade-in",
+                  "animationDelay": 400
+                }
+              ],
+              "notes": "Number-lead style: anchors the 30-min cadence rule.",
+              "questions": [],
+              "backgroundColor": "#FAF8F4",
+              "backgroundImage": "",
+              "duration": 80,
+              "transition": "fade"
+            },
+            {
+              "id": "s_p_3_channels",
+              "title": "Three channels, three audiences",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_p_3_ch_h",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Where to look — and where to post</h2>"
+                },
+                {
+                  "id": "b_p_3_ch_cmp",
+                  "type": "comparison",
+                  "content": "",
+                  "data": {
+                    "cmpEyebrow": "Slack channels",
+                    "cmpTitle": "Each one has a single audience and a single purpose",
+                    "cmpColumns": [
+                      {
+                        "id": "c_oncall",
+                        "eyebrow": "INTERNAL",
+                        "title": "#mf-oncall",
+                        "subtitle": "Engineering response only",
+                        "bullets": [
+                          { "id": "b_o_1", "text": "Pages & alerts land here first", "included": true },
+                          { "id": "b_o_2", "text": "Engineering-only audience", "included": true },
+                          { "id": "b_o_3", "text": "Stakeholders should not post here", "included": false }
+                        ],
+                        "featured": false,
+                        "ribbonLabel": ""
+                      },
+                      {
+                        "id": "c_product",
+                        "eyebrow": "INTERNAL",
+                        "title": "#emergency_product",
+                        "subtitle": "Cross-functional coordination",
+                        "bullets": [
+                          { "id": "b_pr_1", "text": "L1 Liaison + Senior SME + Command Staff", "included": true },
+                          { "id": "b_pr_2", "text": "Working channel for the response", "included": true },
+                          { "id": "b_pr_3", "text": "Decision log lives here", "included": true }
+                        ],
+                        "featured": false,
+                        "ribbonLabel": ""
+                      },
+                      {
+                        "id": "c_stake",
+                        "eyebrow": "STAKEHOLDER",
+                        "title": "#emergency_stakeholders",
+                        "subtitle": "Where you live",
+                        "bullets": [
+                          { "id": "b_st_1", "text": "Status updates from L1 Liaison", "included": true },
+                          { "id": "b_st_2", "text": "30-min cadence during Tier-1", "included": true },
+                          { "id": "b_st_3", "text": "Post questions here, not in DMs", "included": true }
+                        ],
+                        "featured": true,
+                        "ribbonLabel": "Stakeholder home"
+                      }
+                    ]
+                  },
+                  "animation": "slide-up",
+                  "animationDelay": 200
+                }
+              ],
+              "notes": "3-channel comparison. Stakeholder channel is featured.",
+              "questions": [],
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 100,
+              "transition": "fade"
+            },
+            {
+              "id": "s_p_3_partners",
+              "title": "The one rule about partners",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_p_3_pa_h",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Partner communication runs through one bridge</h2>"
+                },
+                {
+                  "id": "b_p_3_pa_p",
+                  "type": "text",
+                  "content": "<p style=\"color:#5C5A57;max-width:600px\">When an emergency touches our distribution partners (banks, wealth managers, family offices), the natural instinct is to reach out directly. <strong>Don't.</strong> The response only works because we have one voice.</p>"
+                },
+                {
+                  "id": "b_p_3_pa_callout",
+                  "type": "callout",
+                  "content": "All partner-bound communication flows through <strong>Max</strong> and <strong>Nicolai</strong> in Partnerships. Never DM a partner contact directly during an active incident — even if you've worked with them for years.",
+                  "data": {
+                    "calloutStyle": "danger",
+                    "calloutTitle": "Hard rule"
+                  },
+                  "animation": "fade-in"
+                },
+                {
+                  "id": "b_p_3_pa_pq",
+                  "type": "pull-quote",
+                  "content": "",
+                  "data": {
+                    "pqQuote": "Two stakeholders telling the same partner two slightly different stories is how a 90-minute incident becomes a six-month relationship problem.",
+                    "pqName": "Nicolai",
+                    "pqRole": "Head of Partnerships",
+                    "pqOrg": "Moonfare",
+                    "pqAvatarMode": "auto"
+                  },
+                  "animation": "fade-in",
+                  "animationDelay": 300
+                }
+              ],
+              "notes": "The single hardest stakeholder rule, paired with a rationale pull-quote.",
+              "questions": [],
+              "backgroundColor": "#FAF8F4",
+              "backgroundImage": "",
+              "duration": 90,
+              "transition": "fade"
+            },
+            {
+              "id": "s_p_3_quiz",
+              "title": "Knowledge check — Communication",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_p_3_qz_h",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Comms quick check</h2>"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_p_3_1",
+                  "type": "multiple-choice",
+                  "text": "A trusted partner contact pings you directly during an active Tier-1 Emergency. What do you do?",
+                  "options": [
+                    { "id": "o_q5_1", "text": "Reply with what you know — they need information fast", "isCorrect": false },
+                    { "id": "o_q5_2", "text": "Forward to Max and Nicolai and let them respond", "isCorrect": true },
+                    { "id": "o_q5_3", "text": "Forward to the Command Staff", "isCorrect": false },
+                    { "id": "o_q5_4", "text": "Wait for the next 30-minute update, then forward that", "isCorrect": false }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Partner relay always goes through Max and Nicolai. Even with the best intentions, direct replies create message fragmentation that hurts the relationship.",
+                  "points": 1
+                },
+                {
+                  "id": "q_p_3_2",
+                  "type": "true-false",
+                  "text": "If there's nothing new to report, the L1 Liaison can skip the 30-minute update.",
+                  "options": [
+                    { "id": "o_q6_1", "text": "True", "isCorrect": false },
+                    { "id": "o_q6_2", "text": "False", "isCorrect": true }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Stakeholders read silence as the response stalling. We always post — even if the post is &ldquo;no change since last update.&rdquo;",
+                  "points": 1
+                }
+              ],
+              "notes": "Module 3 quiz.",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 70,
+              "transition": "fade"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mod_premium_4",
+      "title": "Module 4 — Lifecycle & Aftermath",
+      "description": "The five phases from detection to post-mortem, and the culture that makes the process work.",
+      "thumbnail": "",
+      "color": "#5B66CF",
+      "lessons": [
+        {
+          "id": "les_premium_4_1",
+          "title": "From signal to post-mortem",
+          "description": "The full incident arc.",
+          "order": 0,
+          "slides": [
+            {
+              "id": "s_p_4_timeline",
+              "title": "The five-phase arc",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_p_4_t_h",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Every emergency runs the same arc</h2>"
+                },
+                {
+                  "id": "b_p_4_t_p",
+                  "type": "text",
+                  "content": "<p style=\"color:#5C5A57;max-width:560px\">From the first signal to the published post-mortem. Average wall-clock time for a contained Tier-1: <strong>2&ndash;6 hours</strong> live, <strong>10 working days</strong> to written post-mortem.</p>"
+                },
+                {
+                  "id": "b_p_4_t_tl",
+                  "type": "timeline",
+                  "content": "",
+                  "data": {
+                    "timelineEvents": [
+                      {
+                        "id": "tl_1",
+                        "title": "Detection",
+                        "date": "T+0",
+                        "description": "Signal arrives via monitoring, oncall page, or stakeholder report. L1 Liaison acknowledges within 5 minutes."
+                      },
+                      {
+                        "id": "tl_2",
+                        "title": "Triage & Classification",
+                        "date": "T+15 min",
+                        "description": "Severity tier assigned. If Tier-1, Command Staff and stakeholder channel are activated."
+                      },
+                      {
+                        "id": "tl_3",
+                        "title": "Active Response",
+                        "date": "T+15 min onwards",
+                        "description": "Senior SME drives the fix. L1 Liaison posts every 30 minutes. Partner relay activates if needed."
+                      },
+                      {
+                        "id": "tl_4",
+                        "title": "Resolution",
+                        "date": "T+2 to T+6 hr (Tier-1 avg)",
+                        "description": "Fix verified in production, monitoring confirms recovery, stakeholder channel gets the all-clear."
+                      },
+                      {
+                        "id": "tl_5",
+                        "title": "Post-mortem",
+                        "date": "T+10 working days",
+                        "description": "Written post-mortem published. Blameless format. Linked from the Confluence Emergencies index."
+                      }
+                    ]
+                  },
+                  "animation": "fade-in",
+                  "animationDelay": 200
+                }
+              ],
+              "notes": "Full incident lifecycle as a timeline block.",
+              "questions": [],
+              "backgroundColor": "#FAF8F4",
+              "backgroundImage": "",
+              "duration": 110,
+              "transition": "fade"
+            },
+            {
+              "id": "s_p_4_culture",
+              "title": "Why post-mortems are blameless",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_p_4_c_pq",
+                  "type": "pull-quote",
+                  "content": "",
+                  "data": {
+                    "pqQuote": "Trust is built in seconds. It's lost in minutes. Our post-mortems are blameless because the next emergency is more likely to be caught by the engineer who already learned the hard way — not the one who's hiding from the fallout.",
+                    "pqName": "Andrew",
+                    "pqRole": "Co-Founder & CEO · Command Staff",
+                    "pqOrg": "Moonfare",
+                    "pqAvatarMode": "auto"
+                  },
+                  "animation": "fade-in"
+                }
+              ],
+              "notes": "Closing pull-quote on blameless culture.",
+              "questions": [],
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 60,
+              "transition": "fade"
+            },
+            {
+              "id": "s_p_4_recap",
+              "title": "Five things to remember",
+              "layout": "content",
+              "content": [
+                {
+                  "id": "b_p_4_r_h",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">If you remember nothing else…</h2>"
+                },
+                {
+                  "id": "b_p_4_r_chk",
+                  "type": "checklist",
+                  "content": "",
+                  "data": {
+                    "checklistItems": [
+                      { "id": "ch_1", "text": "100% users · €100k impact · data breach → Tier-1 Emergency", "checked": true },
+                      { "id": "ch_2", "text": "L1 Liaison → Senior SME → Command Staff is the escalation ladder", "checked": true },
+                      { "id": "ch_3", "text": "Updates land in #emergency_stakeholders every 30 minutes during Tier-1", "checked": true },
+                      { "id": "ch_4", "text": "Partner contact only via Max + Nicolai — never direct", "checked": true },
+                      { "id": "ch_5", "text": "Post-mortems are blameless and published within 10 working days", "checked": true }
+                    ]
+                  },
+                  "animation": "fade-in",
+                  "animationDelay": 200
+                }
+              ],
+              "notes": "Five-point recap before the final quiz.",
+              "questions": [],
+              "backgroundColor": "#FAF8F4",
+              "backgroundImage": "",
+              "duration": 80,
+              "transition": "fade"
+            },
+            {
+              "id": "s_p_4_quiz",
+              "title": "Final assessment",
+              "layout": "quiz",
+              "content": [
+                {
+                  "id": "b_p_4_qz_h",
+                  "type": "heading",
+                  "content": "<h2 style=\"font-family:'Fraunces',serif;font-weight:400;color:#0A0C3F\">Final assessment</h2>"
+                }
+              ],
+              "questions": [
+                {
+                  "id": "q_p_4_1",
+                  "type": "multiple-choice",
+                  "text": "Within how long should the L1 Liaison acknowledge a new signal?",
+                  "options": [
+                    { "id": "o_q7_1", "text": "Within 1 minute", "isCorrect": false },
+                    { "id": "o_q7_2", "text": "Within 5 minutes", "isCorrect": true },
+                    { "id": "o_q7_3", "text": "Within 30 minutes", "isCorrect": false },
+                    { "id": "o_q7_4", "text": "Whenever possible", "isCorrect": false }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Acknowledgement within 5 minutes is the SLA. The 30-minute number is the ongoing update cadence — different rule.",
+                  "points": 1
+                },
+                {
+                  "id": "q_p_4_2",
+                  "type": "multiple-choice",
+                  "text": "What is the standard target for publishing a written post-mortem?",
+                  "options": [
+                    { "id": "o_q8_1", "text": "Within 24 hours", "isCorrect": false },
+                    { "id": "o_q8_2", "text": "Within 5 working days", "isCorrect": false },
+                    { "id": "o_q8_3", "text": "Within 10 working days", "isCorrect": true },
+                    { "id": "o_q8_4", "text": "Within the next quarter", "isCorrect": false }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "10 working days. Published in Confluence, linked from the Emergencies index, blameless.",
+                  "points": 1
+                },
+                {
+                  "id": "q_p_4_3",
+                  "type": "true-false",
+                  "text": "Moonfare uses blameless post-mortems because hiding mistakes makes the next emergency harder to catch.",
+                  "options": [
+                    { "id": "o_q9_1", "text": "True", "isCorrect": true },
+                    { "id": "o_q9_2", "text": "False", "isCorrect": false }
+                  ],
+                  "matchingPairs": [],
+                  "correctAnswer": "",
+                  "correctOrder": [],
+                  "explanation": "Exactly. Blameless culture is what makes the engineer who tripped the wire the most likely person to catch the next one.",
+                  "points": 1
+                }
+              ],
+              "notes": "Final assessment — 3 questions covering lifecycle and culture.",
+              "backgroundColor": "#FFFFFF",
+              "backgroundImage": "",
+              "duration": 90,
+              "transition": "fade"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

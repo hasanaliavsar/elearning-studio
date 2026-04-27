@@ -3,11 +3,13 @@ import { persist } from 'zustand/middleware';
 import type { Course, Module, Lesson, Slide, Question, ContentBlock, EditorState, ViewMode, SlideLayout, QuestionType, ContentBlockType } from './types';
 import { generateId, deepClone } from './utils/helpers';
 import moonfareEmergencyCourse from './data/moonfare-emergency-course.json';
+import moonfareEmergencyPremiumCourse from './data/moonfare-emergency-course-premium.json';
 
-const SEED_FLAG_KEY = 'elearning-studio-seed-v2-applied';
+const SEED_FLAG_KEY = 'elearning-studio-seed-v3-applied';
 
 function buildSeedCourses(): Course[] {
   return [
+    { ...(moonfareEmergencyPremiumCourse as unknown as Course), id: generateId() },
     { ...(moonfareEmergencyCourse as unknown as Course), id: generateId() },
   ];
 }
