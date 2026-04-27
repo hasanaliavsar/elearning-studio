@@ -3,7 +3,8 @@ import { useStore } from '../store';
 import { SlideEditor } from './SlideEditor';
 import { QuizBuilder } from './QuizBuilder';
 import { CourseSettings } from './CourseSettings';
-import type { SlideLayout } from '../types';
+import type { SlideLayout, Slide } from '../types';
+import { TemplateModal } from './TemplateModal';
 import {
   ArrowLeft, Plus, ChevronDown, ChevronRight, BookOpen, FileText,
   Presentation, MoreHorizontal, Trash2, Copy, Play, Download,
@@ -85,6 +86,7 @@ export function CourseEditor() {
   const updateLesson = useStore(s => s.updateLesson);
   const deleteLesson = useStore(s => s.deleteLesson);
   const addSlide = useStore(s => s.addSlide);
+  const addSlideFromTemplate = useStore(s => s.addSlideFromTemplate);
   const deleteSlide = useStore(s => s.deleteSlide);
   const duplicateSlide = useStore(s => s.duplicateSlide);
   const selectModule = useStore(s => s.selectModule);
@@ -109,6 +111,9 @@ export function CourseEditor() {
     new Set(course?.modules.flatMap(m => m.lessons.map(l => l.id)) ?? [])
   );
   const [showAddSlideMenu, setShowAddSlideMenu] = useState<string | null>(null);
+  const [templateModalOpen, setTemplateModalOpen] = useState(false);
+  const [templateModalLessonId, setTemplateModalLessonId] = useState<string | null>(null);
+  const [templateModalModuleId, setTemplateModalModuleId] = useState<string | null>(null);
   const [slideMenuOpen, setSlideMenuOpen] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState<string | null>(null);
   const [editTitleValue, setEditTitleValue] = useState('');
@@ -162,6 +167,20 @@ export function CourseEditor() {
     setShowAddSlideMenu(null);
   };
 
+  const handleOpenTemplateModal = (moduleId: string, lessonId: string) => {
+    setTemplateModalModuleId(moduleId);
+    setTemplateModalLessonId(lessonId);
+    setTemplateModalOpen(true);
+  };
+
+  const handleInsertTemplate = (slide: Slide) => {
+    if (!templateModalModuleId || !templateModalLessonId) return;
+    addSlideFromTemplate(course.id, templateModalModuleId, templateModalLessonId, slide);
+    setTemplateModalOpen(false);
+    setTemplateModalLessonId(null);
+    setTemplateModalModuleId(null);
+  };
+
   const handlePreview = () => {
     setPreviewSlideIndex(0);
     setViewMode('preview');
@@ -189,6 +208,11 @@ export function CourseEditor() {
 
   return (
     <div className="h-full flex flex-col">
+      <TemplateModal
+        open={templateModalOpen}
+        onClose={() => setTemplateModalOpen(false)}
+        onInsert={handleInsertTemplate}
+      />
       {/* Top toolbar */}
       <header className="bg-white border-b px-4 py-2 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
@@ -384,7 +408,7 @@ export function CourseEditor() {
                                             )}
                                             <div className="hidden group-hover:flex items-center gap-0.5">
                                               <button
-                                                onClick={e => { e.stopPropagation(); setShowAddSlideMenu(showAddSlideMenu === lesson.id ? null : lesson.id); }}
+                                                onClick={e => { e.stopPropagation(); handleOpenTemplateModal(mod.id, lesson.id); }}
                                                 className="text-gray-500 hover:text-white"
                                                 title="Add Slide"
                                               >
@@ -400,21 +424,6 @@ export function CourseEditor() {
                                             </div>
                                           </div>
 
-                                          {/* Add slide menu */}
-                                          {showAddSlideMenu === lesson.id && (
-                                            <div className="ml-6 my-1 bg-gray-800 rounded-lg border border-gray-700 p-2 grid grid-cols-2 gap-1">
-                                              {layoutOptions.map(opt => (
-                                                <button
-                                                  key={opt.layout}
-                                                  onClick={() => handleAddSlide(mod.id, lesson.id, opt.layout)}
-                                                  className="flex items-center gap-2 px-2 py-1.5 text-xs text-gray-300 hover:bg-gray-700 rounded"
-                                                >
-                                                  {opt.icon}
-                                                  {opt.label}
-                                                </button>
-                                              ))}
-                                            </div>
-                                          )}
 
                                           {/* Slides */}
                                           {expandedLessons.has(lesson.id) && (

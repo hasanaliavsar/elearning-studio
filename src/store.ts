@@ -240,6 +240,7 @@ interface AppState {
 
   // Slide CRUD
   addSlide: (courseId: string, moduleId: string, lessonId: string, layout?: SlideLayout) => void;
+  addSlideFromTemplate: (courseId: string, moduleId: string, lessonId: string, slide: Slide) => void;
   updateSlide: (courseId: string, moduleId: string, lessonId: string, slideId: string, updates: Partial<Slide>) => void;
   deleteSlide: (courseId: string, moduleId: string, lessonId: string, slideId: string) => void;
   duplicateSlide: (courseId: string, moduleId: string, lessonId: string, slideId: string) => void;
@@ -604,6 +605,29 @@ export const useStore = create<AppState>()(
             };
           }),
           editor: { ...state.editor, selectedSlideId: newSlide.id },
+        }));
+      },
+
+      addSlideFromTemplate: (courseId, moduleId, lessonId, slide) => {
+        set(state => ({
+          courses: state.courses.map(c => {
+            if (c.id !== courseId) return c;
+            return {
+              ...c,
+              modules: c.modules.map(m => {
+                if (m.id !== moduleId) return m;
+                return {
+                  ...m,
+                  lessons: m.lessons.map(l => {
+                    if (l.id !== lessonId) return l;
+                    return { ...l, slides: [...l.slides, slide] };
+                  }),
+                };
+              }),
+              updatedAt: new Date().toISOString(),
+            };
+          }),
+          editor: { ...state.editor, selectedSlideId: slide.id },
         }));
       },
 
