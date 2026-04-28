@@ -10,6 +10,7 @@ import { ModuleCoverEditor, RawHtmlEditor, isModuleCoverHtml, isStructuralHtml }
 import { InlineAdd, ImagePicker, STOCK_IMAGES } from './CanvasInsert';
 import { BlockResizeHandle, BlockSizingControls } from './BlockSizing';
 import { CanvasFreeForm, defaultCanvasPos } from './CanvasFreeForm';
+import { BlockPreview } from './LivePreviewPane';
 import { generateId } from '../utils/helpers';
 import {
   DndContext, closestCenter, PointerSensor, useSensor, useSensors,
@@ -238,31 +239,14 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
     input.click();
   };
 
-  // Lightweight body renderer for canvas-mode blocks — no editor affordances,
-  // just the visual content. Falls back to a placeholder for interactive
-  // block types so authors can still see and position them.
-  const renderCanvasBlockBody = (block: ContentBlock): React.ReactNode => {
-    if (block.type === 'text' || block.type === 'heading' || block.type === 'list') {
-      return <div className="p-3 w-full h-full overflow-hidden" dangerouslySetInnerHTML={{ __html: block.content || '<p class="text-gray-400 italic">Empty</p>' }} />;
-    }
-    if (block.type === 'image' && block.content) {
-      return <img src={block.content} alt={block.alt || ''} className="w-full h-full object-cover" />;
-    }
-    if (block.type === 'image') {
-      return <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs bg-gray-50 border-2 border-dashed border-gray-200">Empty image — open inspector to set</div>;
-    }
-    if (block.type === 'divider') return <hr className="my-auto border-gray-300" />;
-    if (block.type === 'button') {
-      const label = block.data?.buttonText || 'Button';
-      return <div className="w-full h-full flex items-center justify-center"><a className="px-4 py-2 rounded text-sm font-medium" style={{ background: '#171D97', color: '#FFFFFF' }} onClick={e => e.preventDefault()}>{label}</a></div>;
-    }
-    // Generic placeholder for interactive blocks
-    return (
-      <div className="w-full h-full flex items-center justify-center text-xs text-gray-500 bg-gray-50 border border-dashed border-gray-300 rounded">
-        <span>{block.type} (open inspector)</span>
-      </div>
-    );
-  };
+  // Render the actual visual content of a block in canvas mode — reuses the
+  // same renderer the live-preview pane uses so what authors see in the
+  // canvas matches the live preview, the Preview view, and the SCORM export.
+  const renderCanvasBlockBody = (block: ContentBlock): React.ReactNode => (
+    <div className="w-full h-full overflow-hidden p-2">
+      <BlockPreview block={block} />
+    </div>
+  );
 
   const renderBlock = (
     block: ContentBlock,

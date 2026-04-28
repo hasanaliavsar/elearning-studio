@@ -195,34 +195,45 @@ function CanvasBlock({ block, zIndex, active, otherBlocks, onSelect, onMove, onS
     window.addEventListener('pointerup', onPointerUp);
   };
 
+  const blockLabel = block.type;
   return (
     <div
       data-canvas-root
-      className={`absolute group transition-shadow ${active ? 'ring-2 ring-[#171D97]' : 'ring-1 ring-transparent hover:ring-gray-300'}`}
+      className={`absolute group transition-shadow ${active ? 'ring-2 ring-[#171D97]' : 'ring-1 ring-transparent hover:ring-[#171D97]/40'}`}
       style={{
         left: pos.x,
         top: pos.y,
         width: pos.w,
         height: pos.h,
-        zIndex,
-        cursor: 'move',
+        zIndex: dragRef.current ? 999 : zIndex,
       }}
       onClick={e => { e.stopPropagation(); onSelect(); }}
-      onPointerDown={e => {
-        // Only start drag if clicking the block body, not a handle
-        const target = e.target as HTMLElement;
-        if (target.dataset.handle) return;
-        startDrag('move')(e);
-      }}
     >
-      {/* Block body */}
-      <div className="w-full h-full overflow-hidden bg-white" style={{ pointerEvents: 'none' }}>
+      {/* Drag bar — grab here to move; body remains editable */}
+      <div
+        data-handle
+        onPointerDown={startDrag('move')}
+        className={`absolute -top-7 left-0 right-0 h-7 flex items-center px-2 rounded-t cursor-move transition-opacity ${
+          active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+        }`}
+        style={{ background: 'linear-gradient(180deg, rgba(23,29,151,0.92), rgba(10,12,63,0.92))' }}
+      >
+        <span className="text-[10px] font-semibold tracking-[0.12em] uppercase text-white/90 truncate">
+          ⠿ {blockLabel}
+        </span>
+        <span className="ml-auto text-[10px] font-mono text-white/60">
+          {Math.round(pos.x)},{Math.round(pos.y)} · {Math.round(pos.w)}×{Math.round(pos.h)}
+        </span>
+      </div>
+
+      {/* Block body — editable in place: pointer events on, click to interact */}
+      <div className="w-full h-full overflow-hidden bg-white">
         {children}
       </div>
 
-      {/* Z-order toolbar — only when active */}
+      {/* Z-order toolbar — only when active, positioned BELOW the drag bar to avoid overlap */}
       {active && (
-        <div className="absolute -top-9 left-0 flex items-center gap-1 bg-white border border-gray-200 shadow-md rounded px-1.5 py-1" onPointerDown={e => e.stopPropagation()}>
+        <div className="absolute -bottom-9 left-0 flex items-center gap-1 bg-white border border-gray-200 shadow-md rounded px-1.5 py-1" onPointerDown={e => e.stopPropagation()}>
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); onForward(); }}
@@ -239,8 +250,8 @@ function CanvasBlock({ block, zIndex, active, otherBlocks, onSelect, onMove, onS
           >
             <ChevronDown className="w-3.5 h-3.5" />
           </button>
-          <span className="text-[10px] text-gray-400 ml-1 font-mono">
-            {Math.round(pos.x)}, {Math.round(pos.y)} · {Math.round(pos.w)}×{Math.round(pos.h)}
+          <span className="text-[10px] text-gray-400 ml-1">
+            Drag the navy bar to move · drag handles to resize
           </span>
         </div>
       )}

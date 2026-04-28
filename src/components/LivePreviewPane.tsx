@@ -79,29 +79,54 @@ export function LivePreviewPane({ course, slide }: Props) {
               </h2>
             )}
 
-            <div
-              className={slide.fullBleed ? '' : `${slide.layout === 'two-column' ? 'grid grid-cols-2 gap-6' : 'space-y-5'}`}
-              style={{ position: slide.fullBleed ? 'absolute' : 'static', inset: slide.fullBleed ? 0 : undefined }}
-            >
-              {slide.content.length === 0 ? (
-                <p className="text-base text-gray-400 italic">No content blocks yet.</p>
-              ) : (
-                slide.content.map((b, i) => {
-                  const w = typeof b.width === 'number' ? Math.max(20, Math.min(100, b.width)) : 100;
-                  const al = b.align || 'left';
-                  const wrap: React.CSSProperties = w >= 100 ? {} : {
-                    width: `${w}%`,
-                    marginLeft: al === 'left' ? 0 : 'auto',
-                    marginRight: al === 'right' ? 0 : 'auto',
+            {slide.layout === 'canvas' ? (
+              // Canvas layout — preview at the same 1280×720 base so blocks
+              // sit exactly where authors placed them.
+              <div style={{ position: 'absolute', inset: 0 }}>
+                {slide.content.map((b, i) => {
+                  const p = b.pos;
+                  if (!p) return null;
+                  const wrap: React.CSSProperties = {
+                    position: 'absolute',
+                    left: `${(p.x / 1280) * 100}%`,
+                    top: `${(p.y / 720) * 100}%`,
+                    width: `${(p.w / 1280) * 100}%`,
+                    height: `${(p.h / 720) * 100}%`,
+                    zIndex: typeof p.z === 'number' ? p.z : i,
+                    overflow: 'hidden',
                   };
                   return (
                     <div key={b.id || i} style={wrap}>
                       <BlockPreview block={b} />
                     </div>
                   );
-                })
-              )}
-            </div>
+                })}
+              </div>
+            ) : (
+              <div
+                className={slide.fullBleed ? '' : `${slide.layout === 'two-column' ? 'grid grid-cols-2 gap-6' : 'space-y-5'}`}
+                style={{ position: slide.fullBleed ? 'absolute' : 'static', inset: slide.fullBleed ? 0 : undefined }}
+              >
+                {slide.content.length === 0 ? (
+                  <p className="text-base text-gray-400 italic">No content blocks yet.</p>
+                ) : (
+                  slide.content.map((b, i) => {
+                    const w = typeof b.width === 'number' ? Math.max(20, Math.min(100, b.width)) : 100;
+                    const al = b.align || 'left';
+                    const wrap: React.CSSProperties = w >= 100 ? {} : {
+                      width: `${w}%`,
+                      marginLeft: al === 'left' ? 0 : 'auto',
+                      marginRight: al === 'right' ? 0 : 'auto',
+                    };
+                    return (
+                      <div key={b.id || i} style={wrap}>
+                        <BlockPreview block={b} />
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            )}
 
             {slide.questions.length > 0 && !slide.fullBleed && (
               <div className="mt-8 pt-5 border-t border-gray-200">
@@ -124,7 +149,7 @@ function isDarkBg(c: string | undefined): boolean {
   return dark.includes(c.toUpperCase()) || dark.map(x => x.toLowerCase()).includes(c.toLowerCase());
 }
 
-function BlockPreview({ block }: { block: ContentBlock }) {
+export function BlockPreview({ block }: { block: ContentBlock }) {
   const t = block.type;
 
   if (t === 'heading' || t === 'text') {
