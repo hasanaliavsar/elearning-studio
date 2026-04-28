@@ -1,4 +1,14 @@
-export type SlideLayout = 'title' | 'content' | 'two-column' | 'image-text' | 'video' | 'quiz' | 'blank';
+export type SlideLayout = 'title' | 'content' | 'two-column' | 'image-text' | 'video' | 'quiz' | 'blank' | 'canvas';
+
+// Free-placement coordinates for blocks on a 'canvas'-layout slide.
+// All values in pixels relative to the slide canvas (default 1280×720).
+export interface BlockCanvasPos {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  z?: number; // explicit z-index; otherwise array order
+}
 
 export type QuestionType =
   | 'multiple-choice' | 'true-false' | 'fill-in-blank' | 'matching' | 'drag-sort'
@@ -268,8 +278,9 @@ export interface ContentBlock {
   data?: ContentBlockData;
   animation?: EntranceAnimation;
   animationDelay?: number; // ms
-  width?: number; // percentage 20-100, default 100
+  width?: number; // percentage 20-100, default 100 (linear layouts only)
   align?: 'left' | 'center' | 'right'; // horizontal alignment when width < 100, default 'left'
+  pos?: BlockCanvasPos; // pixel coords on a 'canvas'-layout slide
 }
 
 export interface LearningObjective {

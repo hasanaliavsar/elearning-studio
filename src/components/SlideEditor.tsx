@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useStore } from '../store';
 import { RichTextEditor } from './RichTextEditor';
 import { QuizBuilder } from './QuizBuilder';
@@ -9,6 +9,7 @@ import { LivePreviewPane } from './LivePreviewPane';
 import { ModuleCoverEditor, RawHtmlEditor, isModuleCoverHtml, isStructuralHtml } from './TemplateAwareEditor';
 import { InlineAdd, ImagePicker, STOCK_IMAGES } from './CanvasInsert';
 import { BlockResizeHandle, BlockSizingControls } from './BlockSizing';
+import { CanvasFreeForm, defaultCanvasPos } from './CanvasFreeForm';
 import { generateId } from '../utils/helpers';
 import {
   DndContext, closestCenter, PointerSensor, useSensor, useSensors,
@@ -141,6 +142,21 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
   const [activeBlockId, setActiveBlockId] = useState<string | null>(null);
   const [livePreviewOpen, setLivePreviewOpen] = useState(true);
   const [dragOver, setDragOver] = useState(false);
+
+  // On canvas-layout slides, ensure every block has a `pos` — assign a
+  // default if it was added by the linear add flow (which doesn't know
+  // about canvas mode).
+  useEffect(() => {
+    if (slide.layout !== 'canvas') return;
+    for (const block of slide.content) {
+      if (!block.pos) {
+        updateContentBlock(course.id, moduleId, lessonId, slide.id, block.id, {
+          pos: defaultCanvasPos(slide.content),
+        });
+        break; // one at a time to keep effects predictable
+      }
+    }
+  }, [slide.layout, slide.content, course.id, moduleId, lessonId, slide.id, updateContentBlock]);
   const [showVideoRecorder, setShowVideoRecorder] = useState(false);
 
   const handleUpdateSlide = (updates: Partial<Slide>) => {
@@ -220,6 +236,32 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
       reader.readAsDataURL(file);
     };
     input.click();
+  };
+
+  // Lightweight body renderer for canvas-mode blocks — no editor affordances,
+  // just the visual content. Falls back to a placeholder for interactive
+  // block types so authors can still see and position them.
+  const renderCanvasBlockBody = (block: ContentBlock): React.ReactNode => {
+    if (block.type === 'text' || block.type === 'heading' || block.type === 'list') {
+      return <div className="p-3 w-full h-full overflow-hidden" dangerouslySetInnerHTML={{ __html: block.content || '<p class="text-gray-400 italic">Empty</p>' }} />;
+    }
+    if (block.type === 'image' && block.content) {
+      return <img src={block.content} alt={block.alt || ''} className="w-full h-full object-cover" />;
+    }
+    if (block.type === 'image') {
+      return <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs bg-gray-50 border-2 border-dashed border-gray-200">Empty image — open inspector to set</div>;
+    }
+    if (block.type === 'divider') return <hr className="my-auto border-gray-300" />;
+    if (block.type === 'button') {
+      const label = block.data?.buttonText || 'Button';
+      return <div className="w-full h-full flex items-center justify-center"><a className="px-4 py-2 rounded text-sm font-medium" style={{ background: '#171D97', color: '#FFFFFF' }} onClick={e => e.preventDefault()}>{label}</a></div>;
+    }
+    // Generic placeholder for interactive blocks
+    return (
+      <div className="w-full h-full flex items-center justify-center text-xs text-gray-500 bg-gray-50 border border-dashed border-gray-300 rounded">
+        <span>{block.type} (open inspector)</span>
+      </div>
+    );
   };
 
   const renderBlock = (
@@ -495,7 +537,32 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
                 </div>
               </div>
             )}
-            {slide.fullBleed ? (
+            {slide.layout === 'canvas' ? (
+              <div>
+                <div className="flex items-center justify-between mb-3 px-1">
+                  <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-[#171D97]">Canvas mode · drag freely</p>
+                  <div className="text-xs">
+                    <InlineAdd index={slide.content.length} onInsert={handleInlineAdd} />
+                  </div>
+                </div>
+                <CanvasFreeForm
+                  blocks={slide.content}
+                  activeId={activeBlockId}
+                  onSelect={setActiveBlockId}
+                  onMove={(id, pos) => handleBlockUpdate(id, { pos })}
+                  onReorder={(id, dir) => {
+                    const idx = slide.content.findIndex(b => b.id === id);
+                    if (idx < 0) return;
+                    const target = dir === 'forward' ? idx + 1 : idx - 1;
+                    if (target < 0 || target >= slide.content.length) return;
+                    const next = [...slide.content];
+                    [next[idx]!, next[target]!] = [next[target]!, next[idx]!];
+                    handleUpdateSlide({ content: next });
+                  }}
+                  renderBlockBody={renderCanvasBlockBody}
+                />
+              </div>
+            ) : slide.fullBleed ? (
               <>{slide.content.map((block, idx) => renderBlock(block, idx))}</>
             ) : slide.layout === 'two-column' ? (
               <div className="grid grid-cols-2 gap-6">
@@ -678,6 +745,7 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
                   <option value="video">Video</option>
                   <option value="quiz">Quiz</option>
                   <option value="blank">Blank</option>
+                  <option value="canvas">Canvas (free placement)</option>
                 </select>
               </div>
 

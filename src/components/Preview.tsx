@@ -1009,8 +1009,15 @@ export function CoursePreview() {
               </h1>
             )}
 
-            {/* Content blocks */}
-            <div className={`space-y-4 ${currentSlide.layout === 'two-column' ? 'grid grid-cols-2 gap-8 space-y-0' : ''}`}>
+            {/* Content blocks — canvas layout uses a fixed-aspect absolute canvas */}
+            <div
+              className={
+                currentSlide.layout === 'canvas'
+                  ? 'relative w-full bg-white rounded shadow-sm mx-auto'
+                  : `space-y-4 ${currentSlide.layout === 'two-column' ? 'grid grid-cols-2 gap-8 space-y-0' : ''}`
+              }
+              style={currentSlide.layout === 'canvas' ? { aspectRatio: '16 / 9', maxWidth: 1280 } : undefined}
+            >
               {currentSlide.content.map((block, blockIndex) => {
                 const { animName, delay } = getBlockAnimation(block, blockIndex);
                 const visible = isBlockVisible(block);
@@ -1019,7 +1026,7 @@ export function CoursePreview() {
                   : animName !== 'none' && !visible && course.settings.enableScrollReveal
                     ? 'block-anim-hidden'
                     : '';
-                // Block-level width/alignment (default 100% / left)
+                // Block-level width/alignment (default 100% / left) — linear layouts only
                 const w = typeof block.width === 'number' ? Math.max(20, Math.min(100, block.width)) : 100;
                 const al = block.align || 'left';
                 const sizingStyle: React.CSSProperties = w >= 100 ? {} : {
@@ -1027,6 +1034,15 @@ export function CoursePreview() {
                   marginLeft: al === 'left' ? 0 : 'auto',
                   marginRight: al === 'right' ? 0 : 'auto',
                 };
+                // Canvas layout — absolute positioning from block.pos (1280×720 base)
+                const canvasStyle: React.CSSProperties = currentSlide.layout === 'canvas' && block.pos ? {
+                  position: 'absolute',
+                  left: `${(block.pos.x / 1280) * 100}%`,
+                  top: `${(block.pos.y / 720) * 100}%`,
+                  width: `${(block.pos.w / 1280) * 100}%`,
+                  height: `${(block.pos.h / 720) * 100}%`,
+                  zIndex: typeof block.pos.z === 'number' ? block.pos.z : blockIndex,
+                } : {};
                 return (
                 <div
                   key={block.id}
@@ -1035,7 +1051,7 @@ export function CoursePreview() {
                   className={animClass}
                   style={{
                     ...(animName !== 'none' && visible ? { animationDelay: `${delay}ms` } : {}),
-                    ...sizingStyle,
+                    ...(currentSlide.layout === 'canvas' ? canvasStyle : sizingStyle),
                   }}
                 >
                   {(block.type === 'text' || block.type === 'heading' || block.type === 'list') && (
