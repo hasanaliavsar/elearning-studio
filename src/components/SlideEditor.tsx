@@ -7,8 +7,16 @@ import { AIQuizGeneratorButton } from './AIGenerator';
 import { VideoRecorderModal } from './VideoRecorder';
 import { LivePreviewPane } from './LivePreviewPane';
 import { ModuleCoverEditor, RawHtmlEditor, isModuleCoverHtml, isStructuralHtml } from './TemplateAwareEditor';
-import { InlineAdd } from './CanvasInsert';
+import { InlineAdd, ImagePicker, STOCK_IMAGES } from './CanvasInsert';
 import { generateId } from '../utils/helpers';
+import {
+  DndContext, closestCenter, PointerSensor, useSensor, useSensors,
+} from '@dnd-kit/core';
+import type { DragEndEvent } from '@dnd-kit/core';
+import {
+  SortableContext, useSortable, verticalListSortingStrategy, arrayMove,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import type { Course, Slide, SlideLayout, ContentBlock, EntranceAnimation, SlideTransition, LearningObjective } from '../types';
 import {
   Type, Image, Video, FileText, List, Minus, Code, Plus, Trash2,
@@ -82,6 +90,28 @@ const blockCategories: { label: string; options: BlockOption[] }[] = [
   },
 ];
 
+// Wraps a block so it can be dragged to reorder on the canvas. Children
+// receive the drag handle's listeners + attributes via render-prop so
+// we can wire them to the existing GripVertical icon in the block toolbar.
+function SortableBlock({ id, children }: {
+  id: string;
+  children: (handle: { listeners: ReturnType<typeof useSortable>['listeners']; attributes: ReturnType<typeof useSortable>['attributes']; isDragging: boolean }) => React.ReactNode;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : undefined,
+    position: 'relative',
+    zIndex: isDragging ? 10 : undefined,
+  };
+  return (
+    <div ref={setNodeRef} style={style}>
+      {children({ listeners, attributes, isDragging })}
+    </div>
+  );
+}
+
 export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
   const updateSlide = useStore(s => s.updateSlide);
   const addContentBlock = useStore(s => s.addContentBlock);
@@ -113,6 +143,20 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
 
   const handleInlineAdd = (type: ContentBlock['type'], atIndex: number) => {
     addContentBlock(course.id, moduleId, lessonId, slide.id, type, atIndex);
+  };
+
+  const blockSensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  );
+
+  const handleBlockDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIdx = slide.content.findIndex(b => b.id === active.id);
+    const newIdx = slide.content.findIndex(b => b.id === over.id);
+    if (oldIdx < 0 || newIdx < 0) return;
+    const ordered = arrayMove(slide.content, oldIdx, newIdx);
+    reorderContentBlocks(course.id, moduleId, lessonId, slide.id, ordered.map(b => b.id));
   };
 
   const handleDropFiles = async (files: FileList | null, atIndex?: number) => {
@@ -164,7 +208,11 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
     input.click();
   };
 
-  const renderBlock = (block: ContentBlock, idx: number) => {
+  const renderBlock = (
+    block: ContentBlock,
+    idx: number,
+    handle?: { listeners: ReturnType<typeof useSortable>['listeners']; attributes: ReturnType<typeof useSortable>['attributes']; isDragging: boolean }
+  ) => {
     const isActive = activeBlockId === block.id;
 
     return (
@@ -184,7 +232,16 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
           >
             <ChevronUp className="w-3 h-3" />
           </button>
-          <GripVertical className="w-3 h-3 text-gray-400 cursor-grab" />
+          <button
+            type="button"
+            className="btn-icon w-6 h-6 cursor-grab active:cursor-grabbing touch-none"
+            {...(handle?.attributes || {})}
+            {...(handle?.listeners || {})}
+            onClick={e => e.stopPropagation()}
+            title="Drag to reorder"
+          >
+            <GripVertical className="w-3 h-3 text-gray-400" />
+          </button>
           <button
             onClick={() => handleMoveBlock(block.id, 'down')}
             className="btn-icon w-6 h-6"
@@ -279,22 +336,10 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
                   </div>
                 </div>
               ) : (
-                <div
-                  onClick={() => handleImageUpload(block.id)}
-                  className="border border-dashed border-ivory-300 rounded-md p-8 text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50/40 transition-colors"
-                >
-                  <Image className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-500">Click to upload an image</p>
-                  <p className="text-xs text-gray-400 mt-1">or paste an image URL below</p>
-                </div>
+                <ImagePicker
+                  onSelect={(src, alt) => handleBlockUpdate(block.id, { content: src, alt: alt || block.alt || '' })}
+                />
               )}
-              <input
-                type="text"
-                className="input text-xs"
-                placeholder="Image URL (or use upload above)"
-                value={block.content?.startsWith('data:') ? '' : block.content}
-                onChange={e => handleBlockUpdate(block.id, { content: e.target.value })}
-              />
               <input
                 type="text"
                 className="input text-xs"
@@ -441,12 +486,20 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
                   </div>
                 )}
                 <InlineAdd index={0} onInsert={handleInlineAdd} />
-                {slide.content.map((block, idx) => (
-                  <div key={block.id}>
-                    {renderBlock(block, idx)}
-                    <InlineAdd index={idx + 1} onInsert={handleInlineAdd} />
-                  </div>
-                ))}
+                <DndContext sensors={blockSensors} collisionDetection={closestCenter} onDragEnd={handleBlockDragEnd}>
+                  <SortableContext items={slide.content.map(b => b.id)} strategy={verticalListSortingStrategy}>
+                    {slide.content.map((block, idx) => (
+                      <SortableBlock key={block.id} id={block.id}>
+                        {(handle) => (
+                          <>
+                            {renderBlock(block, idx, handle)}
+                            <InlineAdd index={idx + 1} onInsert={handleInlineAdd} />
+                          </>
+                        )}
+                      </SortableBlock>
+                    ))}
+                  </SortableContext>
+                </DndContext>
               </div>
             )}
 
