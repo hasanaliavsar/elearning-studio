@@ -6,6 +6,7 @@ import { BlockEditor } from './BlockEditors';
 import { AIQuizGeneratorButton } from './AIGenerator';
 import { VideoRecorderModal } from './VideoRecorder';
 import { LivePreviewPane } from './LivePreviewPane';
+import { ModuleCoverEditor, RawHtmlEditor, isModuleCoverHtml, isStructuralHtml } from './TemplateAwareEditor';
 import type { Course, Slide, SlideLayout, ContentBlock, EntranceAnimation, SlideTransition, LearningObjective } from '../types';
 import {
   Type, Image, Video, FileText, List, Minus, Code, Plus, Trash2,
@@ -26,20 +27,6 @@ interface Props {
 
 type BlockOption = { type: ContentBlock['type']; label: string; icon: React.ReactNode };
 
-/**
- * Detects content that TipTap will silently mangle (structural <div> tags
- * with inline styles — used by full-bleed templates like the Module cover).
- * Such content needs a raw-HTML textarea editor instead of the rich-text editor;
- * otherwise TipTap normalises it away and infinite-loops on prop comparison.
- */
-function isStructuralHtml(html: string): boolean {
-  if (!html) return false;
-  // Top-level <div with absolute positioning, gradients, or clamp() — clear template marker
-  if (/<div[^>]*style=["'][^"']*position\s*:\s*absolute/i.test(html)) return true;
-  if (/<div[^>]*style=["'][^"']*background\s*:\s*linear-gradient/i.test(html)) return true;
-  if (/clamp\s*\(/.test(html)) return true;
-  return false;
-}
 
 const blockCategories: { label: string; options: BlockOption[] }[] = [
   {
@@ -211,20 +198,16 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
         {/* Block content */}
         <div className="p-2">
           {(block.type === 'text' || block.type === 'heading' || block.type === 'list') && (
-            isStructuralHtml(block.content) ? (
-              <div className="space-y-2">
-                <div className="flex items-start gap-2 text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
-                  <AlertCircle className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
-                  <span>This block uses styled HTML (template content). Editing in raw HTML preserves the layout — the rich-text editor would strip the <code className="font-mono">&lt;div&gt;</code> structure.</span>
-                </div>
-                <textarea
-                  value={block.content}
-                  onChange={e => handleBlockUpdate(block.id, { content: e.target.value })}
-                  spellCheck={false}
-                  className="w-full font-mono text-[11px] leading-snug bg-gray-50 border border-gray-200 rounded p-2 focus:outline-none focus:border-brand-500"
-                  rows={Math.min(20, Math.max(6, block.content.split('\n').length + 1))}
-                />
-              </div>
+            isModuleCoverHtml(block.content) ? (
+              <ModuleCoverEditor
+                content={block.content}
+                onChange={(html) => handleBlockUpdate(block.id, { content: html })}
+              />
+            ) : isStructuralHtml(block.content) ? (
+              <RawHtmlEditor
+                content={block.content}
+                onChange={(html) => handleBlockUpdate(block.id, { content: html })}
+              />
             ) : (
               <RichTextEditor
                 content={block.content}
