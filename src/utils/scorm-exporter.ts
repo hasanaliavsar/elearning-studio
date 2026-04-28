@@ -858,8 +858,8 @@ function generatePlayer(): string {
       container.style.backgroundImage = '';
     }
 
-    // Full-bleed: drop padding so the inner block can fill the slide edge-to-edge
-    if (slide.fullBleed) {
+    // Full-bleed and canvas: drop padding so the inner content fills the slide edge-to-edge
+    if (slide.fullBleed || slide.layout === 'canvas') {
       container.style.padding = '0';
       container.style.overflow = 'hidden';
       container.style.position = 'relative';
@@ -896,7 +896,8 @@ function generatePlayer(): string {
 
     // Slide title — match Preview.tsx: text-3xl font-bold mb-6, white on dark bg.
     // No breadcrumb (Preview doesn't show one).
-    if (!slide.fullBleed && slide.title) {
+    // Skip for full-bleed and canvas layouts — those own their own composition.
+    if (!slide.fullBleed && slide.layout !== 'canvas' && slide.title) {
       html += '<h1 style="color:' + textColor + ';font-size:1.875rem;font-weight:700;line-height:1.2;margin-bottom:1.5rem;">' + escapeHtml(slide.title) + '</h1>';
     }
 
@@ -913,20 +914,35 @@ function generatePlayer(): string {
 
     // Content blocks
     var isColumn = slide.layout === 'two-column';
+    var isCanvas = slide.layout === 'canvas';
     if (isColumn) html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;" class="two-col-grid">';
+    if (isCanvas) html += '<div class="scorm-canvas" style="position:relative;width:100%;max-width:1280px;aspect-ratio:16/9;margin:0 auto;background:#FFFFFF;">';
 
     var defaultAnim = COURSE_DATA.settings.defaultAnimation || 'none';
     slide.content.forEach(function(block, blockIndex) {
       var anim = block.animation || defaultAnim;
-      // Block-level width + alignment wrapper
-      var bw = (typeof block.width === 'number') ? Math.max(20, Math.min(100, block.width)) : 100;
-      var ba = block.align || 'left';
+      // Block-level wrapper — canvas-mode blocks get absolute positioning
+      // from block.pos (1280×720 base, emitted as % so it scales);
+      // linear-mode blocks honour width + alignment.
       var sizingStyle = '';
-      if (bw < 100) {
-        sizingStyle = 'width:' + bw + '%;'
-          + (ba === 'left' ? 'margin-left:0;margin-right:auto;'
-              : ba === 'right' ? 'margin-left:auto;margin-right:0;'
-              : 'margin-left:auto;margin-right:auto;');
+      if (isCanvas && block.pos) {
+        var pp = block.pos;
+        sizingStyle = 'position:absolute;'
+          + 'left:' + ((pp.x / 1280) * 100) + '%;'
+          + 'top:' + ((pp.y / 720) * 100) + '%;'
+          + 'width:' + ((pp.w / 1280) * 100) + '%;'
+          + 'height:' + ((pp.h / 720) * 100) + '%;'
+          + 'overflow:hidden;'
+          + 'z-index:' + (typeof pp.z === 'number' ? pp.z : blockIndex) + ';';
+      } else {
+        var bw = (typeof block.width === 'number') ? Math.max(20, Math.min(100, block.width)) : 100;
+        var ba = block.align || 'left';
+        if (bw < 100) {
+          sizingStyle = 'width:' + bw + '%;'
+            + (ba === 'left' ? 'margin-left:0;margin-right:auto;'
+                : ba === 'right' ? 'margin-left:auto;margin-right:0;'
+                : 'margin-left:auto;margin-right:auto;');
+        }
       }
       if (sizingStyle) html += '<div style="' + sizingStyle + '">';
       if (anim && anim !== 'none') {
@@ -1313,6 +1329,7 @@ function generatePlayer(): string {
     });
 
     if (isColumn) html += '</div>';
+    if (isCanvas) html += '</div>';
 
     // Questions
     if (slide.questions && slide.questions.length > 0) {
