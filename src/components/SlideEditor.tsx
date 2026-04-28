@@ -8,6 +8,7 @@ import { VideoRecorderModal } from './VideoRecorder';
 import { LivePreviewPane } from './LivePreviewPane';
 import { ModuleCoverEditor, RawHtmlEditor, isModuleCoverHtml, isStructuralHtml } from './TemplateAwareEditor';
 import { InlineAdd, ImagePicker, STOCK_IMAGES } from './CanvasInsert';
+import { BlockResizeHandle, BlockSizingControls } from './BlockSizing';
 import { generateId } from '../utils/helpers';
 import {
   DndContext, closestCenter, PointerSensor, useSensor, useSensors,
@@ -89,6 +90,19 @@ const blockCategories: { label: string; options: BlockOption[] }[] = [
     ],
   },
 ];
+
+// Returns the inline style for a block's width + horizontal alignment.
+// Defaults: width=100%, align=left. Centered/right blocks use auto margins.
+export function getBlockSizingStyle(block: ContentBlock): React.CSSProperties {
+  const width = typeof block.width === 'number' ? Math.max(20, Math.min(100, block.width)) : 100;
+  const align = block.align || 'left';
+  if (width >= 100) return {};
+  return {
+    width: `${width}%`,
+    marginLeft: align === 'left' ? 0 : 'auto',
+    marginRight: align === 'right' ? 0 : 'auto',
+  };
+}
 
 // Wraps a block so it can be dragged to reorder on the canvas. Children
 // receive the drag handle's listeners + attributes via render-prop so
@@ -214,6 +228,7 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
     handle?: { listeners: ReturnType<typeof useSortable>['listeners']; attributes: ReturnType<typeof useSortable>['attributes']; isDragging: boolean }
   ) => {
     const isActive = activeBlockId === block.id;
+    const sizingStyle = getBlockSizingStyle(block);
 
     return (
       <div
@@ -221,8 +236,17 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
         className={`group relative rounded-lg border transition-all ${
           isActive ? 'border-brand-300 ring-2 ring-brand-100' : 'border-transparent hover:border-gray-200'
         }`}
+        style={sizingStyle}
         onClick={() => setActiveBlockId(block.id)}
       >
+        {/* Right-edge resize handle — drag to scale the block width */}
+        {!slide.fullBleed && slide.layout !== 'two-column' && (
+          <BlockResizeHandle
+            block={block}
+            onResize={(width, align) => handleBlockUpdate(block.id, { width, ...(align ? { align } : {}) })}
+            visible={isActive}
+          />
+        )}
         {/* Block toolbar */}
         <div className={`absolute -left-10 top-0 flex flex-col items-center gap-0.5 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}>
           <button
@@ -625,6 +649,21 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
         <div className="flex-1 overflow-auto p-4">
           {editor.rightPanelTab === 'properties' && (
             <div className="space-y-4">
+              {/* Block sizing — only when a block is selected and the layout supports it */}
+              {(() => {
+                const activeBlock = slide.content.find(b => b.id === activeBlockId);
+                if (!activeBlock || slide.fullBleed || slide.layout === 'two-column') return null;
+                return (
+                  <div>
+                    <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-[#171D97] mb-2">Block size</p>
+                    <BlockSizingControls
+                      block={activeBlock}
+                      onChange={updates => handleBlockUpdate(activeBlock.id, updates)}
+                    />
+                  </div>
+                );
+              })()}
+
               <div>
                 <label className="label">Layout</label>
                 <select

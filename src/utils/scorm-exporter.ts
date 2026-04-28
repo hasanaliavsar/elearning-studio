@@ -918,6 +918,17 @@ function generatePlayer(): string {
     var defaultAnim = COURSE_DATA.settings.defaultAnimation || 'none';
     slide.content.forEach(function(block, blockIndex) {
       var anim = block.animation || defaultAnim;
+      // Block-level width + alignment wrapper
+      var bw = (typeof block.width === 'number') ? Math.max(20, Math.min(100, block.width)) : 100;
+      var ba = block.align || 'left';
+      var sizingStyle = '';
+      if (bw < 100) {
+        sizingStyle = 'width:' + bw + '%;'
+          + (ba === 'left' ? 'margin-left:0;margin-right:auto;'
+              : ba === 'right' ? 'margin-left:auto;margin-right:0;'
+              : 'margin-left:auto;margin-right:auto;');
+      }
+      if (sizingStyle) html += '<div style="' + sizingStyle + '">';
       if (anim && anim !== 'none') {
         var delay = block.animationDelay || (blockIndex * 150);
         html += '<div class="animated" data-animation="' + anim + '" style="animation-delay:' + delay + 'ms;">';
@@ -1297,6 +1308,8 @@ function generatePlayer(): string {
       if (anim && anim !== 'none') {
         html += '</div>';
       }
+      // Close sizing wrapper if needed
+      if (sizingStyle) html += '</div>';
     });
 
     if (isColumn) html += '</div>';

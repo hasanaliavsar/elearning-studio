@@ -268,6 +268,8 @@ export interface ContentBlock {
   data?: ContentBlockData;
   animation?: EntranceAnimation;
   animationDelay?: number; // ms
+  width?: number; // percentage 20-100, default 100
+  align?: 'left' | 'center' | 'right'; // horizontal alignment when width < 100, default 'left'
 }
 
 export interface LearningObjective {

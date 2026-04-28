@@ -86,7 +86,20 @@ export function LivePreviewPane({ course, slide }: Props) {
               {slide.content.length === 0 ? (
                 <p className="text-base text-gray-400 italic">No content blocks yet.</p>
               ) : (
-                slide.content.map((b, i) => <BlockPreview key={b.id || i} block={b} />)
+                slide.content.map((b, i) => {
+                  const w = typeof b.width === 'number' ? Math.max(20, Math.min(100, b.width)) : 100;
+                  const al = b.align || 'left';
+                  const wrap: React.CSSProperties = w >= 100 ? {} : {
+                    width: `${w}%`,
+                    marginLeft: al === 'left' ? 0 : 'auto',
+                    marginRight: al === 'right' ? 0 : 'auto',
+                  };
+                  return (
+                    <div key={b.id || i} style={wrap}>
+                      <BlockPreview block={b} />
+                    </div>
+                  );
+                })
               )}
             </div>
 

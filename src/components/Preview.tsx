@@ -1019,13 +1019,24 @@ export function CoursePreview() {
                   : animName !== 'none' && !visible && course.settings.enableScrollReveal
                     ? 'block-anim-hidden'
                     : '';
+                // Block-level width/alignment (default 100% / left)
+                const w = typeof block.width === 'number' ? Math.max(20, Math.min(100, block.width)) : 100;
+                const al = block.align || 'left';
+                const sizingStyle: React.CSSProperties = w >= 100 ? {} : {
+                  width: `${w}%`,
+                  marginLeft: al === 'left' ? 0 : 'auto',
+                  marginRight: al === 'right' ? 0 : 'auto',
+                };
                 return (
                 <div
                   key={block.id}
                   ref={(el) => { blockRefs.current[block.id] = el; }}
                   data-block-id={block.id}
                   className={animClass}
-                  style={animName !== 'none' && visible ? { animationDelay: `${delay}ms` } : undefined}
+                  style={{
+                    ...(animName !== 'none' && visible ? { animationDelay: `${delay}ms` } : {}),
+                    ...sizingStyle,
+                  }}
                 >
                   {(block.type === 'text' || block.type === 'heading' || block.type === 'list') && (
                     <div
