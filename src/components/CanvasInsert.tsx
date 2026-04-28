@@ -25,20 +25,78 @@ export const STOCK_IMAGES: { url: string; alt: string; theme: string }[] = [
 // or near the dragged-over block).
 
 import { useEffect, useRef, useState } from 'react';
-import { Type as TypeIcon, FileText, Image as ImageIcon, Quote, AlertCircle, Columns3, Minus, MousePointer } from 'lucide-react';
+import {
+  Type as TypeIcon, FileText, Image as ImageIcon, Quote, AlertCircle, Columns3,
+  Minus, MousePointer, Video, Code, Music, Code2, Images,
+  RotateCw, MapPin, ChevronsUpDown, LayoutPanelTop, Clock, Table2,
+  GitBranch, ListChecks, Layers,
+  ArrowUpFromLine, ArrowDownFromLine, PanelLeft, PanelRight, Columns2, Grid3x3,
+  List as ListIcon,
+} from 'lucide-react';
 import type { ContentBlock } from '../types';
 
 type BlockType = ContentBlock['type'];
 
-const QUICK_TYPES: { type: BlockType; label: string; icon: React.ReactNode; description: string }[] = [
-  { type: 'heading', label: 'Heading', icon: <TypeIcon className="w-3.5 h-3.5" />, description: 'Section title' },
-  { type: 'text', label: 'Text', icon: <FileText className="w-3.5 h-3.5" />, description: 'Paragraph or rich text' },
-  { type: 'image', label: 'Image', icon: <ImageIcon className="w-3.5 h-3.5" />, description: 'Picture from URL' },
-  { type: 'pull-quote', label: 'Pull quote', icon: <Quote className="w-3.5 h-3.5" />, description: 'Highlighted quote with attribution' },
-  { type: 'callout', label: 'Callout', icon: <AlertCircle className="w-3.5 h-3.5" />, description: 'Info / warning / tip / success box' },
-  { type: 'comparison', label: 'Comparison', icon: <Columns3 className="w-3.5 h-3.5" />, description: '2–4 columns with featured option' },
-  { type: 'button', label: 'Button', icon: <MousePointer className="w-3.5 h-3.5" />, description: 'Clickable CTA' },
-  { type: 'divider', label: 'Divider', icon: <Minus className="w-3.5 h-3.5" />, description: 'Horizontal line' },
+interface BlockOption {
+  type: BlockType;
+  label: string;
+  icon: React.ReactNode;
+  description: string;
+}
+
+const ICN = 'w-3.5 h-3.5';
+
+const BLOCK_GROUPS: { label: string; options: BlockOption[] }[] = [
+  {
+    label: 'Basic',
+    options: [
+      { type: 'heading', label: 'Heading', icon: <TypeIcon className={ICN} />, description: 'Section title' },
+      { type: 'text', label: 'Text', icon: <FileText className={ICN} />, description: 'Paragraph or rich text' },
+      { type: 'image', label: 'Image', icon: <ImageIcon className={ICN} />, description: 'Picture / upload' },
+      { type: 'pull-quote', label: 'Pull quote', icon: <Quote className={ICN} />, description: 'Quote with attribution' },
+      { type: 'comparison', label: 'Comparison', icon: <Columns3 className={ICN} />, description: '2–4 columns featured' },
+      { type: 'callout', label: 'Callout', icon: <AlertCircle className={ICN} />, description: 'Info / warning / tip box' },
+      { type: 'button', label: 'Button', icon: <MousePointer className={ICN} />, description: 'Clickable CTA' },
+      { type: 'list', label: 'List', icon: <ListIcon className={ICN} />, description: 'Bulleted or numbered list' },
+      { type: 'divider', label: 'Divider', icon: <Minus className={ICN} />, description: 'Horizontal line' },
+      { type: 'code', label: 'Code', icon: <Code className={ICN} />, description: 'Code snippet' },
+    ],
+  },
+  {
+    label: 'Image layouts',
+    options: [
+      { type: 'image-top', label: 'Image top', icon: <ArrowUpFromLine className={ICN} />, description: 'Image above text' },
+      { type: 'image-bottom', label: 'Image bottom', icon: <ArrowDownFromLine className={ICN} />, description: 'Image below text' },
+      { type: 'image-left', label: 'Image left', icon: <PanelLeft className={ICN} />, description: 'Image left of text' },
+      { type: 'image-right', label: 'Image right', icon: <PanelRight className={ICN} />, description: 'Image right of text' },
+      { type: 'two-images', label: 'Two images', icon: <Columns2 className={ICN} />, description: 'Side-by-side pair' },
+      { type: 'three-images', label: 'Three images', icon: <Grid3x3 className={ICN} />, description: 'Three-up grid' },
+      { type: 'gallery', label: 'Gallery', icon: <Images className={ICN} />, description: 'Image grid with captions' },
+    ],
+  },
+  {
+    label: 'Interactive',
+    options: [
+      { type: 'flip-card', label: 'Flip cards', icon: <RotateCw className={ICN} />, description: 'Front / back tap-to-flip' },
+      { type: 'hotspot', label: 'Hotspot', icon: <MapPin className={ICN} />, description: 'Image with clickable pins' },
+      { type: 'labeled-graphic', label: 'Labeled graphic', icon: <LayoutPanelTop className={ICN} />, description: 'Annotated image' },
+      { type: 'accordion', label: 'Accordion', icon: <ChevronsUpDown className={ICN} />, description: 'Expandable sections' },
+      { type: 'tabs', label: 'Tabs', icon: <LayoutPanelTop className={ICN} />, description: 'Tabbed content' },
+      { type: 'timeline', label: 'Timeline', icon: <Clock className={ICN} />, description: 'Chronological events' },
+      { type: 'table', label: 'Table', icon: <Table2 className={ICN} />, description: 'Rows and columns' },
+      { type: 'scenario', label: 'Scenario', icon: <GitBranch className={ICN} />, description: 'Branching decisions' },
+      { type: 'checklist', label: 'Checklist', icon: <ListChecks className={ICN} />, description: 'Tickable items' },
+      { type: 'card-sorting', label: 'Card sorting', icon: <Layers className={ICN} />, description: 'Drag to categorise' },
+    ],
+  },
+  {
+    label: 'Media',
+    options: [
+      { type: 'video', label: 'Video', icon: <Video className={ICN} />, description: 'Embedded video' },
+      { type: 'audio', label: 'Audio', icon: <Music className={ICN} />, description: 'Audio player' },
+      { type: 'embed', label: 'Embed', icon: <Code2 className={ICN} />, description: 'iframe / embed' },
+    ],
+  },
 ];
 
 interface InlineAddProps {
@@ -86,25 +144,29 @@ export function InlineAdd({ index, onInsert }: InlineAddProps) {
 
       {/* Popover */}
       {open && (
-        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1 z-30 w-[320px] bg-white rounded-lg shadow-xl border border-gray-200 p-2">
-          <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-gray-400 px-2 py-1">
-            Insert block
-          </p>
-          <div className="grid grid-cols-2 gap-1">
-            {QUICK_TYPES.map(({ type, label, icon, description }) => (
-              <button
-                key={type}
-                onClick={() => { onInsert(type, index); setOpen(false); }}
-                className="flex items-start gap-2 p-2 rounded-md text-left hover:bg-gray-50 transition-colors"
-              >
-                <span className="mt-0.5 text-[#171D97]">{icon}</span>
-                <span className="flex-1 min-w-0">
-                  <span className="block text-[12px] font-medium text-gray-900 truncate">{label}</span>
-                  <span className="block text-[10px] text-gray-500 truncate">{description}</span>
-                </span>
-              </button>
-            ))}
-          </div>
+        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1 z-30 w-[420px] max-h-[460px] overflow-y-auto bg-white rounded-lg shadow-xl border border-gray-200">
+          {BLOCK_GROUPS.map((group) => (
+            <div key={group.label} className="border-b border-gray-100 last:border-b-0">
+              <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-gray-400 px-3 pt-2.5 pb-1.5 sticky top-0 bg-white z-10">
+                {group.label}
+              </p>
+              <div className="grid grid-cols-2 gap-0.5 p-1.5 pt-0">
+                {group.options.map(({ type, label, icon, description }) => (
+                  <button
+                    key={type}
+                    onClick={() => { onInsert(type, index); setOpen(false); }}
+                    className="flex items-start gap-2 p-2 rounded-md text-left hover:bg-gray-50 transition-colors"
+                  >
+                    <span className="mt-0.5 text-[#171D97]">{icon}</span>
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-[12px] font-medium text-gray-900 truncate">{label}</span>
+                      <span className="block text-[10px] text-gray-500 truncate">{description}</span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
