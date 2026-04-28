@@ -6,7 +6,7 @@ import Placeholder from '@tiptap/extension-placeholder';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
 import Highlight from '@tiptap/extension-highlight';
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import {
   Bold, Italic, Underline as UnderlineIcon, Strikethrough,
   AlignLeft, AlignCenter, AlignRight,
@@ -41,8 +41,14 @@ export function RichTextEditor({ content, onChange, placeholder = 'Start typing.
     },
   });
 
+  // Track the last externally-supplied content so we don't loop when TipTap
+  // normalises away tags it doesn't understand (e.g. structural <div>s on
+  // template slides). Comparing against editor.getHTML() directly causes an
+  // infinite "Maximum update depth exceeded" crash on those slides.
+  const lastExternalContent = useRef(content);
   useEffect(() => {
-    if (editor && content !== editor.getHTML()) {
+    if (editor && content !== lastExternalContent.current) {
+      lastExternalContent.current = content;
       editor.commands.setContent(content, false);
     }
   }, [content, editor]);
