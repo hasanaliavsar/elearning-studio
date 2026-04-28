@@ -7,6 +7,8 @@ import { AIQuizGeneratorButton } from './AIGenerator';
 import { VideoRecorderModal } from './VideoRecorder';
 import { LivePreviewPane } from './LivePreviewPane';
 import { ModuleCoverEditor, RawHtmlEditor, isModuleCoverHtml, isStructuralHtml } from './TemplateAwareEditor';
+import { InlineAdd } from './CanvasInsert';
+import { generateId } from '../utils/helpers';
 import type { Course, Slide, SlideLayout, ContentBlock, EntranceAnimation, SlideTransition, LearningObjective } from '../types';
 import {
   Type, Image, Video, FileText, List, Minus, Code, Plus, Trash2,
@@ -83,6 +85,8 @@ const blockCategories: { label: string; options: BlockOption[] }[] = [
 export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
   const updateSlide = useStore(s => s.updateSlide);
   const addContentBlock = useStore(s => s.addContentBlock);
+  const insertContentBlock = useStore(s => s.insertContentBlock);
+  const reorderContentBlocks = useStore(s => s.reorderContentBlocks);
   const updateContentBlock = useStore(s => s.updateContentBlock);
   const deleteContentBlock = useStore(s => s.deleteContentBlock);
   const addQuestion = useStore(s => s.addQuestion);
@@ -92,6 +96,7 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
   const [showAddBlock, setShowAddBlock] = useState(false);
   const [activeBlockId, setActiveBlockId] = useState<string | null>(null);
   const [livePreviewOpen, setLivePreviewOpen] = useState(true);
+  const [dragOver, setDragOver] = useState(false);
   const [showVideoRecorder, setShowVideoRecorder] = useState(false);
 
   const handleUpdateSlide = (updates: Partial<Slide>) => {
@@ -104,6 +109,33 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
 
   const handleDeleteBlock = (blockId: string) => {
     deleteContentBlock(course.id, moduleId, lessonId, slide.id, blockId);
+  };
+
+  const handleInlineAdd = (type: ContentBlock['type'], atIndex: number) => {
+    addContentBlock(course.id, moduleId, lessonId, slide.id, type, atIndex);
+  };
+
+  const handleDropFiles = async (files: FileList | null, atIndex?: number) => {
+    if (!files || !files.length) return;
+    const images = Array.from(files).filter(f => f.type.startsWith('image/'));
+    if (!images.length) return;
+    let i = typeof atIndex === 'number' ? atIndex : slide.content.length;
+    for (const file of images) {
+      const dataUrl: string = await new Promise(res => {
+        const r = new FileReader();
+        r.onload = () => res(r.result as string);
+        r.readAsDataURL(file);
+      });
+      const newBlock: ContentBlock = {
+        id: generateId(),
+        type: 'image',
+        content: dataUrl,
+        alt: file.name.replace(/\.[^.]+$/, ''),
+        caption: '',
+      };
+      insertContentBlock(course.id, moduleId, lessonId, slide.id, newBlock, i);
+      i += 1;
+    }
   };
 
   const handleMoveBlock = (blockId: string, direction: 'up' | 'down') => {
@@ -362,13 +394,61 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
 
           {/* Slide content area */}
           <div
-            className={`card min-h-[500px] relative ${slide.fullBleed ? 'p-0 overflow-hidden' : 'p-8'}`}
+            className={`card min-h-[500px] relative transition-shadow ${slide.fullBleed ? 'p-0 overflow-hidden' : 'p-8'} ${dragOver ? 'ring-2 ring-[#171D97] ring-offset-2' : ''}`}
             style={{ backgroundColor: slide.backgroundColor }}
             onClick={e => e.stopPropagation()}
+            onDragOver={e => {
+              if (e.dataTransfer.types.includes('Files')) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+                if (!dragOver) setDragOver(true);
+              }
+            }}
+            onDragLeave={e => {
+              if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+              setDragOver(false);
+            }}
+            onDrop={e => {
+              if (e.dataTransfer.types.includes('Files')) {
+                e.preventDefault();
+                setDragOver(false);
+                handleDropFiles(e.dataTransfer.files);
+              }
+            }}
           >
-            <div className={slide.fullBleed ? '' : `space-y-4 ${slide.layout === 'two-column' ? 'grid grid-cols-2 gap-6 space-y-0' : ''}`}>
-              {slide.content.map((block, idx) => renderBlock(block, idx))}
-            </div>
+            {dragOver && (
+              <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-[#171D97]/10 backdrop-blur-[1px] rounded">
+                <div className="bg-white px-4 py-2 rounded-lg shadow-md text-sm font-medium text-[#171D97] flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M3 16v3a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3M16 8l-4-4-4 4M12 4v12" />
+                  </svg>
+                  Drop image to insert
+                </div>
+              </div>
+            )}
+            {slide.fullBleed ? (
+              <>{slide.content.map((block, idx) => renderBlock(block, idx))}</>
+            ) : slide.layout === 'two-column' ? (
+              <div className="grid grid-cols-2 gap-6">
+                {slide.content.map((block, idx) => renderBlock(block, idx))}
+              </div>
+            ) : (
+              <div>
+                {slide.content.length === 0 && (
+                  <div className="text-center py-10 text-gray-400">
+                    <p className="text-sm mb-1">Empty slide</p>
+                    <p className="text-xs">Drop an image here, or use the + line below to add content</p>
+                  </div>
+                )}
+                <InlineAdd index={0} onInsert={handleInlineAdd} />
+                {slide.content.map((block, idx) => (
+                  <div key={block.id}>
+                    {renderBlock(block, idx)}
+                    <InlineAdd index={idx + 1} onInsert={handleInlineAdd} />
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Quiz section */}
             {slide.questions.length > 0 && (

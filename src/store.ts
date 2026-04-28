@@ -249,9 +249,11 @@ interface AppState {
   reorderSlides: (courseId: string, moduleId: string, lessonId: string, slideIds: string[]) => void;
 
   // Content block CRUD
-  addContentBlock: (courseId: string, moduleId: string, lessonId: string, slideId: string, type: ContentBlock['type']) => void;
+  addContentBlock: (courseId: string, moduleId: string, lessonId: string, slideId: string, type: ContentBlock['type'], insertIndex?: number) => void;
+  insertContentBlock: (courseId: string, moduleId: string, lessonId: string, slideId: string, block: ContentBlock, insertIndex?: number) => void;
   updateContentBlock: (courseId: string, moduleId: string, lessonId: string, slideId: string, blockId: string, updates: Partial<ContentBlock>) => void;
   deleteContentBlock: (courseId: string, moduleId: string, lessonId: string, slideId: string, blockId: string) => void;
+  reorderContentBlocks: (courseId: string, moduleId: string, lessonId: string, slideId: string, blockIds: string[]) => void;
 
   // Question CRUD
   addQuestion: (courseId: string, moduleId: string, lessonId: string, slideId: string, type?: QuestionType) => void;
@@ -742,7 +744,7 @@ export const useStore = create<AppState>()(
         }));
       },
 
-      addContentBlock: (courseId, moduleId, lessonId, slideId, type) => {
+      addContentBlock: (courseId, moduleId, lessonId, slideId, type, insertIndex) => {
         const block: ContentBlock = {
           id: generateId(),
           type,
@@ -856,7 +858,75 @@ export const useStore = create<AppState>()(
                       ...l,
                       slides: l.slides.map(s => {
                         if (s.id !== slideId) return s;
+                        if (typeof insertIndex === 'number') {
+                          const next = [...s.content];
+                          next.splice(insertIndex, 0, block);
+                          return { ...s, content: next };
+                        }
                         return { ...s, content: [...s.content, block] };
+                      }),
+                    };
+                  }),
+                };
+              }),
+              updatedAt: new Date().toISOString(),
+            };
+          }),
+        }));
+      },
+
+      insertContentBlock: (courseId, moduleId, lessonId, slideId, block, insertIndex) => {
+        set(state => ({
+          courses: state.courses.map(c => {
+            if (c.id !== courseId) return c;
+            return {
+              ...c,
+              modules: c.modules.map(m => {
+                if (m.id !== moduleId) return m;
+                return {
+                  ...m,
+                  lessons: m.lessons.map(l => {
+                    if (l.id !== lessonId) return l;
+                    return {
+                      ...l,
+                      slides: l.slides.map(s => {
+                        if (s.id !== slideId) return s;
+                        if (typeof insertIndex === 'number') {
+                          const next = [...s.content];
+                          next.splice(insertIndex, 0, block);
+                          return { ...s, content: next };
+                        }
+                        return { ...s, content: [...s.content, block] };
+                      }),
+                    };
+                  }),
+                };
+              }),
+              updatedAt: new Date().toISOString(),
+            };
+          }),
+        }));
+      },
+
+      reorderContentBlocks: (courseId, moduleId, lessonId, slideId, blockIds) => {
+        set(state => ({
+          courses: state.courses.map(c => {
+            if (c.id !== courseId) return c;
+            return {
+              ...c,
+              modules: c.modules.map(m => {
+                if (m.id !== moduleId) return m;
+                return {
+                  ...m,
+                  lessons: m.lessons.map(l => {
+                    if (l.id !== lessonId) return l;
+                    return {
+                      ...l,
+                      slides: l.slides.map(s => {
+                        if (s.id !== slideId) return s;
+                        const byId = new Map(s.content.map(b => [b.id, b]));
+                        const reordered = blockIds.map(id => byId.get(id)).filter(Boolean) as typeof s.content;
+                        return { ...s, content: reordered };
                       }),
                     };
                   }),
