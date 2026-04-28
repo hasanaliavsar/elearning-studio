@@ -2339,7 +2339,78 @@ export function BlockEditor(props: BlockEditorProps) {
       return <PullQuoteEditor {...props} />;
     case 'comparison':
       return <ComparisonEditor {...props} />;
+    case 'learning-objectives':
+      return <LearningObjectivesEditor {...props} />;
     default:
       return null;
   }
+}
+
+function LearningObjectivesEditor({ block, onUpdateData }: BlockEditorProps) {
+  const data = ensureData(block);
+  const items = data.loItems ?? [];
+  const title = data.loTitle ?? 'Learning objectives';
+
+  const update = (next: typeof items) => onUpdateData({ loItems: next });
+
+  return (
+    <div className="space-y-3">
+      <SectionHeading>Learning objectives</SectionHeading>
+
+      <div>
+        <label className="label text-xs">Title</label>
+        <input
+          className="input text-xs"
+          value={title}
+          onChange={e => onUpdateData({ loTitle: e.target.value })}
+          placeholder="Learning objectives"
+        />
+      </div>
+
+      <div>
+        <label className="label text-xs flex items-center justify-between">
+          <span>Objectives ({items.length})</span>
+          <button
+            type="button"
+            onClick={() => update([...items, { id: generateId(), text: '' }])}
+            className="text-[11px] text-[#171D97] hover:underline"
+          >
+            + Add objective
+          </button>
+        </label>
+        <div className="space-y-2 mt-1">
+          {items.map((item, idx) => (
+            <div key={item.id} className="flex items-center gap-2">
+              <span className="text-[10px] font-mono text-gray-400 w-4">{idx + 1}.</span>
+              <input
+                className="input text-xs flex-1"
+                value={item.text}
+                onChange={e => {
+                  const next = items.slice();
+                  next[idx] = { ...item, text: e.target.value };
+                  update(next);
+                }}
+                placeholder="Recognize when an issue may be a product emergency"
+              />
+              <button
+                type="button"
+                onClick={() => update(items.filter(i => i.id !== item.id))}
+                className="p-1 rounded text-gray-400 hover:text-red-500 hover:bg-red-50"
+                title="Remove"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+          {items.length === 0 && (
+            <p className="text-[11px] text-gray-400 italic">Add the first objective above.</p>
+          )}
+        </div>
+      </div>
+
+      <p className="text-[10px] text-gray-400">
+        Renders with the Moonfare sand bg + navy left rule. Drag the block to place it anywhere on a canvas slide.
+      </p>
+    </div>
+  );
 }

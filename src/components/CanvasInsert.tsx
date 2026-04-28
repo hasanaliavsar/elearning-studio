@@ -29,7 +29,7 @@ import {
   Type as TypeIcon, FileText, Image as ImageIcon, Quote, AlertCircle, Columns3,
   Minus, MousePointer, Video, Code, Music, Code2, Images,
   RotateCw, MapPin, ChevronsUpDown, LayoutPanelTop, Clock, Table2,
-  GitBranch, ListChecks, Layers,
+  GitBranch, ListChecks, Layers, Target,
   ArrowUpFromLine, ArrowDownFromLine, PanelLeft, PanelRight, Columns2, Grid3x3,
   List as ListIcon,
 } from 'lucide-react';
@@ -56,6 +56,7 @@ const BLOCK_GROUPS: { label: string; options: BlockOption[] }[] = [
       { type: 'pull-quote', label: 'Pull quote', icon: <Quote className={ICN} />, description: 'Quote with attribution' },
       { type: 'comparison', label: 'Comparison', icon: <Columns3 className={ICN} />, description: '2–4 columns featured' },
       { type: 'callout', label: 'Callout', icon: <AlertCircle className={ICN} />, description: 'Info / warning / tip box' },
+      { type: 'learning-objectives', label: 'Learning objectives', icon: <Target className={ICN} />, description: 'Goal list, sand bg + navy rule' },
       { type: 'button', label: 'Button', icon: <MousePointer className={ICN} />, description: 'Clickable CTA' },
       { type: 'list', label: 'List', icon: <ListIcon className={ICN} />, description: 'Bulleted or numbered list' },
       { type: 'divider', label: 'Divider', icon: <Minus className={ICN} />, description: 'Horizontal line' },

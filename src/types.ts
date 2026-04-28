@@ -224,6 +224,9 @@ export interface ContentBlockData {
   cmpEyebrow?: string;
   cmpTitle?: string;
   cmpColumns?: ComparisonColumn[];
+  // Learning objectives block
+  loTitle?: string;
+  loItems?: LearningObjective[];
 }
 
 export interface ScenarioStep {
@@ -262,7 +265,8 @@ export type ContentBlockType =
   | 'image-top' | 'image-bottom' | 'image-left' | 'image-right'
   | 'two-images' | 'three-images'
   | 'scenario' | 'checklist' | 'card-sorting'
-  | 'pull-quote' | 'comparison';
+  | 'pull-quote' | 'comparison'
+  | 'learning-objectives';
 
 // --- Animation types ---
 export type EntranceAnimation = 'none' | 'fade-in' | 'slide-up' | 'slide-left' | 'slide-right' | 'zoom-in' | 'bounce-in';

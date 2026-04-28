@@ -1319,6 +1319,19 @@ function generatePlayer(): string {
           html += '</div>';
         });
         html += '</div></div>';
+      } else if (block.type === 'learning-objectives') {
+        var items = (d && d.loItems) || [];
+        var loTitle = (d && d.loTitle) || 'Learning objectives';
+        html += '<div style="border-radius:8px;padding:1.25rem 1.5rem;background:#FAF8F4;border-left:3px solid #171D97;margin:1rem 0;">';
+        html += '<p style="font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#171D97;margin:0 0 0.75rem;">🎯 ' + escapeHtml(loTitle) + '</p>';
+        html += '<ul style="list-style:none;padding:0;margin:0;">';
+        items.forEach(function(item) {
+          html += '<li style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:14px;color:#1A1A1F;line-height:1.55;">';
+          html += '<span style="color:#171D97;font-weight:700;margin-top:1px;">✓</span>';
+          html += '<span>' + escapeHtml(item.text) + '</span>';
+          html += '</li>';
+        });
+        html += '</ul></div>';
       }
       // Close animation wrapper if needed
       if (anim && anim !== 'none') {

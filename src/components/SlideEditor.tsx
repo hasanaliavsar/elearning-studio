@@ -53,6 +53,7 @@ const blockCategories: { label: string; options: BlockOption[] }[] = [
       { type: 'code', label: 'Code', icon: <Code className="w-4 h-4" /> },
       { type: 'pull-quote', label: 'Pull Quote', icon: <Quote className="w-4 h-4" /> },
       { type: 'comparison', label: 'Comparison', icon: <Columns3 className="w-4 h-4" /> },
+      { type: 'learning-objectives', label: 'Learning Objectives', icon: <BookOpen className="w-4 h-4" /> },
     ],
   },
   {
@@ -450,6 +451,7 @@ export function SlideEditor({ course, moduleId, lessonId, slide }: Props) {
             'image-top', 'image-bottom', 'image-left', 'image-right', 'two-images', 'three-images',
             'scenario', 'checklist', 'card-sorting',
             'pull-quote', 'comparison',
+            'learning-objectives',
           ].includes(block.type) && (
             <BlockEditor
               block={block}

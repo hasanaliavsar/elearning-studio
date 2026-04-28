@@ -354,6 +354,29 @@ export function BlockPreview({ block }: { block: ContentBlock }) {
     );
   }
 
+  if (t === 'learning-objectives') {
+    const items = block.data?.loItems || [];
+    const loTitle = block.data?.loTitle || 'Learning objectives';
+    return (
+      <div style={{ borderRadius: 8, padding: 20, backgroundColor: '#FAF8F4', borderLeft: '3px solid #171D97' }}>
+        <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#171D97', margin: '0 0 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span>🎯</span>{loTitle}
+        </p>
+        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+          {items.map(item => (
+            <li key={item.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 8, fontSize: 14, color: '#1A1A1F', lineHeight: 1.55 }}>
+              <span style={{ color: '#171D97', fontWeight: 700, marginTop: 1 }}>✓</span>
+              <span>{item.text}</span>
+            </li>
+          ))}
+          {items.length === 0 && (
+            <li style={{ fontSize: 13, color: '#9CA3AF', fontStyle: 'italic' }}>Add objectives in the inspector…</li>
+          )}
+        </ul>
+      </div>
+    );
+  }
+
   // Fallback for interactive types
   if (INTERACTIVE_HINT_TYPES.has(t)) {
     return (

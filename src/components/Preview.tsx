@@ -1367,6 +1367,28 @@ export function CoursePreview() {
                     );
                   })()}
 
+                  {/* Learning objectives block */}
+                  {block.type === 'learning-objectives' && (() => {
+                    const items = block.data?.loItems || [];
+                    const loTitle = block.data?.loTitle || 'Learning objectives';
+                    return (
+                      <div className="rounded-md p-5" style={{ backgroundColor: '#FAF8F4', borderLeft: '3px solid #171D97' }}>
+                        <h3 className="text-[11px] font-semibold uppercase mb-3 flex items-center gap-2" style={{ color: '#171D97', letterSpacing: '0.12em' }}>
+                          <Lightbulb className="w-4 h-4" />
+                          {loTitle}
+                        </h3>
+                        <ul className="space-y-1.5">
+                          {items.map((obj) => (
+                            <li key={obj.id} className="flex items-start gap-2 text-sm" style={{ color: '#1A1A1F' }}>
+                              <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#171D97' }} />
+                              <span>{obj.text}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  })()}
+
                   {/* Comparison */}
                   {block.type === 'comparison' && block.data?.cmpColumns && block.data.cmpColumns.length > 0 && (() => {
                     const d = block.data;

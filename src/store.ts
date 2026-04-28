@@ -841,6 +841,13 @@ export const useStore = create<AppState>()(
               { id: generateId(), text: 'Card C', correctCategory: 'Category 1' },
               { id: generateId(), text: 'Card D', correctCategory: 'Category 2' },
             ],
+          } : type === 'learning-objectives' ? {
+            loTitle: 'Learning objectives',
+            loItems: [
+              { id: generateId(), text: 'Recognize when an issue may be a product emergency' },
+              { id: generateId(), text: 'Apply the threshold criteria with confidence' },
+              { id: generateId(), text: 'Escalate through the correct channels' },
+            ],
           } : undefined,
         };
         set(state => ({
