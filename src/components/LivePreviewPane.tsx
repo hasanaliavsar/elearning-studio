@@ -152,8 +152,15 @@ function isDarkBg(c: string | undefined): boolean {
 export function BlockPreview({ block }: { block: ContentBlock }) {
   const t = block.type;
 
-  if (t === 'heading' || t === 'text') {
-    return <div dangerouslySetInnerHTML={{ __html: block.content || '' }} />;
+  if (t === 'heading' || t === 'text' || t === 'list') {
+    // Apply prose styling so headings, lists, blockquotes etc. render
+    // with the same visual hierarchy the rich-text editor + Preview show.
+    return (
+      <div
+        className="rich-text-block"
+        dangerouslySetInnerHTML={{ __html: block.content || '' }}
+      />
+    );
   }
 
   if (t === 'image') {
@@ -342,7 +349,7 @@ export function BlockPreview({ block }: { block: ContentBlock }) {
     return (
       <div style={{ display: 'flex', flexDirection: horizontal ? (reverse ? 'row-reverse' : 'row') : (reverse ? 'column-reverse' : 'column'), gap: 16 }}>
         {imgs[0]?.url && <img src={imgs[0].url} alt={imgs[0].alt || ''} style={{ borderRadius: 8, flex: 1, maxWidth: horizontal ? '40%' : '100%', objectFit: 'cover' }} />}
-        <div style={{ fontSize: 16, flex: 1, lineHeight: 1.6 }} dangerouslySetInnerHTML={{ __html: text }} />
+        <div className="rich-text-block" style={{ fontSize: 16, flex: 1, lineHeight: 1.6 }} dangerouslySetInnerHTML={{ __html: text }} />
       </div>
     );
   }

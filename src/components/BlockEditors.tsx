@@ -1326,13 +1326,15 @@ function ImageTopEditor({ block, onUpdateData }: BlockEditorProps) {
     <div className="space-y-3">
       <SectionHeading>Image Top Layout</SectionHeading>
       <LayoutImageInput image={images[0]!} index={0} images={images} onUpdateData={onUpdateData} />
-      <textarea
-        className="input text-xs resize-none"
-        rows={4}
-        placeholder="Text content below the image..."
-        value={data.layoutText ?? ''}
-        onChange={e => onUpdateData({ layoutText: e.target.value })}
-      />
+      <div>
+        <label className="label text-xs">Text content (below the image)</label>
+        <RichTextEditor
+          content={data.layoutText ?? ''}
+          onChange={(html) => onUpdateData({ layoutText: html })}
+          placeholder="Text content below the image…"
+          minimal
+        />
+      </div>
     </div>
   );
 }
@@ -1343,13 +1345,15 @@ function ImageBottomEditor({ block, onUpdateData }: BlockEditorProps) {
   return (
     <div className="space-y-3">
       <SectionHeading>Image Bottom Layout</SectionHeading>
-      <textarea
-        className="input text-xs resize-none"
-        rows={4}
-        placeholder="Text content above the image..."
-        value={data.layoutText ?? ''}
-        onChange={e => onUpdateData({ layoutText: e.target.value })}
-      />
+      <div>
+        <label className="label text-xs">Text content (above the image)</label>
+        <RichTextEditor
+          content={data.layoutText ?? ''}
+          onChange={(html) => onUpdateData({ layoutText: html })}
+          placeholder="Text content above the image…"
+          minimal
+        />
+      </div>
       <LayoutImageInput image={images[0]!} index={0} images={images} onUpdateData={onUpdateData} />
     </div>
   );
@@ -1361,14 +1365,13 @@ function ImageLeftEditor({ block, onUpdateData }: BlockEditorProps) {
   return (
     <div className="space-y-3">
       <SectionHeading>Image Left Layout</SectionHeading>
-      <div className="grid grid-cols-2 gap-3">
-        <LayoutImageInput image={images[0]!} index={0} images={images} onUpdateData={onUpdateData} />
-        <textarea
-          className="input text-xs resize-none h-full"
-          rows={6}
-          placeholder="Text content..."
-          value={data.layoutText ?? ''}
-          onChange={e => onUpdateData({ layoutText: e.target.value })}
+      <LayoutImageInput image={images[0]!} index={0} images={images} onUpdateData={onUpdateData} />
+      <div>
+        <label className="label text-xs">Text content (right of the image)</label>
+        <RichTextEditor
+          content={data.layoutText ?? ''}
+          onChange={(html) => onUpdateData({ layoutText: html })}
+          placeholder="Text content…"
         />
       </div>
     </div>
@@ -1381,15 +1384,14 @@ function ImageRightEditor({ block, onUpdateData }: BlockEditorProps) {
   return (
     <div className="space-y-3">
       <SectionHeading>Image Right Layout</SectionHeading>
-      <div className="grid grid-cols-2 gap-3">
-        <textarea
-          className="input text-xs resize-none h-full"
-          rows={6}
-          placeholder="Text content..."
-          value={data.layoutText ?? ''}
-          onChange={e => onUpdateData({ layoutText: e.target.value })}
+      <LayoutImageInput image={images[0]!} index={0} images={images} onUpdateData={onUpdateData} />
+      <div>
+        <label className="label text-xs">Text content (left of the image)</label>
+        <RichTextEditor
+          content={data.layoutText ?? ''}
+          onChange={(html) => onUpdateData({ layoutText: html })}
+          placeholder="Text content…"
         />
-        <LayoutImageInput image={images[0]!} index={0} images={images} onUpdateData={onUpdateData} />
       </div>
     </div>
   );
