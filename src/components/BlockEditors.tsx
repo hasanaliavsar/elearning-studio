@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { generateId } from '../utils/helpers';
+import { RichTextEditor } from './RichTextEditor';
 import type {
   ContentBlock,
   ContentBlockData,
@@ -622,7 +623,7 @@ const calloutStyles: { value: CalloutStyle; label: string; icon: React.ReactNode
   { value: 'success', label: 'Success', icon: <CheckCircle className="w-4 h-4" />, bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-700' },
 ];
 
-function CalloutEditor({ block, onUpdateData }: BlockEditorProps) {
+function CalloutEditor({ block, onUpdate, onUpdateData }: BlockEditorProps) {
   const data = ensureData(block);
   const style = data.calloutStyle ?? 'info';
   const title = data.calloutTitle ?? '';
@@ -662,15 +663,25 @@ function CalloutEditor({ block, onUpdateData }: BlockEditorProps) {
         />
       </div>
 
+      <div>
+        <label className="label text-xs">Body</label>
+        <RichTextEditor
+          content={block.content}
+          onChange={(html) => onUpdate({ content: html })}
+          minimal
+          placeholder="Callout body…"
+        />
+      </div>
+
       {/* Live preview */}
       <div className={`rounded-lg border p-4 ${active.bg} ${active.border}`}>
         <div className={`flex items-center gap-2 font-semibold text-sm ${active.text}`}>
           {active.icon}
           {title || 'Callout Title'}
         </div>
-        <p className="mt-1 text-xs text-gray-600">
-          {block.content || <em className="text-gray-400">Content is edited in the main content area above.</em>}
-        </p>
+        {block.content
+          ? <div className="mt-1 text-xs text-gray-700" dangerouslySetInnerHTML={{ __html: block.content }} />
+          : <p className="mt-1 text-xs text-gray-400 italic">Add a body above…</p>}
       </div>
     </div>
   );
